@@ -30,8 +30,8 @@ def addPits(caves, pProbs):
         rcol = random.randint(0, len(caves) - 1)
         rrow = random.randint(0, len(caves) - 1)
         while caves[rcol][rrow] != '_' or (rcol == 0 and rrow == 0):
-            rcol = random.randint(1, len(caves))
-            rrow = random.randint(1, len(caves))
+            rcol = random.randint(0, len(caves)-1)
+            rrow = random.randint(0, len(caves)-1)
         caves[rcol][rrow] = 'p'
     return caves
 
@@ -42,8 +42,8 @@ def addWumpus(caves, wProbs):
         rcol = random.randint(0, len(caves) - 1)
         rrow = random.randint(0, len(caves) - 1)
         while caves[rcol][rrow] != '_' or (rcol == 0 and rrow == 0):
-            rcol = random.randint(1, len(caves))
-            rrow = random.randint(1, len(caves))
+            rcol = random.randint(0, len(caves)-1)
+            rrow = random.randint(0, len(caves)-1)
         caves[rcol][rrow] = 'w'
     return caves
 
@@ -52,8 +52,8 @@ def addGold(caves):
     rcol = random.randint(0, len(caves) - 1)
     rrow = random.randint(0, len(caves) - 1)
     while caves[rcol][rrow] != '_' or (rcol == 0 and rrow == 0):
-        rcol = random.randint(1, len(caves))
-        rrow = random.randint(1, len(caves))
+        rcol = random.randint(0, len(caves)-1)
+        rrow = random.randint(0, len(caves)-1)
     caves[rcol][rrow] = 'g'
     return caves
 
@@ -65,4 +65,9 @@ def createWorld(size, oProbs, pProbs, wProbs):
     world = addWumpus(world, wProbs)
     world = addGold(world)
     return world
+
+def printGrid(grid):
+    for row in grid:
+        print(row)
+        print()
 
