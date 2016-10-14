@@ -8,7 +8,8 @@ class AbstractDude:
     def __init__(self, size, oProbs, pProbs, wProbs):
         self.kb = KnowledgeBase.KnowledgeBase(size, oProbs, pProbs, wProbs)
         self.size = size
-        Move.place_dude(self.kb)
+        self.move = Move.Move(self.kb)
+        self.move.place_dude()
         self.x = 0
         self.y = 0
 
@@ -54,9 +55,11 @@ class ReactiveDude(AbstractDude):
         self.rounds()
 
     def rounds(self):
-        while(True):
-            self.get_random_safe()
+        go_on = False
+        while not go_on :
+            go_on = self.get_random_safe()
 
     def get_random_safe(self):
         safe_directions = self.get_possible_directions(self.x, self.y)
-        self.x, self.y = Move.move_direction(self.kb, self.x, self.y, random.choice(safe_directions))
+        self.x, self.y, gold_found = self.move.move_direction(self.x, self.y, random.choice(safe_directions))
+        return gold_found
