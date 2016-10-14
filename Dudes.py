@@ -58,6 +58,10 @@ class ReactiveDude(AbstractDude):
         go_on = False
         while not go_on :
             go_on = self.get_random_safe()
+        print("Total Moves")
+        print(self.move.moves)
+        print("Total Cost")
+        print(self.move.cost)
 
     def get_random_safe(self):
         safe_directions = self.get_possible_directions(self.x, self.y)

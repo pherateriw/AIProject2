@@ -11,5 +11,6 @@ class KnowledgeBase:
         print(wg.printGrid(self.known_map))
 
     def update_cell(self, x, y, char):
-        self.known_map[x][y]= char
-        print(wg.printGrid(self.known_map))
+        self.known_map[x][y] = char
+        if char != "_": # limit amount of maps printed
+            print(wg.printGrid(self.known_map))

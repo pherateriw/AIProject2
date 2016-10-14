@@ -1,12 +1,17 @@
-# TODO not pass kb in all methods?
-
+# TODO use ^ < > v to indicate which direction Dude is facing?
+# TODO add_use change_direction method/Move
 class Move:
 
     def __init__(self, kb):
         self.gold_found = False
         self.kb = kb
+        self.moves = 0
+        self.cost = 0
 
+    # TODO if cases are getting copy/pasty modularize further?
     def move_direction(self, x, y, direction):
+        self.moves += 1
+        self.cost -= 1
         if direction == "NORTH":
             print("Moving North")
             temp = x
@@ -44,11 +49,16 @@ class Move:
 
     def successful_move(self, x, y):
         if self.kb.unknown_map[x][y] == 'g':
-            print("Gold found!")
-            self.gold_found = True
+            self.grab_gold()
             return True
         elif self.kb.unknown_map[x][y] == 'o':
             print("Thunk!")
             self.kb.update_cell(x, y, "o")
             return False
         return True
+
+    def grab_gold(self):
+        print("Gold found!")
+        self.moves += 1
+        self.cost += 1000
+        self.gold_found = True
