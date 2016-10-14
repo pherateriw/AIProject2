@@ -12,7 +12,7 @@ class AbstractDude:
         self.x = 0
         self.y = 0
 
-    # Not tested
+    # TODO fix numbers
     def get_neighbor_cells(self, x, y):
         neighbors = []
         # North
@@ -32,13 +32,17 @@ class AbstractDude:
     def get_possible_directions(self, x, y):
         directions = []
         if x > 0:
-            directions.append("NORTH")
-        if x < self.size:
-            directions.append("EAST")
-        if y < self.size:
-            directions.append("SOUTH")
+            if self.kb.known_map[x - 1][y] != 'o':
+                directions.append("NORTH")
+        if x < self.size - 1:
+            if self.kb.known_map[x + 1][y] != 'o':
+                directions.append("SOUTH")
+        if y < self.size -1 :
+            if self.kb.known_map[x][y + 1] != 'o':
+                directions.append("EAST")
         if y > 0:
-            directions.append("WEST")
+            if self.kb.known_map[x][y - 1] != 'o':
+                directions.append("WEST")
         return directions
 
 
