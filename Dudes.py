@@ -35,9 +35,9 @@ class AbstractDude:
             directions.append("NORTH")
         if x < self.size:
             directions.append("EAST")
-        if y > 0:
-            directions.append("SOUTH")
         if y < self.size:
+            directions.append("SOUTH")
+        if y > 0:
             directions.append("WEST")
         return directions
 
@@ -54,4 +54,5 @@ class ReactiveDude(AbstractDude):
             self.get_random_safe()
 
     def get_random_safe(self):
-        Move.move_direction(self.x, self.y, random.choice(self.get_possible_directions(self.x, self.y)))
+        safe_directions = self.get_possible_directions(self.x, self.y)
+        self.x, self.y = Move.move_direction(self.kb, self.x, self.y, random.choice(safe_directions))

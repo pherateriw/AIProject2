@@ -1,12 +1,24 @@
-NORTH = 0
-EAST = 1
-SOUTH = 2
-WEST = 3
+# TODO not pass kb in all methods?
 
 
+def move_direction(kb, x, y, direction):
+    kb.update_cell(x, y, "_")
 
-def move_direction(x, y, direction):
-    print("Not yet implemented!")
+    if direction == "NORTH":
+        print("Moving North")
+        x -= 1
+    if direction == "SOUTH":
+        print("Moving South")
+        x += 1
+    if direction == "EAST":
+        print("Moving East")
+        y += 1
+    if direction == "WEST":
+        print("Moving West")
+        y -= 1
+
+    kb.update_cell(x, y, "D")
+    return x, y
 
 
 def place_dude(kb):

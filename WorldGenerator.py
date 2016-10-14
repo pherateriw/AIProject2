@@ -67,6 +67,9 @@ def createWorld(size, oProbs, pProbs, wProbs):
     return world
 
 def printGrid(grid):
+    print(" N ")
+    print("W E")
+    print(" S ")
     for row in grid:
         print(row)
         print()
