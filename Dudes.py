@@ -72,8 +72,8 @@ class ReactiveDude(AbstractDude):
 class InformedDude(AbstractDude):
 
     def __init__(self, size, oProbs, pProbs, wProbs):
-        print("Reactive dude created!")
-        super(ReactiveDude, self).__init__(size, oProbs, pProbs, wProbs)
+        print("Informed dude created!")
+        super(InformedDude, self).__init__(size, oProbs, pProbs, wProbs)
         self.rounds()
 
     def rounds(self):
