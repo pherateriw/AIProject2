@@ -5,6 +5,9 @@
 # TODO figure out why "None" is printing out and fix it
 # TODO print statements in a more reasonable order?
 # TODO check score
+# TODO: arrows (in kb?)
+# TODO: add other percept call
+import WorldGenerator as wg
 
 
 class Move:
@@ -13,7 +16,6 @@ class Move:
     EAST = '>'
     SOUTH = 'v'
     WEST = '<'
-
 
     def __init__(self, kb, dude):
         self.gold_found = False

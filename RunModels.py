@@ -10,6 +10,7 @@ def main():
     parser.add_argument("w", help="Probability of wumpi", type=float)
     args = parser.parse_args()
 
+    # TODO: make a choice for user, make sure we pass same world to both
     #rDude = Dudes.ReactiveDude(args.size, args.o, args.p, args.w)
     iDude = Dudes.InformedDude(args.size, args.o, args.p, args.w)
     
