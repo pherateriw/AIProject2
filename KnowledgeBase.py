@@ -1,20 +1,23 @@
 import WorldGenerator as wg
 
-
+# the explorer's knowledge base, what it knows about the environment
 class KnowledgeBase:
     def __init__(self, size, oProbs, pProbs, wProbs):
+        
         self.unknown_map = wg.createWorld(size, oProbs, pProbs, wProbs)
         self.known_map = wg.createGrid(size);
         self.percepts = {} 
-        print("Actual map")
-        print(wg.printGrid(self.unknown_map))
+
+        print("Actual map")        
+        wg.printGrid(self.unknown_map)     
+                
         print("Known map")
-        print(wg.printGrid(self.known_map))
+        wg.printGrid(self.known_map)
 
     def update_cell(self, x, y, char):
         self.known_map[x][y] = char
         if char != "_": # limit amount of maps printed
-            print(wg.printGrid(self.known_map))
+            wg.printGrid(self.known_map)
 
     # update the percepts according to the environment    
     def update_percept(self, x, y):
@@ -118,4 +121,5 @@ class KnowledgeBase:
         print("########Explorer's Percepts:")
         for key, value in self.percepts.items():
             print(key, value)
-        print("############################")        
+        print("############################")
+        print()        
