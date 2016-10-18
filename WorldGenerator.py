@@ -1,4 +1,3 @@
-import math
 import random
 
 
@@ -51,7 +50,7 @@ def addGold(caves):
     while caves[rcol][rrow] != '_' or (rcol == 0 and rrow == 0):
         rcol = random.randint(0, len(caves)-1)
         rrow = random.randint(0, len(caves)-1)
-    caves[rcol][rrow] = 'g'
+    caves[rcol][rrow] = '$'
     return caves
 
 def createWorld(size, oProbs, pProbs, wProbs):
