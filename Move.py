@@ -1,5 +1,12 @@
-# TODO use ^ < > v to indicate which direction Dude is facing?
 # TODO add_use change_direction method/Move
+# TODO add shoot arrow, wumpus scream
+# TODO right now game does not end on pit/wumpus (helps to test), fix this
+# TODO finish game/print stats if die
+# TODO figure out why "None" is printing out and fix it
+# TODO print statements in a more reasonable order?
+# TODO check score
+
+
 class Move:
 
     NORTH = '^'
@@ -14,7 +21,6 @@ class Move:
         self.moves = 0
         self.cost = 0
         self.dude = dude
-
 
     # TODO if cases are getting copy/pasty modularize further?
     def move_direction(self, x, y, direction):
@@ -54,23 +60,27 @@ class Move:
     def place_dude(self):
         print("Placing Dude at (0, 0), facing south")
         self.kb.update_cell(0, 0, "v")
+        self.kb.update_percept(0, 0)
 
+    # upon move, interacts with the world (if in a relevant part of the map)
     def successful_move(self, x, y, direction):
         self.change_direction(direction)
         if self.kb.unknown_map[x][y] == 'g':
             self.grab_gold()
             return True
         elif self.kb.unknown_map[x][y] == 'o':
-            print("Thunk!")
             self.kb.update_cell(x, y, "o")
+            self.kb.update_percept(x, y)
             return False
+        elif self.kb.unknown_map[x][y] == 'p':    
+            self.pit_fall()
+            self.kb.update_cell(x, y, "p")
+            return True
+        elif self.kb.unknown_map[x][y] == 'w':    
+            self.wumpus_encounter()
+            self.kb.update_cell(x, y, "w")
+            return True
         return True
-
-    def grab_gold(self):
-        print("Gold found!")
-        self.moves += 1
-        self.cost += 1000
-        self.gold_found = True
 
     def change_direction(self, direction):
         direction_dict = {'^': 0, '>': 1, 'v': 2, '<': 3}
@@ -113,3 +123,25 @@ class Move:
             self.cost -= 1
         else:
             print("Got turned around...")
+
+
+    def grab_gold(self):
+        print("Gold found!")
+        self.moves += 1
+        self.cost += 1000
+        self.gold_found = True
+        
+    def pit_fall(self):
+        print("Ahhhhhhhhhhhhhhhhhhhh!")
+        print("RIP Explorer, you fell into a pit.")
+        self.moves += 1
+        self.cost -= 1000
+        self.game_over = True     
+
+    def wumpus_encounter(self):
+        print("Crunch.")        
+        print("RIP Explorer, you were eaten by a wumpus.")
+        self.moves += 1
+        self.cost -= 1000
+        self.game_over = True  
+        

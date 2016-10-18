@@ -69,9 +69,9 @@ def createWorld(size, oProbs, pProbs, wProbs):
 
 #TODO: this is printing none...
 def printGrid(grid):
-    print(" N ")
-    print("W E")
-    print(" S ")
+    #print(" N ")
+    #print("W E")
+    #print(" S ")
     for row in grid:
         print(row)
         print()
