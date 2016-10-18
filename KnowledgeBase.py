@@ -1,13 +1,16 @@
 import WorldGenerator as wg
 
-# the explorer's knowledge base, what it knows about the environment
+# TODO: Turn percepts into facts (i.e. Breeze(x,y))
+
+# the explorer's knowledge base, reflects what it knows about the environment
 class KnowledgeBase:
     def __init__(self, size, oProbs, pProbs, wProbs):
         
         self.unknown_map = wg.createWorld(size, oProbs, pProbs, wProbs)
         self.known_map = wg.createGrid(size);
         self.percepts = {} 
-
+        self.facts = {}        
+        
         print("Actual map")        
         wg.printGrid(self.unknown_map)     
                 
@@ -34,7 +37,7 @@ class KnowledgeBase:
             pCount = len(value)
         
         # gold is in this cell, glimmer ($) is perceived, else (_) 
-        if self.unknown_map[x][y] == 'g':            
+        if self.unknown_map[x][y] == '$':            
             print("Explorer sees a glimmer in ({},{})".format(x,y))
             percept_glimmer = '$'
         else: 
@@ -123,3 +126,39 @@ class KnowledgeBase:
             print(key, value)
         print("############################")
         print()        
+
+        # take the informatcheck if value already exists for keyion gathered from percepts, add it to the knowledge base
+        for value in self.percepts[percept_key]:
+            if (value != '_'):
+                self.update_knowledge_base(percept_key, value, x, y) 
+                
+     
+    # update the knowledge base with information gathered from percepts
+    def update_knowledge_base(self, key, value, x, y):        
+        self.facts.setdefault(key,[])
+        
+        if (value == '$'):
+            rule = "GLIMMER({},{})".format(x,y)
+
+        if (value == 'b'):
+            rule = "BREEZE({},{})".format(x,y)
+ 
+        if (value == 's'):
+            rule = "STENCH({},{})".format(x,y)
+
+        if (value == 't'):
+            rule = "BUMP({},{})".format(x,y)
+
+        # check that this rule is not already in dictionary
+        if (rule not in self.facts[key]):
+            self.facts[key].append(rule)       
+        
+        print("########Information in Knowledge Base:")
+        for key, value in self.facts.items():
+            print(key, value)
+        print("##################################")
+        print()        
+
+    def rules(self):
+        r1 = "SAFE(X,Y) <=> !(PIT(X,Y))"
+        r2 = "BREEZE(X,Y) => PIT(X+1,Y) v PIT(X-1,Y) v PIT(X,Y+1) v PIT(X,Y-1)"
