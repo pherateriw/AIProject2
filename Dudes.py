@@ -69,7 +69,8 @@ class ReactiveDude(AbstractDude):
         self.x, self.y, gold_found = self.move.move_direction(self.x, self.y, random.choice(safe_directions))
         return gold_found
 
-# test comment, to make sure I can push
+# TODO: comment this, change so works as expected
+# TODO: how to turn right/left? double check with Lisa
 class InformedDude(AbstractDude):
 
     def __init__(self, size, oProbs, pProbs, wProbs):
