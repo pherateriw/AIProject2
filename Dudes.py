@@ -67,3 +67,26 @@ class ReactiveDude(AbstractDude):
         safe_directions = self.get_possible_directions(self.x, self.y)
         self.x, self.y, gold_found = self.move.move_direction(self.x, self.y, random.choice(safe_directions))
         return gold_found
+
+# test comment, to make sure I can push
+class InformedDude(AbstractDude):
+
+    def __init__(self, size, oProbs, pProbs, wProbs):
+        print("Informed dude created!")
+        print()
+        super(InformedDude, self).__init__(size, oProbs, pProbs, wProbs)
+        self.rounds()
+
+    def rounds(self):
+        go_on = False
+        while not go_on :
+            go_on = self.get_random_safe()
+        print("Total Moves")
+        print(self.move.moves)
+        print("Total Cost")
+        print(self.move.cost)
+
+    def get_random_safe(self):
+        safe_directions = self.get_possible_directions(self.x, self.y)
+        self.x, self.y, gold_found = self.move.move_direction(self.x, self.y, random.choice(safe_directions))
+        return gold_found

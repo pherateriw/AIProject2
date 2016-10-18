@@ -10,7 +10,10 @@ def main():
     parser.add_argument("wumpi", help="Probability of wumpi", type=float)
     args = parser.parse_args()
 
-    dude = Dudes.ReactiveDude(args.size, args.obstacles, args.pit, args.wumpi)
 
+    # TODO: make a choice for user, make sure we pass same world to both
+    #rDude = Dudes.ReactiveDude(args.size, args.o, args.p, args.w)
+    iDude = Dudes.InformedDude(args.size, args.o, args.p, args.w)
+    
 if __name__ == '__main__':
     main()
