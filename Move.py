@@ -133,6 +133,7 @@ class Move:
 
     # turns the explorer left 90 degrees
     # prints out compass where location of "<", ">" ,"^" or "v" shows location explorer is facing
+    # TODO: might not need     
     def turn_explorer_left(self):
         self.moves += 1
         
@@ -194,22 +195,22 @@ class Move:
         print("Explorer has turned left, is now facing {}".format(self.facing))
 
     # moves the informed explorer forward by one space    
+    # TODO: finish this
     def move_forward(self, x, y):
         self.moves += 1
         
-        if(self.facing == "EAST"):
+        #if(self.facing == "EAST"):
             #increment x by 1, y stays the same
-
-        if(self.facing == "WEST"):
+                                                
+            
+        #if(self.facing == "WEST"):
             #decrement x by 1, y stays the same                
 
-        if(self.facing == "NORTH"):
+        #if(self.facing == "NORTH"):
             #x stays the same, decrement y by 1
         
-        if(self.facing == "SOUTH"):
+        #if(self.facing == "SOUTH"):
             #x stays the same, increment y by 1        
-
-
 
     def grab_gold(self):
         print("Gold found!")
