@@ -30,6 +30,7 @@ class AbstractDude:
                 neighbors.append((x, y + 1))
         return neighbors
 
+    # TODO: throws exceptions if obstacles in 1,0 and 0,1
     def get_possible_directions(self, x, y):
         directions = []
         if x > 0:

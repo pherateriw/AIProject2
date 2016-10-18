@@ -13,7 +13,7 @@ def main():
 
     # TODO: make a choice for user, make sure we pass same world to both
     #rDude = Dudes.ReactiveDude(args.size, args.o, args.p, args.w)
-    iDude = Dudes.InformedDude(args.size, args.o, args.p, args.w)
+    iDude = Dudes.InformedDude(args.size, args.obstacles, args.pit, args.wumpi)
     
 if __name__ == '__main__':
     main()
