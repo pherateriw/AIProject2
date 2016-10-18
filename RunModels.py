@@ -10,7 +10,8 @@ def main():
     parser.add_argument("w", help="Probability of wumpi", type=float)
     args = parser.parse_args()
 
-    dude = Dudes.ReactiveDude(args.size, args.o, args.p, args.w)
-
+    #rDude = Dudes.ReactiveDude(args.size, args.o, args.p, args.w)
+    iDude = Dudes.InformedDude(args.size, args.o, args.p, args.w)
+    
 if __name__ == '__main__':
     main()
