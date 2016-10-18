@@ -73,6 +73,7 @@ class InformedDude(AbstractDude):
 
     def __init__(self, size, oProbs, pProbs, wProbs):
         print("Informed dude created!")
+        print()
         super(InformedDude, self).__init__(size, oProbs, pProbs, wProbs)
         self.rounds()
 
