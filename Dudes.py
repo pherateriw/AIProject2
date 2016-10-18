@@ -8,7 +8,7 @@ class AbstractDude:
     def __init__(self, size, oProbs, pProbs, wProbs):
         self.kb = KnowledgeBase.KnowledgeBase(size, oProbs, pProbs, wProbs)
         self.size = size
-        self.move = Move.Move(self.kb)
+        self.move = Move.Move(self.kb, self)
         self.move.place_dude()
         self.x = 0
         self.y = 0
@@ -34,16 +34,16 @@ class AbstractDude:
         directions = []
         if x > 0:
             if self.kb.known_map[x - 1][y] != 'o':
-                directions.append("NORTH")
+                directions.append("^")
         if x < self.size - 1:
             if self.kb.known_map[x + 1][y] != 'o':
-                directions.append("SOUTH")
+                directions.append("v")
         if y < self.size -1 :
             if self.kb.known_map[x][y + 1] != 'o':
-                directions.append("EAST")
+                directions.append(">")
         if y > 0:
             if self.kb.known_map[x][y - 1] != 'o':
-                directions.append("WEST")
+                directions.append("<")
         return directions
 
 

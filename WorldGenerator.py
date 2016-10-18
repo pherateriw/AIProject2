@@ -66,6 +66,8 @@ def createWorld(size, oProbs, pProbs, wProbs):
     world = addGold(world)
     return world
 
+
+#TODO: this is printing none...
 def printGrid(grid):
     print(" N ")
     print("W E")
