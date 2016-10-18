@@ -8,7 +8,7 @@ def createGrid(size):
         row = []
         for j in range(size):
             row.append('_')
-        caves.append(row)
+        caves.append(row)    
     return caves
 
 
@@ -23,7 +23,6 @@ def addObstacles(caves, oProbs):
         caves[rcol][rrow] = 'o'
     return caves
 
-
 def addPits(caves, pProbs):
     numPits = round(len(caves) * len(caves) * pProbs)
     for i in range(numPits):
@@ -34,7 +33,6 @@ def addPits(caves, pProbs):
             rrow = random.randint(0, len(caves)-1)
         caves[rcol][rrow] = 'p'
     return caves
-
 
 def addWumpus(caves, wProbs):
     numWumpi = round(len(caves) * len(caves) * wProbs)
@@ -47,7 +45,6 @@ def addWumpus(caves, wProbs):
         caves[rcol][rrow] = 'w'
     return caves
 
-
 def addGold(caves):
     rcol = random.randint(0, len(caves) - 1)
     rrow = random.randint(0, len(caves) - 1)
@@ -56,7 +53,6 @@ def addGold(caves):
         rrow = random.randint(0, len(caves)-1)
     caves[rcol][rrow] = 'g'
     return caves
-
 
 def createWorld(size, oProbs, pProbs, wProbs):
     world = createGrid(size)
@@ -67,12 +63,12 @@ def createWorld(size, oProbs, pProbs, wProbs):
     return world
 
 
-#TODO: this is printing none...
 def printGrid(grid):
     #print(" N ")
     #print("W E")
     #print(" S ")
+    
     for row in grid:
         print(row)
-        print()
-
+    print()
+    
