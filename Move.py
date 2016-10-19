@@ -29,6 +29,8 @@ class Move:
 
     # TODO if cases are getting copy/pasty modularize further?
     def move_direction(self, x, y, direction):
+        self.dude.prevx = x
+        self.dude.prevy = y
         self.moves += 1
         self.cost -= 1
         if direction == "^":
@@ -85,12 +87,12 @@ class Move:
         elif self.kb.unknown_map[x][y] == 'p':    
             self.pit_fall()
             self.kb.update_cell(x, y, "p")
-            return True
+            return False
         # if in square with wumpus, call wumpus handler
         elif self.kb.unknown_map[x][y] == 'w':    
             self.wumpus_encounter()
             self.kb.update_cell(x, y, "w")
-            return True
+            return False
         return True
 
     def change_direction(self, direction):

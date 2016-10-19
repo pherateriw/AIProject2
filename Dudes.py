@@ -12,6 +12,8 @@ class AbstractDude:
         self.move.place_dude()
         self.x = 0
         self.y = 0
+        self.prevx = 0
+        self.prvey = 0
 
     # TODO fix numbers
     def get_neighbor_cells(self, x, y):
@@ -32,20 +34,30 @@ class AbstractDude:
 
     # TODO: throws exceptions if obstacles in 1,0 and 0,1
     def get_possible_directions(self, x, y):
-        directions = []
+        safe_directions = []
+        unsafe_directions = []
+        unsafe_chars = ['o', 'p', 'w']
         if x > 0:
-            if self.kb.known_map[x - 1][y] != 'o':
-                directions.append("^")
+            if self.kb.known_map[x - 1][y] not in unsafe_chars:
+                safe_directions.append("^")
+            else:
+                unsafe_directions.append("^")
         if x < self.size - 1:
-            if self.kb.known_map[x + 1][y] != 'o':
-                directions.append("v")
+            if self.kb.known_map[x + 1][y] not in unsafe_chars:
+                safe_directions.append("v")
+            else:
+                unsafe_directions.append('v')
         if y < self.size -1 :
-            if self.kb.known_map[x][y + 1] != 'o':
-                directions.append(">")
+            if self.kb.known_map[x][y + 1] not in unsafe_chars:
+                safe_directions.append(">")
+            else:
+                unsafe_directions.append(">")
         if y > 0:
-            if self.kb.known_map[x][y - 1] != 'o':
-                directions.append("<")
-        return directions
+            if self.kb.known_map[x][y - 1] not in unsafe_chars:
+                safe_directions.append("<")
+            else:
+                unsafe_directions.append("<")
+        return safe_directions, unsafe_directions
 
 
 class ReactiveDude(AbstractDude):
@@ -65,8 +77,9 @@ class ReactiveDude(AbstractDude):
         print(self.move.cost)
 
     def get_random_safe(self):
-        safe_directions = self.get_possible_directions(self.x, self.y)
-        self.x, self.y, gold_found = self.move.move_direction(self.x, self.y, random.choice(safe_directions))
+        safe, unsafe = self.get_possible_directions(self.x, self.y)
+        choices = safe if safe is not None else unsafe
+        self.x, self.y, gold_found = self.move.move_direction(self.x, self.y, random.choice(choices))
         return gold_found
 
 # TODO: comment this, change so works as expected
