@@ -6,8 +6,6 @@
 # TODO check score
 # TODO: arrows (in kb?)
 # TODO: add other percept call
-import WorldGenerator as wg
-
 
 class Move:
 
@@ -22,6 +20,12 @@ class Move:
         self.moves = 0
         self.cost = 0
         self.dude = dude
+
+    def informed_dude_move(self):
+        from InferenceEngine import InferenceEngine
+        ie = InferenceEngine()
+        
+
 
     # TODO if cases are getting copy/pasty modularize further?
     def move_direction(self, x, y, direction):
@@ -69,7 +73,7 @@ class Move:
     def successful_move(self, x, y, direction):
         self.change_direction(direction)
         # if in square with gold, grab gold
-        if self.kb.unknown_map[x][y] == 'g':
+        if self.kb.unknown_map[x][y] == '$':
             self.grab_gold()
             return True
         # if in square with obstacle, update percept
@@ -130,87 +134,6 @@ class Move:
             self.cost -= 1
         else:
             print("Got turned around...")
-
-    # turns the explorer left 90 degrees
-    # prints out compass where location of "<", ">" ,"^" or "v" shows location explorer is facing
-    # TODO: might not need     
-    def turn_explorer_left(self):
-        self.moves += 1
-        
-        if (self.facing == "EAST"):
-            self.facing = "NORTH"
-            print(" ^ ")
-            print("W E")
-            print(" S ")             
-
-        elif (self.facing == "NORTH"):
-            self.facing = "WEST"
-            print(" N ")
-            print("< E")
-            print(" S ")         
-        
-        elif (self.facing == "WEST"):
-            self.facing = "SOUTH"            
-            print(" N ")
-            print("W E")
-            print(" v ") 
-            
-        elif (self.facing == "SOUTH"):
-            self.facing = "EAST"             
-            print(" N ")
-            print("W >")
-            print(" S ") 
-        
-        print("Explorer has turned left, is now facing {}".format(self.facing))
-
-    # turns the informed explorer right 90 degrees
-    # prints out compass where location of "<", ">" ,"^" or "v" shows location explorer is facing
-    def turn_explorer_right(self):
-        self.moves += 1
-             
-        if (self.facing == "EAST"):
-            self.facing = "SOUTH"
-            print(" N ")
-            print("W E")
-            print(" v ") 
-            
-        elif (self.facing == "NORTH"):
-            self.facing = "EAST"             
-            print(" N ")
-            print("W >")
-            print(" S ")        
-        
-        elif (self.facing == "WEST"):
-            self.facing = "NORTH"            
-            print(" ^ ")
-            print("W E")
-            print(" S ")  
-            
-        elif (self.facing == "SOUTH"):
-            self.facing = "WEST"             
-            print(" N ")
-            print("< E")
-            print(" S ")  
-        
-        print("Explorer has turned left, is now facing {}".format(self.facing))
-
-    # moves the informed explorer forward by one space    
-    # TODO: finish this
-    def move_forward(self, x, y):
-        self.moves += 1
-        
-        #if(self.facing == "EAST"):
-            #increment x by 1, y stays the same
-                                                
-            
-        #if(self.facing == "WEST"):
-            #decrement x by 1, y stays the same                
-
-        #if(self.facing == "NORTH"):
-            #x stays the same, decrement y by 1
-        
-        #if(self.facing == "SOUTH"):
-            #x stays the same, increment y by 1        
 
     def grab_gold(self):
         print("Gold found!")

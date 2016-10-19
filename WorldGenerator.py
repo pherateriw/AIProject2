@@ -1,6 +1,5 @@
 import random
 
-
 def createGrid(size):
     caves = []
     for i in range(size):

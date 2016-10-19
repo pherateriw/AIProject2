@@ -1,7 +1,7 @@
 import KnowledgeBase
 import Move
 import random
-
+import InferenceEngine
 
 class AbstractDude:
 
@@ -80,15 +80,28 @@ class InformedDude(AbstractDude):
         self.rounds()
 
     def rounds(self):
-        go_on = False
-        while not go_on :
-            go_on = self.get_random_safe()
-        print("Total Moves")
-        print(self.move.moves)
-        print("Total Cost")
-        print(self.move.cost)
+        self.move.informed_dude_move()
+
+        #go_on = False
+        #while not go_on :
+        #    go_on = self.get_random_safe()
+        #print("Total Moves")
+        #print(self.move.moves)
+        #print("Total Cost")
+        #print(self.move.cost)
 
     def get_random_safe(self):
         safe_directions = self.get_possible_directions(self.x, self.y)
         self.x, self.y, gold_found = self.move.move_direction(self.x, self.y, random.choice(safe_directions))
         return gold_found
+        
+    # TODO: make sure matches design doc    
+    # R & N pg 270, adapted to FOL
+    # inputs: percepts
+    # persistent: kb, plan (action sequence, starts empty)
+    # TELL(KB, MAKE-PERCEPT-SENTENCE(percept,t))
+    # TELL the KB the temporal physics sentences for time t    
+
+
+
+
