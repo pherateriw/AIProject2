@@ -36,26 +36,27 @@ class AbstractDude:
     def get_possible_directions(self, x, y):
         safe_directions = []
         unsafe_directions = []
-        unsafe_chars = ['o', 'p', 'w']
+        unsafe_chars = ['d', 'm']
+        impossible_chars = ['o', 'p', 'w']
         if x > 0:
-            if self.kb.known_map[x - 1][y] not in unsafe_chars:
+            if self.kb.known_map[x - 1][y] not in unsafe_chars and self.kb.known_map[x - 1][y] not in impossible_chars:
                 safe_directions.append("^")
-            else:
+            elif self.kb.known_map[x - 1][y] not in impossible_chars:
                 unsafe_directions.append("^")
         if x < self.size - 1:
-            if self.kb.known_map[x + 1][y] not in unsafe_chars:
+            if self.kb.known_map[x + 1][y] not in unsafe_chars and self.kb.known_map[x + 1][y] not in impossible_chars:
                 safe_directions.append("v")
-            else:
+            elif self.kb.known_map[x + 1][y] not in impossible_chars:
                 unsafe_directions.append('v')
         if y < self.size -1 :
-            if self.kb.known_map[x][y + 1] not in unsafe_chars:
+            if self.kb.known_map[x][y + 1] not in unsafe_chars and self.kb.known_map[x][y + 1] not in impossible_chars:
                 safe_directions.append(">")
-            else:
+            elif self.kb.known_map[x][y + 1] not in impossible_chars:
                 unsafe_directions.append(">")
         if y > 0:
-            if self.kb.known_map[x][y - 1] not in unsafe_chars:
+            if self.kb.known_map[x][y - 1] not in unsafe_chars and self.kb.known_map[x][y -1] not in impossible_chars:
                 safe_directions.append("<")
-            else:
+            elif self.kb.known_map[x][y - 1] not in impossible_chars:
                 unsafe_directions.append("<")
         return safe_directions, unsafe_directions
 
@@ -79,6 +80,9 @@ class ReactiveDude(AbstractDude):
     def get_random_safe(self):
         safe, unsafe = self.get_possible_directions(self.x, self.y)
         choices = safe if safe is not None else unsafe
+        if len(choices) == 0:
+            print("Explorer is stuck!!")
+            return True
         self.x, self.y, gold_found = self.move.move_direction(self.x, self.y, random.choice(choices))
         return gold_found
 
