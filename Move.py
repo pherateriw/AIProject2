@@ -25,14 +25,13 @@ class Move:
         from InferenceEngine import InferenceEngine
         ie = InferenceEngine()
         
-    # TODO if cases are getting copy/pasty modularize further?
     def move_direction(self, x, y, direction):
         self.dude.prevx = x
         self.dude.prevy = y
         self.moves += 1
         self.cost -= 1
         if len(direction) > 1:
-            self.kill_wumpi(direction)
+            self.shoot_wumpus(direction)
             return x, y, self.gold_found
         if direction == "^":
             print("Moving North")
@@ -62,7 +61,7 @@ class Move:
         self.kb.update_percept(x, y)
         return x, y, self.gold_found
 
-    def kill_wumpi(self, direction):
+    def shoot_wumpus(self, direction):
         print("Killing a wumpus!!!")
         if direction[0] == '^':
             print("Shooting arrow north")

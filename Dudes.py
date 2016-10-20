@@ -14,11 +14,19 @@ class AbstractDude:
         self.y = 0
         self.prevx = 0
         self.prvey = 0
-        self.arrow = self.kb.numWumpii
+        self.arrows = self.kb.numWumpii
         self.death_by_pit = 0
         self.death_by_wumpii = 0
-        self.wumpii_kill = 0
-        self.total_deaths = self.death_by_pit + self.death_by_wumpii
+        self.killed_wumpii = 0
+
+    def print_stats(self):
+        print("Total Moves: %s" % self.move.moves)
+        print("Total Cost: %s" % self.move.cost)
+        print("Total Death: %s" % (self.death_by_pit + self.death_by_wumpii))
+        print("Wumpii Deaths: %s" % self.death_by_wumpii)
+        print("Pit Deaths: %s" % self.death_by_pit)
+        print("Wumpii Killed: %s" % self.killed_wumpii)
+
 
 
     def get_possible_directions(self, x, y):
@@ -50,22 +58,22 @@ class AbstractDude:
         # Retracing steps and killing wumpii is last resort
         if len(safe_directions) == 0 and len(unsafe_directions) == 0:
             if x > 0:
-                if self.kb.known_map[x - 1][y] == 'w':
+                if self.kb.known_map[x - 1][y] == 'w' and self.arrows > 0:
                     safe_directions.append("^k")
                 elif self.kb.known_map[x - 1][y] == 's':
                     safe_directions.append('^')
             if x < self.size -1:
-                if self.kb.known_map[x + 1][y] == 'w':
+                if self.kb.known_map[x + 1][y] == 'w' and self.arrows > 0:
                     safe_directions.append("vk")
                 elif self.kb.known_map[x + 1][y] == 's':
                     safe_directions.append('v')
             if y > 0:
-                if self.kb.known_map[x][y - 1] == 'w':
+                if self.kb.known_map[x][y - 1] == 'w' and self.arrows > 0:
                     safe_directions.append("<k")
                 elif self.kb.known_map[x][y - 1] == 's':
                     safe_directions.append('<')
             if y < self.size -1:
-                if self.kb.known_map[x][y + 1] == 'w':
+                if self.kb.known_map[x][y + 1] == 'w' and self.arrows > 0:
                     safe_directions.append(">k")
                 elif self.kb.known_map[x][y + 1] == 's':
                     safe_directions.append('>')
@@ -83,10 +91,7 @@ class ReactiveDude(AbstractDude):
         go_on = False
         while not go_on :
             go_on = self.get_random_safe()
-        print("Total Moves")
-        print(self.move.moves)
-        print("Total Cost")
-        print(self.move.cost)
+        self.print_stats()
 
     def get_random_safe(self):
         safe, unsafe = self.get_possible_directions(self.x, self.y)
