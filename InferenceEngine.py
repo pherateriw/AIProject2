@@ -8,7 +8,7 @@ class InferenceEngine:
         self.kb = kb
         
         # testing unification and resolution
-        self.test_unify(self.theta)
+        #self.test_unify(self.theta)
         self.test_resolution(self.kb)
 
     # preprocesses sentences to check that the predicates match, and to get the relevant arguments
@@ -38,16 +38,13 @@ class InferenceEngine:
         else:
             self.unify(argsP, argsQ, theta)
     
-    # reminder: unification takes two atomic sentences P and Q and returns a substitution that makes
-    # P and Q identical.
-    # This implementation uses the method described by Russell and Norvig to perform unification (p 328)  
-    # this method differs from R&N's implementation in that we do not handle compound
-    # expressions (functions), since none of our rules require it. 
-    # input: x is a variable, constant or list 
-    # input: y is a variable, constant or list, or compound expression
-    # input: theta, the substitution built up so far () 
-    # function returns a substitution to make x and y identical   
-    # TODO: do I need to worry about compound case? If so, fix this.
+    """ reminder: unification takes two atomic sentences P and Q and returns a substitution that 
+    makes P and Q identical. This implementation uses the method described by Russell 
+    and Norvig to perform unification (p 328). This method differs from R&N's implementation 
+    in that we do not handle compound expressions (functions), since none of our rules require it. 
+    input: x is a variable, constant or list 
+    input: y is a variable, constant or list, or compound expression
+    input: theta, the substitution built up so far ()"""   
     def unify(self, P, Q, theta):               
         # if there is no theta that can unify x and y, return false
         if self.theta is None:
@@ -79,11 +76,12 @@ class InferenceEngine:
         else:        
             return False
 
-    # note: we have specified that a single variable will be one lowercase character a-z
+    # note: we have specified that a single variable will be one lowercase character a-z (although not v)
     def is_variable(self, X):     
         if len(X) == 1:
             if (X.islower()):            
-                return True
+                if (X != 'v'):
+                    return True
         else:
             return False
 
@@ -95,7 +93,7 @@ class InferenceEngine:
             return False
 
     # helper function for unification, also inspired by Russell and Norvig implementation 
-    # omitted the occur check bc it did not seem necessary for this application, and 
+    # note: omitted the occur check bc it did not seem necessary for this application, and 
     # bc of complexity concerns    
     def unify_var(self, var, x, theta):       
     
@@ -175,36 +173,46 @@ class InferenceEngine:
     def substitute(self, theta):
         print("Not yet implemented")  
 
-    # This implementation uses the method described by Russell and Norvig to perform resolution (p 255)  
-    # this method differs from R&N's implementation in that we are using FOL and not
-    # propositional logic.
-    # input: KB, the knowledge base, a sentence in FOL
-    # input: q, the query, a sentence in FOL
-    # input: clauses, set of clauses in FOL representation of KB and not q
-    # returns the set of all possible clauses otained by resolving KB and q
+    """" This implementation uses the method described by Russell and Norvig to perform resolution (p 255)  
+    this method differs from R&N's implementation in that we are using FOL and not
+    propositional logic.
+    input: KB, the knowledge base, a sentence in FOL
+    input: q, the query, a sentence in FOL
+    input: clauses, set of clauses in FOL representation of KB and not q
+    returns: the set of all possible clauses obtained by resolving KB and q"""
     def resolution(self, kb, q):
-        print("in resolution")
-        c1 = ""
-        c2 = ""
+        print("in resolution") 
+
+        # TODO: parse clauses somewhere in here        
+        # the set of clauses in FOL representation of KB and not q
+        clauses = set(self.kb.clauses())
         
-        this_list = list(self.kb.clauses())        
+        # negate the query          
+        negated_q = self.negate(q) 
+        print(negated_q)        
         
-        for c in this_list: 
-            print (c)        
+        
+        # add the negated query to the list of clauses
+        clauses.add(negated_q)
+        
+        print(clauses)
+        
+        # the set of new clauses
+        # when no new clauses can be added, KB does not entail q
+        new = set()
+
+        # loop until no new clauses can be added (which means KB does not entail q), or
+        # two clauses yield the empty clause (which means KB entails q)
+        while True:
+            # variable to keep track of the length of clause list            
+            clause_len = len(clauses)
+            # make a list of all clause pairs                    
+          
+        #clause_pairs = [(clauses[i], clauses[j]) for i in range(clause_len) for j in range(i+1, clause_len)]
         
         
-        self.resolve(c1, c2)
-        # clauses = set of clauses in FOL representation of KB and not q
-        
-        # new, make this a set?
-        
-        # CHANGE BELOW
-        #clauses = KB.clauses + conjuncts(to_cnf(~alpha))
-        #new = set()
-        #while True:
-        #    n = len(clauses)
-        #    pairs = [(clauses[i], clauses[j]) for i in range(n) for j in range(i+1, n)]
-        #    
+            #print(clause_pairs)            
+            
         #    for (ci, cj) in pairs:
         #        resolvents = pl_resolve(ci, cj)
         #        if FALSE in resolvents: 
@@ -215,11 +223,14 @@ class InferenceEngine:
         #    for c in new:
        #         if c not in clauses: clauses.append(c)        
         
+            c1 = ""
+            c2 = ""
+            False 
             
-        #print(clauses)
-               
+            #print(clauses)
+            self.resolve(c1, c2)               
 
-    # DO UNIFICATION, but where? look at other algo        
+    # DO UNIFICATION, but where? look at other algo in book        
     def resolve(self, c1, c2):
         print("in resolve")
         """Return all clauses that can be obtained by resolving clauses ci and cj.
@@ -234,9 +245,9 @@ class InferenceEngine:
         #        clauses.append(NaryExpr('|', *dnew))
     #return clauses
         
-        
-        
-        
+    def negate(self,q):
+        print("negate")
+        return "!{}".format(q)       
         
     # Do we need?     
     def universal_instantiation(self, theta):
@@ -247,6 +258,5 @@ class InferenceEngine:
         print("Not yet implemented")  
         
     def test_resolution(self, kb):
-        print("in test resolution")
-        q = ""
+        q = "BREEZE(0,0)"
         self.resolution(kb, q)
