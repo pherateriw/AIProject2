@@ -14,25 +14,13 @@ class AbstractDude:
         self.y = 0
         self.prevx = 0
         self.prvey = 0
+        self.arrow = self.kb.numWumpii
+        self.death_by_pit = 0
+        self.death_by_wumpii = 0
+        self.wumpii_kill = 0
+        self.total_deaths = self.death_by_pit + self.death_by_wumpii
 
-    # TODO fix numbers
-    def get_neighbor_cells(self, x, y):
-        neighbors = []
-        # North
-        if x > 0:
-            neighbors.append((x-1, y))
-        # East
-        if x < self.size:
-            neighbors.append((x+1, y))
-        # South
-            if y > 0:
-                neighbors.append((x, y - 1))
-        # West
-            if y < self.size:
-                neighbors.append((x, y + 1))
-        return neighbors
 
-    # TODO: throws exceptions if obstacles in 1,0 and 0,1
     def get_possible_directions(self, x, y):
         safe_directions = []
         unsafe_directions = []

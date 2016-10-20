@@ -4,7 +4,7 @@ import WorldGenerator as wg
 class KnowledgeBase:
     def __init__(self, size, oProbs, pProbs, wProbs):
         
-        self.unknown_map = wg.createWorld(size, oProbs, pProbs, wProbs)
+        self.unknown_map, self.numWumpii = wg.createWorld(size, oProbs, pProbs, wProbs)
         self.known_map = wg.createGrid(size);
         self.percepts = {} 
         self.facts = {}

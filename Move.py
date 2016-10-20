@@ -69,10 +69,8 @@ class Move:
             i = self.dude.x
             y = self.dude.y
             while i <= 0:
-                if self.kb.known_map[i][y] == 'w':
-                    print("AAAIIIIEEEEE")
-                    self.kb.update_cell(i, y, '_')
-                    self.kb.update_unknown_cell(i, y, '_')
+                if self.kb.unknown_map[i][y] == 'w':
+                    self.kill_wumpi(i, y)
                     break
                 i -= 1
         elif direction[0] == '>':
@@ -80,10 +78,8 @@ class Move:
             x = self.dude.x
             i = self.dude.y
             while i < len(self.kb.known_map) - 1:
-                if self.kb.known_map[x][i] == 'w':
-                    print("AAAIIIIEEEEE")
-                    self.kb.update_cell(x, i, '_')
-                    self.kb.update_unknown_cell(x, i, '_')
+                if self.kb.unknown_map[x][i] == 'w':
+                    self.kill_wumpi(x, i)
                     break
                 i += 1
         elif direction[0] == 'v':
@@ -91,10 +87,8 @@ class Move:
             i = self.dude.x
             y = self.dude.y
             while i < len(self.kb.known_map) - 1:
-                if self.kb.known_map[i][y] == 'w':
-                    print("AAAIIIIEEEEE")
-                    self.kb.update_cell(i, y, '_')
-                    self.kb.update_unknown_cell(i, y, '_')
+                if self.kb.unknown_map[i][y] == 'w':
+                    self.kill_wumpi(i, y)
                     break
                 i += 1
         elif direction[0] == '<':
@@ -102,12 +96,19 @@ class Move:
             x = self.dude.x
             i = self.dude.y
             while i <= 0:
-                if self.kb.known_map[x][i] == 'w':
-                    print("AAAIIIIEEEEE")
-                    self.kb.update_cell(x, i, '_')
-                    self.kb.update_unknown_cell(x, i, '_')
+                if self.kb.unknown_map[x][i] == 'w':
+                    self.kill_wumpi(x, i)
                     break
                 i -= 1
+
+
+    def kill_wumpi(self, x, y):
+        print("AAAIIIIEEEEE")
+        self.kb.update_cell(x, y, '_')
+        self.kb.update_unknown_cell(x, y, '_')
+        self.dude.arrows -= 1
+        self.cost -= 1
+        self.dude.killed_wumpii += 1
 
 
     # places the explorer in the starting cell, facing south
@@ -195,6 +196,7 @@ class Move:
         print("RIP Explorer, you fell into a pit.")
         self.moves += 1
         self.cost -= 1000
+        self.dude.death_by_pit += 1
         self.game_over = True     
 
     def wumpus_encounter(self):
@@ -202,5 +204,6 @@ class Move:
         print("RIP Explorer, you were eaten by a wumpus.")
         self.moves += 1
         self.cost -= 1000
+        self.dude.death_by_wumpii += 1
         self.game_over = True  
         

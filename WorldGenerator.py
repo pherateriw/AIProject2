@@ -63,7 +63,7 @@ def addWumpus(caves, wProbs):
             rrow = random.randint(0, len(caves)-1)
         #Change _ to 'w'
         caves[rcol][rrow] = 'w'
-    return caves
+    return caves, numWumpi
 
 def addGold(caves):
     rcol = random.randint(0, len(caves) - 1)
@@ -82,9 +82,9 @@ def createWorld(size, oProbs, pProbs, wProbs):
     #Adds all the other stuff to the world
     world = addObstacles(world, oProbs)
     world = addPits(world, pProbs)
-    world = addWumpus(world, wProbs)
+    world, numWumpii = addWumpus(world, wProbs)
     world = addGold(world)
-    return world
+    return world, numWumpii
 
 
 def printGrid(grid):
