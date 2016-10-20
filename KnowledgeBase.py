@@ -7,7 +7,8 @@ class KnowledgeBase:
         self.unknown_map = wg.createWorld(size, oProbs, pProbs, wProbs)
         self.known_map = wg.createGrid(size);
         self.percepts = {} 
-        self.facts = {}        
+        self.facts = {}
+        self.clauses = {}        
         
         print("Actual map")        
         wg.printGrid(self.unknown_map)     
@@ -128,28 +129,27 @@ class KnowledgeBase:
         # take the information gathered from percepts, add it to the knowledge base
         for value in self.percepts[percept_key]:
             if (value != '_'):
-                self.update_knowledge_base(percept_key, value, x, y) 
+                self.tell(percept_key, value, x, y) 
                 
-     
-    # update the knowledge base with information gathered from percepts
     # TODO: add safe spaces
-    # TODO: add death info to cell, add inferred info to cell
-    def update_knowledge_base(self, key, value, x, y):        
+    # TODO: add death info to cell, add inferred info to cell     
+    # update the knowledge base with information gathered from percept
+    def tell(self, key, assertion, x, y):        
         self.facts.setdefault(key,[])
         
-        # for percept information, builds the appropriate fact
-        if (value == '$'):
-            rule = "GLIMMER({},{})".format(x,y)
-        elif (value == 'b'):
-            rule = "BREEZE({},{})".format(x,y)
-        elif (value == 's'):
-            rule = "STENCH({},{})".format(x,y)
-        elif (value == 't'):
-            rule = "BUMP({},{})".format(x,y)
+        # for percept information, builds the appropriate assertion
+        if (assertion == '$'):
+            assertion = "GLIMMER({},{})".format(x,y)
+        elif (assertion == 'b'):
+            assertion = "BREEZE({},{})".format(x,y)
+        elif (assertion == 's'):
+            assertion = "STENCH({},{})".format(x,y)
+        elif (assertion == 't'):
+            assertion = "BUMP({},{})".format(x,y)
        
        # check that this rule is not already in dictionary
-        if (rule not in self.facts[key]):
-            self.facts[key].append(rule)       
+        if (assertion not in self.facts[key]):
+            self.facts[key].append(assertion)       
         
         print("########Information in Knowledge Base:")
         for key, value in self.facts.items():
@@ -157,7 +157,15 @@ class KnowledgeBase:
         print("##################################")
         print()        
 
+    # TODO: write this
+    # ask questions of the knowledge base
+    # input: kb, query
+    def ask():
+        print("not implemented yet")
+
     # TODO: quantifiers?
-    def rules(self):
-        r1 = "SAFE(X,Y) <=> !(PIT(X,Y))"
-        r2 = "BREEZE(X,Y) => PIT(X+1,Y) v PIT(X-1,Y) v PIT(X,Y+1) v PIT(X,Y-1)"
+    def clauses(self):
+        c1 = "SAFE(X,Y) <=> !(PIT(X,Y))"
+        c2 = "BREEZE(X,Y) => PIT(X+1,Y) v PIT(X-1,Y) v PIT(X,Y+1) v PIT(X,Y-1)"
+        
+        # add to clauses, how to store. Dictionary? Made dictionary (self.clauses)
