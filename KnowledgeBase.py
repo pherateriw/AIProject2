@@ -164,17 +164,39 @@ class KnowledgeBase:
         print("not implemented yet")
 
     # TODO: quantifiers?
-    def clauses(self):        
-        c1 = "SAFE(X,Y) <=> !(PIT(X,Y))"
-        c2 = "BREEZE(X,Y) => PIT(X+1,Y) v PIT(X-1,Y) v PIT(X,Y+1) v PIT(X,Y-1)"
+    def clauses(self):
+        """Creates and returns a list of clauses in the knowledge base.
+        All Predicates with all caps, Instantiated variables with single capital letter at beginning,
+        Uninstantiated variables lowercase char (cannot include v since v means or)
+        All sentences in clause form
+        Possble Actions: GRAB, TURN90, MOVEFORWARD, SHOOTARROW
+        Possible Predicates: SAFE(X,Y), BREEZE(X,Y), STENCH(X,Y), BUMP(X,Y), PIT(X,Y), WUMPUS(X,Y), OBSTACLE(X,Y),
+        GOLD(X,Y), POSSPIT(X,Y), POSSWUMP(X,Y), AT(X,Y)(?)
+        """
+        self.clause_list.append("BUMP(X,Y) => OBSTACLE(X,Y)") #If there's a bump, there must be an obstacle
+        self.clause_list.append("SAFE(X,Y) <=> !(PIT(X,Y)) ^ !(WUMPUS(X,Y)") #If it's safe there are no pits or wumpi
+        self.clause_list.append("BREEZE(X,Y) <=> (PIT(X+1,Y) v PIT(X-1,Y) v PIT(X,Y+1) v PIT(X,Y-1))") #A breeze means there must be a pit in one of the surrounding cells
+        self.clause_list.append("STENCH(X,Y) <=> (WUMPUS(X+1,Y) v WUMPUS(X-1,Y) v WUMPUS(X,Y+1) v WUMPUS(X,Y-1))") #A stench means there must be a wumpus in one of the surrounding cells
+        self.clause_list.append("POSSPIT(X,Y) ^ SAFE(X,Y) => !PIT(X,Y)") #A Possible Pit that is already safe means there is no pit there
+        self.clause_list.append("POSSWUMP(X,Y) ^ SAFE(X,Y) => !WUMPUS(X,Y)")#A Possible Wumpus that is already safe means there is no wumpus there
+        self.clause_list.append("PIT(X,Y) => !SAFE(X,Y) ^ !WUMPUS(X,Y)") #Pits, wumpi and safe can not be in the same cells
+        self.clause_list.append("WUMPUS(X,Y) => !SAFE(X,Y) ^ !PIT(X,Y)")
+        self.clause_list.append("BREEZE(X,Y) => (POSSPIT(X+1,Y) ^ POSSPIT(X-1,Y) ^ POSSPIT(X,Y+1) ^ POSSPIT(X,Y-1))") 
+        self.clause_list.append("STENCH(X,Y) => (POSSWUMP(X+1,Y) ^ POSSWUMP(X-1,Y) ^ POSSWUMP(X,Y+1) ^ POSSWUMP(X,Y-1))")
+
+
         
         # Jani: change this if needed, was just testing to make sure I could reach this 
-        self.clause_list.append(c1)
-        
-        self.clause_list.append(c2)
-        
+
+        for c in self.clause_list:
+            if "magic regex" in c: #TODO: find implications and remove them from clause list
+                print(c)
+
                 
         for c in self.clause_list: 
             print (c)
         
+        return self.clause_list
+
+    def getclauses(self):
         return self.clause_list
