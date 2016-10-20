@@ -7,7 +7,8 @@ class KnowledgeBase:
         self.unknown_map = wg.createWorld(size, oProbs, pProbs, wProbs)
         self.known_map = wg.createGrid(size);
         self.percepts = {} 
-        self.facts = {}        
+        self.facts = {}
+        self.clause_list = []        
         
         print("Actual map")        
         wg.printGrid(self.unknown_map)     
@@ -128,28 +129,27 @@ class KnowledgeBase:
         # take the information gathered from percepts, add it to the knowledge base
         for value in self.percepts[percept_key]:
             if (value != '_'):
-                self.update_knowledge_base(percept_key, value, x, y) 
+                self.tell(percept_key, value, x, y) 
                 
-     
-    # update the knowledge base with information gathered from percepts
     # TODO: add safe spaces
-    # TODO: add death info to cell, add inferred info to cell
-    def update_knowledge_base(self, key, value, x, y):        
+    # TODO: add death info to cell, add inferred info to cell     
+    # update the knowledge base with information gathered from percept
+    def tell(self, key, assertion, x, y):        
         self.facts.setdefault(key,[])
         
-        # for percept information, builds the appropriate fact
-        if (value == '$'):
-            rule = "GLIMMER({},{})".format(x,y)
-        elif (value == 'b'):
-            rule = "BREEZE({},{})".format(x,y)
-        elif (value == 's'):
-            rule = "STENCH({},{})".format(x,y)
-        elif (value == 't'):
-            rule = "BUMP({},{})".format(x,y)
+        # for percept information, builds the appropriate assertion
+        if (assertion == '$'):
+            assertion = "GLIMMER({},{})".format(x,y)
+        elif (assertion == 'b'):
+            assertion = "BREEZE({},{})".format(x,y)
+        elif (assertion == 's'):
+            assertion = "STENCH({},{})".format(x,y)
+        elif (assertion == 't'):
+            assertion = "BUMP({},{})".format(x,y)
        
        # check that this rule is not already in dictionary
-        if (rule not in self.facts[key]):
-            self.facts[key].append(rule)       
+        if (assertion not in self.facts[key]):
+            self.facts[key].append(assertion)       
         
         print("########Information in Knowledge Base:")
         for key, value in self.facts.items():
@@ -157,7 +157,46 @@ class KnowledgeBase:
         print("##################################")
         print()        
 
+    # TODO: write this
+    # ask questions of the knowledge base
+    # input: kb, query
+    def ask():
+        print("not implemented yet")
+
     # TODO: quantifiers?
-    def rules(self):
-        r1 = "SAFE(X,Y) <=> !(PIT(X,Y))"
-        r2 = "BREEZE(X,Y) => PIT(X+1,Y) v PIT(X-1,Y) v PIT(X,Y+1) v PIT(X,Y-1)"
+    def clauses(self):
+        """Creates and returns a list of clauses in the knowledge base.
+        All Predicates with all caps, Instantiated variables with single capital letter at beginning,
+        Uninstantiated variables lowercase char (cannot include v since v means or)
+        All sentences in clause form
+        Possble Actions: GRAB, TURN90, MOVEFORWARD, SHOOTARROW
+        Possible Predicates: SAFE(X,Y), BREEZE(X,Y), STENCH(X,Y), BUMP(X,Y), PIT(X,Y), WUMPUS(X,Y), OBSTACLE(X,Y),
+        GOLD(X,Y), POSSPIT(X,Y), POSSWUMP(X,Y), AT(X,Y)(?)
+        """
+        self.clause_list.append("BUMP(X,Y) => OBSTACLE(X,Y)") #If there's a bump, there must be an obstacle
+        self.clause_list.append("SAFE(X,Y) <=> !(PIT(X,Y)) ^ !(WUMPUS(X,Y)") #If it's safe there are no pits or wumpi
+        self.clause_list.append("BREEZE(X,Y) <=> (PIT(X+1,Y) v PIT(X-1,Y) v PIT(X,Y+1) v PIT(X,Y-1))") #A breeze means there must be a pit in one of the surrounding cells
+        self.clause_list.append("STENCH(X,Y) <=> (WUMPUS(X+1,Y) v WUMPUS(X-1,Y) v WUMPUS(X,Y+1) v WUMPUS(X,Y-1))") #A stench means there must be a wumpus in one of the surrounding cells
+        self.clause_list.append("POSSPIT(X,Y) ^ SAFE(X,Y) => !PIT(X,Y)") #A Possible Pit that is already safe means there is no pit there
+        self.clause_list.append("POSSWUMP(X,Y) ^ SAFE(X,Y) => !WUMPUS(X,Y)")#A Possible Wumpus that is already safe means there is no wumpus there
+        self.clause_list.append("PIT(X,Y) => !SAFE(X,Y) ^ !WUMPUS(X,Y)") #Pits, wumpi and safe can not be in the same cells
+        self.clause_list.append("WUMPUS(X,Y) => !SAFE(X,Y) ^ !PIT(X,Y)")
+        self.clause_list.append("BREEZE(X,Y) => (POSSPIT(X+1,Y) ^ POSSPIT(X-1,Y) ^ POSSPIT(X,Y+1) ^ POSSPIT(X,Y-1))") 
+        self.clause_list.append("STENCH(X,Y) => (POSSWUMP(X+1,Y) ^ POSSWUMP(X-1,Y) ^ POSSWUMP(X,Y+1) ^ POSSWUMP(X,Y-1))")
+
+
+        
+        # Jani: change this if needed, was just testing to make sure I could reach this 
+
+        for c in self.clause_list:
+            if "magic regex" in c: #TODO: find implications and remove them from clause list
+                print(c)
+
+                
+        for c in self.clause_list: 
+            print (c)
+        
+        return self.clause_list
+
+    def getclauses(self):
+        return self.clause_list

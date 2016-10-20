@@ -1,14 +1,16 @@
-import re
+# TODO: MAKE THETA FOR EACH PREDICATE?
+import KnowledgeBase
 
 class InferenceEngine:
-    def __init__(self):
+    def __init__(self, kb):
         # theta is a dictionary of all substitutions where the variable is the key, values are the values 
         self.theta = {}        
-    
-        # both false, should print false twice 
+        self.kb = kb
+        
+        # testing unification and resolution
         self.test_unify(self.theta)
+        self.test_resolution(self.kb)
 
-    
     # preprocesses sentences to check that the predicates match, and to get the relevant arguments
     def preprocess_unify(self, P, Q, theta):
         # the sentences P and Q will always be in the same form, so we can make some assumptions here
@@ -45,6 +47,7 @@ class InferenceEngine:
     # input: y is a variable, constant or list, or compound expression
     # input: theta, the substitution built up so far () 
     # function returns a substitution to make x and y identical   
+    # TODO: do I need to worry about compound case? If so, fix this.
     def unify(self, P, Q, theta):               
         # if there is no theta that can unify x and y, return false
         if self.theta is None:
@@ -53,48 +56,54 @@ class InferenceEngine:
         elif P == Q:         
             return self.theta
         elif self.is_variable(P):
-            return self.unify_var(P, Q, theta)
+            return self.unify_var(P, Q, self.theta)
         elif self.is_variable(Q): 
-            return self.unify_var(Q, P, theta)
-        elif self.is_list(P) and self.is_list(Q):
-            print("constituent parts") 
-            split_string = P.split(',')
-            p_first = split_string[0]
-            p_rest = split_string[1]
-            split_string = Q.split(',')
-            q_first = split_string[0]
-            q_rest = split_string[1]                      
-            return self.unify(p_rest, q_rest, self.unify(p_first, q_first, theta))
+            return self.unify_var(Q, P, self.theta)
+        elif self.is_list(P) and self.is_list(Q):                
+                split_stringP = ""                
+                split_stringQ = ""                
+                p_first = ""                
+                p_rest = ""
+                q_first = ""
+                q_rest = ""
+                
+                split_stringP = P.split(',')
+                p_first = split_stringP[0]
+                p_rest = split_stringP[1]
+                
+                split_stringQ = Q.split(',')
+                q_first = split_stringQ[0]
+                q_rest = split_stringQ[1]     
+                
+                return self.unify(p_rest, q_rest, self.unify(p_first, q_first, self.theta))
         else:        
             return False
 
     # note: we have specified that a single variable will be one lowercase character a-z
-    def is_variable(self, X):        
-        pattern = re.compile("[a-z]")
-        pattern.match(X)        
-        
-        if (pattern.match(X)):         
-            return True
+    def is_variable(self, X):     
+        if len(X) == 1:
+            if (X.islower()):            
+                return True
         else:
             return False
 
     # note: assumes that all variables in a list are of form x,y
-    def is_list(self, X):
+    def is_list(self, X):               
         if ',' in X:        
             return True
         else:
             return False
 
-
     # helper function for unification, also inspired by Russell and Norvig implementation 
     # omitted the occur check bc it did not seem necessary for this application, and 
     # bc of complexity concerns    
     def unify_var(self, var, x, theta):       
-        
+    
         # there is already an entry in theta for this var
         if var in self.theta:            
             # the case where x needs to be added to theta 
-            if (x not in theta[var]):
+            
+            if (x not in theta[var]):                
                 theta[var].append(x)
                 return self.unify(var, x, theta)
             else:
@@ -110,31 +119,134 @@ class InferenceEngine:
             self.theta[var].append(value)
                                    
             return self.theta 
-            
-    # TODO: diff dictionaries for diff predicates, buckets        
+                  
     def test_unify(self, theta):
         # should not work bc predicates don't match, prints false 
-        # WORKING for both
-        print(self.preprocess_unify("KNOWS(JOHN,x)", "FATHER(JOHN,x)", theta))       
-        print(self.preprocess_unify("FATHER(JOHN,x)","KNOWS(JOHN,x)", theta))
+        # 1, 2. WORKING for both
+        print(self.preprocess_unify("KNOWS(John,x)", "FATHER(John,x)", theta))       
+        print(self.preprocess_unify("FATHER(John,x)","KNOWS(John,x)", theta))
 
         # predicates are the same, return empty theta
-        # WORKS    
-        self.preprocess_unify("KNOWS(JOHN,x)", "KNOWS(JOHN,x)", theta)
+        # 3. WORKS    
+        self.preprocess_unify("KNOWS(John,x)", "KNOWS(John,x)", theta)
         print(self.theta)
         
         # should substitute x/John
-        # WORKS
-        self.preprocess_unify("KNOWS(JOHN)", "KNOWS(x)", theta)
+        # 4. WORKS
+        self.preprocess_unify("KNOWS(John)", "KNOWS(x)", theta)
         print(self.theta)
         
         # x/John already in theta, should not re-add
-        # WORKS    
-        self.preprocess_unify("KNOWS(x)", "KNOWS(JOHN)", theta)        
+        # 5. WORKS    
+        self.preprocess_unify("KNOWS(x)", "KNOWS(John)", theta)        
         print(self.theta)
 
         # should substitute y/John
-        # WORKS    
-        self.preprocess_unify("KNOWS(y)", "KNOWS(JOHN)", theta)        
+        # 6. WORKS    
+        self.preprocess_unify("KNOWS(y)", "KNOWS(John)", theta)        
+        print(self.theta)
+
+        # should not add anything to theta
+        # 7. WORKS    
+        self.preprocess_unify("KNOWS(John)", "KNOWS(Richard)", theta)        
         print(self.theta)
         
+        # should substitute y/Richard
+        # 8. WORKS    
+        self.preprocess_unify("KNOWS(y)", "KNOWS(Richard)", theta)        
+        print(self.theta)        
+        
+        # should substitute x/Jane
+        # 9. WORKS        
+        self.preprocess_unify("KNOWS(John,x)", "KNOWS(John,Jane)", theta)                 
+        print(self.theta)         
+
+        # should substitute x/Bill, y/John  
+        # 10. WORKS    
+        self.preprocess_unify("KNOWS(John,x)", "KNOWS(y,Bill)", theta)                 
+        print(self.theta)          
+        
+        # should fail, bc x cannot take on two values at same time
+        # 11. WORKS
+        self.preprocess_unify("KNOWS(x,John)", "KNOWS(x,Elizabeth)", theta)  
+        print(self.theta)          
+
+    # TO DO: GET SUBSTITUTION DIALED
+    def substitute(self, theta):
+        print("Not yet implemented")  
+
+    # This implementation uses the method described by Russell and Norvig to perform resolution (p 255)  
+    # this method differs from R&N's implementation in that we are using FOL and not
+    # propositional logic.
+    # input: KB, the knowledge base, a sentence in FOL
+    # input: q, the query, a sentence in FOL
+    # input: clauses, set of clauses in FOL representation of KB and not q
+    # returns the set of all possible clauses otained by resolving KB and q
+    def resolution(self, kb, q):
+        print("in resolution")
+        c1 = ""
+        c2 = ""
+        
+        this_list = list(self.kb.clauses())        
+        
+        for c in this_list: 
+            print (c)        
+        
+        
+        self.resolve(c1, c2)
+        # clauses = set of clauses in FOL representation of KB and not q
+        
+        # new, make this a set?
+        
+        # CHANGE BELOW
+        #clauses = KB.clauses + conjuncts(to_cnf(~alpha))
+        #new = set()
+        #while True:
+        #    n = len(clauses)
+        #    pairs = [(clauses[i], clauses[j]) for i in range(n) for j in range(i+1, n)]
+        #    
+        #    for (ci, cj) in pairs:
+        #        resolvents = pl_resolve(ci, cj)
+        #        if FALSE in resolvents: 
+        #            return True
+        #        new.union_update(set(resolvents))
+        #    if new.issubset(set(clauses)): return False
+
+        #    for c in new:
+       #         if c not in clauses: clauses.append(c)        
+        
+            
+        #print(clauses)
+               
+
+    # DO UNIFICATION, but where? look at other algo        
+    def resolve(self, c1, c2):
+        print("in resolve")
+        """Return all clauses that can be obtained by resolving clauses ci and cj.
+        >>> pl_resolve(to_cnf(A|B|C), to_cnf(~B|~C|F))
+        [(A | C | ~C | F), (A | B | ~B | F)]
+        """
+        #clauses = []
+        #or di in disjuncts(ci):
+        #    for dj in disjuncts(cj):
+        #        if di == ~dj or ~di == dj:
+        #            dnew = unique(removeall(di, disjuncts(ci)) + removeall(dj, disjuncts(cj)))
+        #        clauses.append(NaryExpr('|', *dnew))
+    #return clauses
+        
+        
+        
+        
+        
+    # Do we need?     
+    def universal_instantiation(self, theta):
+        print("Not yet implemented") 
+
+    # Do we need?          
+    def existential_instantiation(self, theta):
+        print("Not yet implemented")  
+        
+    def test_resolution(self, kb):
+        print("in test resolution")
+        q = ""
+        self.resolution(kb, q)

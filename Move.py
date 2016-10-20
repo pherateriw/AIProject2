@@ -25,8 +25,6 @@ class Move:
         from InferenceEngine import InferenceEngine
         ie = InferenceEngine()
         
-
-
     # TODO if cases are getting copy/pasty modularize further?
     def move_direction(self, x, y, direction):
         self.dude.prevx = x
