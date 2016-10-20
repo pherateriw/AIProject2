@@ -5,45 +5,19 @@ import InferenceEngine
 
 class AbstractDude:
 
-    def __init__(self, size, oProbs, pProbs, wProbs):
-        load_file = True
-        save_file = False
-        if load_file:
-            self.kb = KnowledgeBase.KnowledgeBase(size, oProbs, pProbs, wProbs, self.load_file("test_world"))
-        else:
-            self.kb = KnowledgeBase.KnowledgeBase(size, oProbs, pProbs, wProbs, None, None)
-        if save_file:
-            self.save_file("test_world")
-        self.size = size
+    def __init__(self, kb):
+        self.kb = kb
+        self.size = len(kb.known_map)
         self.move = Move.Move(self.kb, self)
         self.move.place_dude()
         self.x = 0
         self.y = 0
         self.prevx = 0
         self.prvey = 0
-        self.arrows = self.kb.numWumpii
         self.death_by_pit = 0
         self.death_by_wumpii = 0
         self.killed_wumpii = 0
-
-
-    def save_file(self, fn):
-        outf = open(fn, 'w')
-        outf.write(self.arrows)
-        outf.write('\n')
-        for line in self.kb.unknown_map:
-            for l in line:
-                outf.write(l)
-            outf.write('\n')
-        outf.close()
-
-    def load_file(self, fn):
-        infile = open(fn, 'r')
-        line = infile.readline()
-        num_arrows = int(line.strip('\n'))
-        result = [list(line.strip('\n')) for line in infile]
-        infile.close()
-        return result, num_arrows
+        self.arrows = self.kb.numWumpii
 
     def print_stats(self):
         print("Total Moves: %s" % self.move.moves)
@@ -112,9 +86,9 @@ class AbstractDude:
 
 class ReactiveDude(AbstractDude):
 
-    def __init__(self, size, oProbs, pProbs, wProbs):
+    def __init__(self, kb):
         print("Reactive dude created!")
-        super(ReactiveDude, self).__init__(size, oProbs, pProbs, wProbs)
+        super(ReactiveDude, self).__init__(kb)
         self.rounds()
 
     def rounds(self):
@@ -139,10 +113,10 @@ class ReactiveDude(AbstractDude):
 # TODO: how to turn right/left? double check with Lisa
 class InformedDude(AbstractDude):
 
-    def __init__(self, size, oProbs, pProbs, wProbs):
+    def __init__(self, kb):
         print("Informed dude created!")
         print()
-        super(InformedDude, self).__init__(size, oProbs, pProbs, wProbs)
+        super(InformedDude, self).__init__(kb)
         self.rounds()
 
     def rounds(self):

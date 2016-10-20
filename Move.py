@@ -23,7 +23,7 @@ class Move:
 
     def informed_dude_move(self):
         from InferenceEngine import InferenceEngine
-        ie = InferenceEngine()
+        ie = InferenceEngine(self.kb)
         
     def move_direction(self, x, y, direction):
         self.dude.prevx = x
