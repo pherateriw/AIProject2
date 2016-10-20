@@ -1,14 +1,16 @@
-import re
+# TODO: MAKE THETA FOR EACH PREDICATE?
+import KnowledgeBase
 
 class InferenceEngine:
-    def __init__(self):
+    def __init__(self, kb):
         # theta is a dictionary of all substitutions where the variable is the key, values are the values 
         self.theta = {}        
-    
-        # both false, should print false twice 
+        self.kb = kb
+        
+        # testing unification and resolution
         self.test_unify(self.theta)
+        self.test_resolution(self.kb)
 
-    
     # preprocesses sentences to check that the predicates match, and to get the relevant arguments
     def preprocess_unify(self, P, Q, theta):
         # the sentences P and Q will always be in the same form, so we can make some assumptions here
@@ -45,6 +47,7 @@ class InferenceEngine:
     # input: y is a variable, constant or list, or compound expression
     # input: theta, the substitution built up so far () 
     # function returns a substitution to make x and y identical   
+    # TODO: do I need to worry about compound case? If so, fix this.
     def unify(self, P, Q, theta):               
         # if there is no theta that can unify x and y, return false
         if self.theta is None:
@@ -95,8 +98,7 @@ class InferenceEngine:
     # omitted the occur check bc it did not seem necessary for this application, and 
     # bc of complexity concerns    
     def unify_var(self, var, x, theta):       
-        
-        
+    
         # there is already an entry in theta for this var
         if var in self.theta:            
             # the case where x needs to be added to theta 
@@ -117,8 +119,7 @@ class InferenceEngine:
             self.theta[var].append(value)
                                    
             return self.theta 
-            
-    # TODO: diff dictionaries for diff predicates, buckets        
+                  
     def test_unify(self, theta):
         # should not work bc predicates don't match, prints false 
         # 1, 2. WORKING for both
@@ -166,6 +167,86 @@ class InferenceEngine:
         print(self.theta)          
         
         # should fail, bc x cannot take on two values at same time
+        # 11. WORKS
         self.preprocess_unify("KNOWS(x,John)", "KNOWS(x,Elizabeth)", theta)  
         print(self.theta)          
+
+    # TO DO: GET SUBSTITUTION DIALED
+    def substitute(self, theta):
+        print("Not yet implemented")  
+
+    # This implementation uses the method described by Russell and Norvig to perform resolution (p 255)  
+    # this method differs from R&N's implementation in that we are using FOL and not
+    # propositional logic.
+    # input: KB, the knowledge base, a sentence in FOL
+    # input: q, the query, a sentence in FOL
+    # input: clauses, set of clauses in FOL representation of KB and not q
+    # returns the set of all possible clauses otained by resolving KB and q
+    def resolution(self, kb, q):
+        print("in resolution")
+        c1 = ""
+        c2 = ""
         
+        this_list = list(self.kb.clauses())        
+        
+        for c in this_list: 
+            print (c)        
+        
+        
+        self.resolve(c1, c2)
+        # clauses = set of clauses in FOL representation of KB and not q
+        
+        # new, make this a set?
+        
+        # CHANGE BELOW
+        #clauses = KB.clauses + conjuncts(to_cnf(~alpha))
+        #new = set()
+        #while True:
+        #    n = len(clauses)
+        #    pairs = [(clauses[i], clauses[j]) for i in range(n) for j in range(i+1, n)]
+        #    
+        #    for (ci, cj) in pairs:
+        #        resolvents = pl_resolve(ci, cj)
+        #        if FALSE in resolvents: 
+        #            return True
+        #        new.union_update(set(resolvents))
+        #    if new.issubset(set(clauses)): return False
+
+        #    for c in new:
+       #         if c not in clauses: clauses.append(c)        
+        
+            
+        #print(clauses)
+               
+
+    # DO UNIFICATION, but where? look at other algo        
+    def resolve(self, c1, c2):
+        print("in resolve")
+        """Return all clauses that can be obtained by resolving clauses ci and cj.
+        >>> pl_resolve(to_cnf(A|B|C), to_cnf(~B|~C|F))
+        [(A | C | ~C | F), (A | B | ~B | F)]
+        """
+        #clauses = []
+        #or di in disjuncts(ci):
+        #    for dj in disjuncts(cj):
+        #        if di == ~dj or ~di == dj:
+        #            dnew = unique(removeall(di, disjuncts(ci)) + removeall(dj, disjuncts(cj)))
+        #        clauses.append(NaryExpr('|', *dnew))
+    #return clauses
+        
+        
+        
+        
+        
+    # Do we need?     
+    def universal_instantiation(self, theta):
+        print("Not yet implemented") 
+
+    # Do we need?          
+    def existential_instantiation(self, theta):
+        print("Not yet implemented")  
+        
+    def test_resolution(self, kb):
+        print("in test resolution")
+        q = ""
+        self.resolution(kb, q)

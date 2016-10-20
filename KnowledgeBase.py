@@ -8,7 +8,7 @@ class KnowledgeBase:
         self.known_map = wg.createGrid(size);
         self.percepts = {} 
         self.facts = {}
-        self.clauses = {}        
+        self.clause_list = []        
         
         print("Actual map")        
         wg.printGrid(self.unknown_map)     
@@ -164,8 +164,17 @@ class KnowledgeBase:
         print("not implemented yet")
 
     # TODO: quantifiers?
-    def clauses(self):
+    def clauses(self):        
         c1 = "SAFE(X,Y) <=> !(PIT(X,Y))"
         c2 = "BREEZE(X,Y) => PIT(X+1,Y) v PIT(X-1,Y) v PIT(X,Y+1) v PIT(X,Y-1)"
         
-        # add to clauses, how to store. Dictionary? Made dictionary (self.clauses)
+        # Jani: change this if needed, was just testing to make sure I could reach this 
+        self.clause_list.append(c1)
+        
+        self.clause_list.append(c2)
+        
+                
+        for c in self.clause_list: 
+            print (c)
+        
+        return self.clause_list
