@@ -59,15 +59,28 @@ class AbstractDude:
             elif self.kb.known_map[x][y - 1] not in impossible_chars:
                 unsafe_directions.append("<")
 
+        # Retracing steps and killing wumpii is last resort
         if len(safe_directions) == 0 and len(unsafe_directions) == 0:
-            if x > 0 and self.kb.known_map[x - 1][y] == 's':
-                safe_directions.append('^')
-            if x < self.size -1 and self.kb.known_map[x -+1][y] == 's':
-                safe_directions.append('v')
-            if y > 0 and self.kb.known_map[x][y - 1] == 's':
-                safe_directions.append('<')
-            if y < self.size -1 and self.kb.known_map[x][y +1] == 's':
-                safe_directions.append('>')
+            if x > 0:
+                if self.kb.known_map[x - 1][y] == 'w':
+                    safe_directions.append("^k")
+                elif self.kb.known_map[x - 1][y] == 's':
+                    safe_directions.append('^')
+            if x < self.size -1:
+                if self.kb.known_map[x + 1][y] == 'w':
+                    safe_directions.append("vk")
+                elif self.kb.known_map[x + 1][y] == 's':
+                    safe_directions.append('v')
+            if y > 0:
+                if self.kb.known_map[x][y - 1] == 'w':
+                    safe_directions.append("<k")
+                elif self.kb.known_map[x][y - 1] == 's':
+                    safe_directions.append('<')
+            if y < self.size -1:
+                if self.kb.known_map[x][y + 1] == 'w':
+                    safe_directions.append(">k")
+                elif self.kb.known_map[x][y + 1] == 's':
+                    safe_directions.append('>')
         return safe_directions, unsafe_directions
 
 

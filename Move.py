@@ -31,6 +31,9 @@ class Move:
         self.dude.prevy = y
         self.moves += 1
         self.cost -= 1
+        if len(direction) > 1:
+            self.kill_wumpi(direction)
+            return x, y, self.gold_found
         if direction == "^":
             print("Moving North")
             temp = x
@@ -58,6 +61,54 @@ class Move:
         self.kb.update_cell(x, y, direction)
         self.kb.update_percept(x, y)
         return x, y, self.gold_found
+
+    def kill_wumpi(self, direction):
+        print("Killing a wumpus!!!")
+        if direction[0] == '^':
+            print("Shooting arrow north")
+            i = self.dude.x
+            y = self.dude.y
+            while i <= 0:
+                if self.kb.known_map[i][y] == 'w':
+                    print("AAAIIIIEEEEE")
+                    self.kb.update_cell(i, y, '_')
+                    self.kb.update_unknown_cell(i, y, '_')
+                    break
+                i -= 1
+        elif direction[0] == '>':
+            print("Shooting arrow west")
+            x = self.dude.x
+            i = self.dude.y
+            while i < len(self.kb.known_map) - 1:
+                if self.kb.known_map[x][i] == 'w':
+                    print("AAAIIIIEEEEE")
+                    self.kb.update_cell(x, i, '_')
+                    self.kb.update_unknown_cell(x, i, '_')
+                    break
+                i += 1
+        elif direction[0] == 'v':
+            print("Shooting arrow south")
+            i = self.dude.x
+            y = self.dude.y
+            while i < len(self.kb.known_map) - 1:
+                if self.kb.known_map[i][y] == 'w':
+                    print("AAAIIIIEEEEE")
+                    self.kb.update_cell(i, y, '_')
+                    self.kb.update_unknown_cell(i, y, '_')
+                    break
+                i += 1
+        elif direction[0] == '<':
+            print("Shooting arrow east")
+            x = self.dude.x
+            i = self.dude.y
+            while i <= 0:
+                if self.kb.known_map[x][i] == 'w':
+                    print("AAAIIIIEEEEE")
+                    self.kb.update_cell(x, i, '_')
+                    self.kb.update_unknown_cell(x, i, '_')
+                    break
+                i -= 1
+
 
     # places the explorer in the starting cell, facing south
     def place_dude(self):

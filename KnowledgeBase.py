@@ -20,8 +20,10 @@ class KnowledgeBase:
 
     def update_cell(self, x, y, char):
         self.known_map[x][y] = char
-        if char != "_": # limit amount of maps printed
-            wg.printGrid(self.known_map)
+        wg.printGrid(self.known_map)
+
+    def update_unknown_cell(self, x, y, char):
+        self.unknown_map[x][y] = char
 
     # update the percepts according to the environment    
     def update_percept(self, x, y):
