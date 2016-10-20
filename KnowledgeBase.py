@@ -8,7 +8,9 @@ class KnowledgeBase:
         self.known_map = wg.createGrid(size);
         self.percepts = {} 
         self.facts = {}
-        self.clause_list = []        
+        self.clause_list = []
+        self.ppits = []
+        self.pwumpi = []
         
         print("Actual map")        
         wg.printGrid(self.unknown_map)     
@@ -54,21 +56,25 @@ class KnowledgeBase:
             if self.unknown_map[x + 1][y] == 'p':    
                 print("Explorer feels a breeze in ({},{})".format(x,y))
                 percept_breeze = 'b'
+                self.set_potentials(x, y, 'd')
             if (x - 1) >= 0:        
                 if self.unknown_map[x - 1][y] == 'p':    
                     print("Explorer feels a breeze in ({},{})".format(x,y))
                     percept_breeze = 'b'
+                    self.set_potentials(x, y, 'd')
         
         # make sure is a valid choice for this y value   
         if y < len(self.known_map) - 1:        
             if self.unknown_map[x][y + 1] == 'p':    
                 print("Explorer feels a breeze in ({},{})".format(x,y))
                 percept_breeze = 'b'
+                self.set_potentials(x, y, 'd')
                 
             if y - 1 >= 0:          
                 if self.unknown_map[x][y - 1] == 'p': 
                     print("Explorer feels a breeze in ({},{})".format(x,y))
                     percept_breeze = 'b'
+                    self.set_potentials(x, y, 'd')
         
         # no breeze perceived, update percept accordingly
         if ('b' not in percept_breeze):
@@ -84,21 +90,25 @@ class KnowledgeBase:
             if self.unknown_map[x + 1][y] == 'w':    
                 print("Explorer smells a stench in ({},{})".format(x,y))
                 percept_stench = 's'
+                self.set_potentials(x, y, 'm')
         if (x - 1) >= 0:        
             if self.unknown_map[x - 1][y] == 'w':    
                 print("Explorer smells a stench in ({},{})".format(x,y))
                 percept_stench = 's'
+                self.set_potentials(x, y, 'm')
         
         # make sure is a valid choice for this y value   
         if y < len(self.known_map) - 1:        
             if self.unknown_map[x][y + 1] == 'w':    
                 print("Explorer smells a stench in ({},{})".format(x,y))
                 percept_stench = 's'
+                self.set_potentials(x, y, 'm')
                 
             if y - 1 >= 0:          
                 if self.unknown_map[x][y - 1] == 'w': 
                     print("Explorer smells a stench in ({},{})".format(x,y))
                     percept_stench = 's'
+                    self.set_potentials(x, y, 'm')
         
         # no stench perceived, update percept accordingly
         if ('s' not in percept_stench):
@@ -130,7 +140,29 @@ class KnowledgeBase:
         for value in self.percepts[percept_key]:
             if (value != '_'):
                 self.tell(percept_key, value, x, y) 
-                
+
+
+    def set_potentials(self, x, y, char):
+        dont_overwrite = ['s', 'o', 'p', 'w']
+        if x > 0:
+            if self.known_map[x-1][y] not in dont_overwrite:
+                self.update_cell(x-1, y, char)
+        if x < len(self.known_map) - 1:
+            if self.known_map[x + 1][y] not in dont_overwrite:
+                self.update_cell(x+1, y, char)
+
+        if y < len(self.known_map) - 1:
+            if self.known_map[x][y+1] not in dont_overwrite:
+                self.update_cell(x, y +1, char)
+
+        if y > 0:
+            if self.known_map[x][y -1] not in dont_overwrite:
+                self.update_cell(x, y-1, char)
+
+
+
+
+
     # TODO: add safe spaces
     # TODO: add death info to cell, add inferred info to cell     
     # update the knowledge base with information gathered from percept

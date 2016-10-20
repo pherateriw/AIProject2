@@ -36,28 +36,24 @@ class Move:
             temp = x
             temp -= 1
             if self.successful_move(temp, y, direction):
-                self.kb.update_cell(x, y, "_")
                 x = temp
         if direction == "v":
             print("Moving South")
             temp = x
             temp += 1
             if self.successful_move(temp, y, direction):
-                self.kb.update_cell(x, y, "_")
                 x = temp
         if direction == ">":
             print("Moving East")
             temp = y
             temp += 1
             if self.successful_move(x, temp, direction):
-                self.kb.update_cell(x, y, "_")
                 y = temp
         if direction == "<":
             print("Moving West")
             temp = y
             temp -= 1
             if self.successful_move(x, temp, direction):
-                self.kb.update_cell(x, y, "_")
                 y = temp
         self.kb.update_cell(x, y, direction)
         self.kb.update_percept(x, y)
@@ -91,6 +87,8 @@ class Move:
             self.wumpus_encounter()
             self.kb.update_cell(x, y, "w")
             return False
+        else:
+            self.kb.update_cell(self.dude.prevx, self.dude.prevy, 's')
         return True
 
     def change_direction(self, direction):

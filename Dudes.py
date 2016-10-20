@@ -37,7 +37,7 @@ class AbstractDude:
         safe_directions = []
         unsafe_directions = []
         unsafe_chars = ['d', 'm']
-        impossible_chars = ['o', 'p', 'w']
+        impossible_chars = ['o', 'p', 'w', 's']
         if x > 0:
             if self.kb.known_map[x - 1][y] not in unsafe_chars and self.kb.known_map[x - 1][y] not in impossible_chars:
                 safe_directions.append("^")
@@ -58,6 +58,16 @@ class AbstractDude:
                 safe_directions.append("<")
             elif self.kb.known_map[x][y - 1] not in impossible_chars:
                 unsafe_directions.append("<")
+
+        if len(safe_directions) == 0 and len(unsafe_directions) == 0:
+            if x > 0 and self.kb.known_map[x - 1][y] == 's':
+                safe_directions.append('^')
+            if x < self.size -1 and self.kb.known_map[x -+1][y] == 's':
+                safe_directions.append('v')
+            if y > 0 and self.kb.known_map[x][y - 1] == 's':
+                safe_directions.append('<')
+            if y < self.size -1 and self.kb.known_map[x][y +1] == 's':
+                safe_directions.append('>')
         return safe_directions, unsafe_directions
 
 
@@ -79,8 +89,11 @@ class ReactiveDude(AbstractDude):
 
     def get_random_safe(self):
         safe, unsafe = self.get_possible_directions(self.x, self.y)
-        choices = safe if safe is not None else unsafe
-        if len(choices) == 0:
+        if len(safe) > 0:
+            choices = safe
+        elif len(unsafe) >0:
+            choices = unsafe
+        else:
             print("Explorer is stuck!!")
             return True
         self.x, self.y, gold_found = self.move.move_direction(self.x, self.y, random.choice(choices))
