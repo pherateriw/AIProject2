@@ -14,7 +14,7 @@ class Move:
         self.cost = 0
         self.dude = dude
 
-    def informed_dude_move(self):
+    def informed_dude_move(self, kb):
         from InferenceEngine import InferenceEngine
         ie = InferenceEngine(self.kb)
         

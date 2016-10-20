@@ -181,40 +181,65 @@ class InferenceEngine:
     input: clauses, set of clauses in FOL representation of KB and not q
     returns: the set of all possible clauses obtained by resolving KB and q"""
     def resolution(self, kb, q):
-        print("in resolution") 
-
-        # TODO: parse clauses somewhere in here        
+   
         # the set of clauses in FOL representation of KB and not q
         clauses = set(self.kb.clauses())
         
         # negate the query          
-        negated_q = self.negate(q) 
-        print(negated_q)        
+        negated_q = self.negate(q)         
         
+        # the flag for resolution looping        
+        loop_flag = True        
         
         # add the negated query to the list of clauses
         clauses.add(negated_q)
-        
-        print(clauses)
-        
-        # the set of new clauses
-        # when no new clauses can be added, KB does not entail q
-        new = set()
+
+        # for testing
+        print(clauses)         
+         
 
         # loop until no new clauses can be added (which means KB does not entail q), or
         # two clauses yield the empty clause (which means KB entails q)
-        while True:
+        while loop_flag:
             # variable to keep track of the length of clause list            
             clause_len = len(clauses)
-            # make a list of all clause pairs                    
-          
-        #clause_pairs = [(clauses[i], clauses[j]) for i in range(clause_len) for j in range(i+1, clause_len)]
-        
-        
-            #print(clause_pairs)            
+
+            # make a list of all clauses (bc easier to deal with then set)                
+            clause_list = list(clauses)
+            # make a list of all clause pairs            
+            clause_pairs = []
+            for i in range (0, clause_len):
+                for j in range (i+1, clause_len):
+                    clause_pairs.append([clause_list[i], clause_list[j]])
             
-        #    for (ci, cj) in pairs:
-        #        resolvents = pl_resolve(ci, cj)
+            # the set of new clauses
+            # when no new clauses can be added, KB does not entail q
+            new = set()
+    
+                
+            
+            
+            # for testing
+            print(clause_pairs)            
+            print(len(clause_pairs)) 
+            pairs_len = len(clause_pairs)
+            
+            
+            print(clause_pairs[0])            
+            print(clause_pairs[0][0])
+            print(clause_pairs[0][1])  
+
+            for pair_index in range (0, pairs_len - 1):
+                # get indices for two of the pairs in the list                
+                val_index = 0
+                ci = clause_pairs[pair_index][val_index] 
+                val_index = val_index + 1
+                cj = clause_pairs[pair_index][val_index] 
+            
+                # resolve returns the set of all possible clauses obtained by resolving ci and cj            
+                resolvents = self.resolve(ci, cj)
+                
+                
         #        if FALSE in resolvents: 
         #            return True
         #        new.union_update(set(resolvents))
@@ -223,40 +248,114 @@ class InferenceEngine:
         #    for c in new:
        #         if c not in clauses: clauses.append(c)        
         
-            c1 = ""
-            c2 = ""
-            False 
+            loop_flag = False 
             
-            #print(clauses)
-            self.resolve(c1, c2)               
-
-    # DO UNIFICATION, but where? look at other algo in book        
-    def resolve(self, c1, c2):
-        print("in resolve")
-        """Return all clauses that can be obtained by resolving clauses ci and cj.
-        >>> pl_resolve(to_cnf(A|B|C), to_cnf(~B|~C|F))
-        [(A | C | ~C | F), (A | B | ~B | F)]
+            #print(clauses)           
+ 
+        """Return all clauses that can be obtained by resolving clauses ci and cj. Each pair
+        that contans complementary literals is resolved to produce a new clause, which is added
+        to the set if it is not alredy present. 
+        Remember: Horn clauses are going to be disjunctions
+        note: a disjunction is true only if at least one of each pair that contains complementary literals
+        is resolved to produce a new clause. New clauses are added to the new set in resolution. 
         """
-        #clauses = []
-        #or di in disjuncts(ci):
-        #    for dj in disjuncts(cj):
-        #        if di == ~dj or ~di == dj:
+    def resolve(self, ci, cj):
+        clauses = []
+        disjunct_list_i = []
+        disjunct_list_j = []        
+        
+        # slice up disjuncts in ci, store in disjuncts_i
+        if 'v' in ci:          
+            # we have a disjunct, split on the "v" to get the constituent parts
+            # extra space is to handle the whitespace around or
+            disjunct_list_i = ci.split(" v ")
+        else:
+            # just a normal term
+            disjunct_list_i.append(ci)
+        
+
+        # slice up disjuncts in cj, store in disjuncts_j
+        if 'v' in cj:          
+            # we have a disjunct, split on the "v" to get the constituent parts
+            disjunct_list_j = cj.split(" v ")
+        else:
+            disjunct_list_j.append(cj)
+
+        
+        for i in disjunct_list_i:
+            for j in disjunct_list_j:
+                print("i = {}".format(i))
+                print("j = {}".format(j))                
+                
+                # TODO: remember to try with everything in theta    
+                # TODO: maybe theta should not be persistent? change scope if so
+                
+                # before the preprocessing step, remove !() from both i and j (temporarily)  
+                if '!' in i:
+                    i_strip = i.split("!(")
+                    # slice off that last paren
+                    i_bare = i_strip[1][:-1]                    
+                else:
+                    i_bare = i
+                
+                if '!' in j:
+                    j_strip = j.split("!(")
+                    # slice off that last paren
+                    j_bare = j_strip[1][:-1]                                
+                else:
+                    j_bare = j
+                
+                self.preprocess_unify(i_bare, j_bare, self.theta)
+
+                print(self.theta)
+                # TODO: get so is working for multiple theta, of different sizes                
+                # there is something in theta we unified, so we can try resolution
+                if len(self.theta) > 1:
+                    # see if we can resolve
+                    # need to match on predicate i.e. B(x,y) and B(0,0)
+                    i_bare_pred = i_bare.split('(')                    
+                    j_bare_pred = j_bare.split('(')                        
+                                    
+                    if i_bare_pred[0] == j_bare_pred[0]:
+                        # i and j have the same predicate
+                        print("resolve")   
+                        # resolve if we have !i == j or !j == i  
+                        # have checked predicate is the same, and they have resolved, so 
+                        if (i[:1] == '!' and j[:1] != '!') or (j[:1] == '!' and i[:1] != '!'):   
+                            
+                            # if resolved, remove from disjuncts
+                            # remove i and j from their respective lists
+                            while i in disjunct_list_i:
+                                disjunct_list_i.remove(i)
+                            
+                            while j in disjunct_list_i:
+                                disjunct_list_j.remove(i)     
+                   
+                       # sub in theta for remaining clauses
+                       
+                
+                # remove that from theta, so we can try again
+
+                
+
+                # note, will have to try for everything in theta
+                
+
+
+                
+                # update clauses in light of these changes
+                
+
+
+
+                      
         #            dnew = unique(removeall(di, disjuncts(ci)) + removeall(dj, disjuncts(cj)))
         #        clauses.append(NaryExpr('|', *dnew))
-    #return clauses
+        return clauses
         
     def negate(self,q):
-        print("negate")
-        return "!{}".format(q)       
-        
-    # Do we need?     
-    def universal_instantiation(self, theta):
-        print("Not yet implemented") 
-
-    # Do we need?          
-    def existential_instantiation(self, theta):
-        print("Not yet implemented")  
-        
+        return "!({})".format(q)       
+                
     def test_resolution(self, kb):
-        q = "BREEZE(0,0)"
+        q = "B(0,0)"
         self.resolution(kb, q)

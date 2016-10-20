@@ -120,7 +120,7 @@ class InformedDude(AbstractDude):
         self.rounds()
 
     def rounds(self):
-        self.move.informed_dude_move()
+        self.move.informed_dude_move(self.kb)
 
         #go_on = False
         #while not go_on :
