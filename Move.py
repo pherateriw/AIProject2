@@ -1,10 +1,3 @@
-# TODO add_use change_direction method/Move
-# TODO add shoot arrow, wumpus scream
-# TODO right now game does not end on pit/wumpus (helps to test), fix this
-# TODO finish game/print stats if die
-# TODO print statements in a more reasonable order?
-# TODO check score
-# TODO: arrows (in kb?)
 # TODO: add other percept call
 
 class Move:
@@ -204,4 +197,4 @@ class Move:
         self.cost -= 1000
         self.dude.death_by_wumpii += 1
         self.game_over = True  
-        
+
