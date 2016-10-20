@@ -67,7 +67,7 @@ class Move:
             print("Shooting arrow north")
             i = self.dude.x
             y = self.dude.y
-            while i <= 0:
+            while i >= 0:
                 if self.kb.unknown_map[i][y] == 'w':
                     self.kill_wumpi(i, y)
                     break
@@ -76,7 +76,7 @@ class Move:
             print("Shooting arrow west")
             x = self.dude.x
             i = self.dude.y
-            while i < len(self.kb.known_map) - 1:
+            while i < len(self.kb.known_map):
                 if self.kb.unknown_map[x][i] == 'w':
                     self.kill_wumpi(x, i)
                     break
@@ -85,7 +85,7 @@ class Move:
             print("Shooting arrow south")
             i = self.dude.x
             y = self.dude.y
-            while i < len(self.kb.known_map) - 1:
+            while i < len(self.kb.known_map):
                 if self.kb.unknown_map[i][y] == 'w':
                     self.kill_wumpi(i, y)
                     break
@@ -94,7 +94,7 @@ class Move:
             print("Shooting arrow east")
             x = self.dude.x
             i = self.dude.y
-            while i <= 0:
+            while i >= 0:
                 if self.kb.unknown_map[x][i] == 'w':
                     self.kill_wumpi(x, i)
                     break
@@ -123,10 +123,9 @@ class Move:
         if self.kb.unknown_map[x][y] == '$':
             self.grab_gold()
             return True
-        # if in square with obstacle, update percept
+        # don't update percept for square with obstacle
         elif self.kb.unknown_map[x][y] == 'o':
             self.kb.update_cell(x, y, "o")
-            self.kb.update_percept(x, y)
             return False
         # if in square with pit, call pit fall handler
         elif self.kb.unknown_map[x][y] == 'p':    

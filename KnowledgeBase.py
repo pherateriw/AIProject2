@@ -2,9 +2,13 @@ import WorldGenerator as wg
 
 # the explorer's knowledge base, reflects what it knows about the environment
 class KnowledgeBase:
-    def __init__(self, size, oProbs, pProbs, wProbs):
-        
-        self.unknown_map, self.numWumpii = wg.createWorld(size, oProbs, pProbs, wProbs)
+    def __init__(self, size, oProbs, pProbs, wProbs, unknown_map):
+
+        if unknown_map == None:
+            self.unknown_map, self.numWumpii = wg.createWorld(size, oProbs, pProbs, wProbs)
+        else:
+            self.unknown_map = unknown_map[0]
+            self.numWumpii = unknown_map[1]
         self.known_map = wg.createGrid(size);
         self.percepts = {} 
         self.facts = {}

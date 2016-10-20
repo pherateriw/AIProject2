@@ -6,7 +6,14 @@ import InferenceEngine
 class AbstractDude:
 
     def __init__(self, size, oProbs, pProbs, wProbs):
-        self.kb = KnowledgeBase.KnowledgeBase(size, oProbs, pProbs, wProbs)
+        load_file = True
+        save_file = False
+        if load_file:
+            self.kb = KnowledgeBase.KnowledgeBase(size, oProbs, pProbs, wProbs, self.load_file("test_world"))
+        else:
+            self.kb = KnowledgeBase.KnowledgeBase(size, oProbs, pProbs, wProbs, None, None)
+        if save_file:
+            self.save_file("test_world")
         self.size = size
         self.move = Move.Move(self.kb, self)
         self.move.place_dude()
@@ -19,6 +26,25 @@ class AbstractDude:
         self.death_by_wumpii = 0
         self.killed_wumpii = 0
 
+
+    def save_file(self, fn):
+        outf = open(fn, 'w')
+        outf.write(self.arrows)
+        outf.write('\n')
+        for line in self.kb.unknown_map:
+            for l in line:
+                outf.write(l)
+            outf.write('\n')
+        outf.close()
+
+    def load_file(self, fn):
+        infile = open(fn, 'r')
+        line = infile.readline()
+        num_arrows = int(line.strip('\n'))
+        result = [list(line.strip('\n')) for line in infile]
+        infile.close()
+        return result, num_arrows
+
     def print_stats(self):
         print("Total Moves: %s" % self.move.moves)
         print("Total Cost: %s" % self.move.cost)
@@ -27,13 +53,16 @@ class AbstractDude:
         print("Pit Deaths: %s" % self.death_by_pit)
         print("Wumpii Killed: %s" % self.killed_wumpii)
 
-
-
+    # get potential directions to go in preference order of:
+    # unexplored and safe seeming cells
+    # unexplored but unsafe seeming cells
+    # killing a wumpus
+    # safe cells
     def get_possible_directions(self, x, y):
         safe_directions = []
         unsafe_directions = []
-        unsafe_chars = ['d', 'm']
-        impossible_chars = ['o', 'p', 'w', 's']
+        unsafe_chars = ['d', 'm']  # Potential wumpi or pits
+        impossible_chars = ['o', 'p', 'w', 's'] # For sure obstacles, pits, wumpii, and already traveled and safe cells
         if x > 0:
             if self.kb.known_map[x - 1][y] not in unsafe_chars and self.kb.known_map[x - 1][y] not in impossible_chars:
                 safe_directions.append("^")
@@ -55,28 +84,29 @@ class AbstractDude:
             elif self.kb.known_map[x][y - 1] not in impossible_chars:
                 unsafe_directions.append("<")
 
-        # Retracing steps and killing wumpii is last resort
+        # No choice kill a wumpii, or retrace steps
         if len(safe_directions) == 0 and len(unsafe_directions) == 0:
             if x > 0:
                 if self.kb.known_map[x - 1][y] == 'w' and self.arrows > 0:
                     safe_directions.append("^k")
                 elif self.kb.known_map[x - 1][y] == 's':
-                    safe_directions.append('^')
-            if x < self.size -1:
+                    unsafe_directions.append('^')
+            if x < self.size - 1:
                 if self.kb.known_map[x + 1][y] == 'w' and self.arrows > 0:
                     safe_directions.append("vk")
                 elif self.kb.known_map[x + 1][y] == 's':
-                    safe_directions.append('v')
+                    unsafe_directions.append('v')
             if y > 0:
                 if self.kb.known_map[x][y - 1] == 'w' and self.arrows > 0:
                     safe_directions.append("<k")
                 elif self.kb.known_map[x][y - 1] == 's':
-                    safe_directions.append('<')
+                    unsafe_directions.append('<')
             if y < self.size -1:
                 if self.kb.known_map[x][y + 1] == 'w' and self.arrows > 0:
                     safe_directions.append(">k")
                 elif self.kb.known_map[x][y + 1] == 's':
-                    safe_directions.append('>')
+                    unsafe_directions.append('>')
+
         return safe_directions, unsafe_directions
 
 
