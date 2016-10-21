@@ -8,7 +8,7 @@ class InferenceEngine:
         self.kb = kb
         
         # testing unification and resolution
-        self.test_unify(self.theta)
+        #self.test_unify(self.theta)
         self.test_resolution(self.kb)
 
     # preprocesses sentences to check that the predicates match, and to get the relevant arguments
@@ -38,16 +38,13 @@ class InferenceEngine:
         else:
             self.unify(argsP, argsQ, theta)
     
-    # reminder: unification takes two atomic sentences P and Q and returns a substitution that makes
-    # P and Q identical.
-    # This implementation uses the method described by Russell and Norvig to perform unification (p 328)  
-    # this method differs from R&N's implementation in that we do not handle compound
-    # expressions (functions), since none of our rules require it. 
-    # input: x is a variable, constant or list 
-    # input: y is a variable, constant or list, or compound expression
-    # input: theta, the substitution built up so far () 
-    # function returns a substitution to make x and y identical   
-    # TODO: do I need to worry about compound case? If so, fix this.
+    """ reminder: unification takes two atomic sentences P and Q and returns a substitution that 
+    makes P and Q identical. This implementation uses the method described by Russell 
+    and Norvig to perform unification (p 328). This method differs from R&N's implementation 
+    in that we do not handle compound expressions (functions), since none of our rules require it. 
+    input: x is a variable, constant or list 
+    input: y is a variable, constant or list, or compound expression
+    input: theta, the substitution built up so far ()"""   
     def unify(self, P, Q, theta):               
         # if there is no theta that can unify x and y, return false
         if self.theta is None:
@@ -79,11 +76,12 @@ class InferenceEngine:
         else:        
             return False
 
-    # note: we have specified that a single variable will be one lowercase character a-z
+    # note: we have specified that a single variable will be one lowercase character a-z (although not v)
     def is_variable(self, X):     
         if len(X) == 1:
             if (X.islower()):            
-                return True
+                if (X != 'v'):
+                    return True
         else:
             return False
 
@@ -95,7 +93,7 @@ class InferenceEngine:
             return False
 
     # helper function for unification, also inspired by Russell and Norvig implementation 
-    # omitted the occur check bc it did not seem necessary for this application, and 
+    # note: omitted the occur check bc it did not seem necessary for this application, and 
     # bc of complexity concerns    
     def unify_var(self, var, x, theta):       
     
@@ -175,38 +173,73 @@ class InferenceEngine:
     def substitute(self, theta):
         print("Not yet implemented")  
 
-    # This implementation uses the method described by Russell and Norvig to perform resolution (p 255)  
-    # this method differs from R&N's implementation in that we are using FOL and not
-    # propositional logic.
-    # input: KB, the knowledge base, a sentence in FOL
-    # input: q, the query, a sentence in FOL
-    # input: clauses, set of clauses in FOL representation of KB and not q
-    # returns the set of all possible clauses otained by resolving KB and q
+    """" This implementation uses the method described by Russell and Norvig to perform resolution (p 255)  
+    this method differs from R&N's implementation in that we are using FOL and not
+    propositional logic.
+    input: KB, the knowledge base, a sentence in FOL
+    input: q, the query, a sentence in FOL
+    input: clauses, set of clauses in FOL representation of KB and not q
+    returns: the set of all possible clauses obtained by resolving KB and q"""
     def resolution(self, kb, q):
-        print("in resolution")
-        c1 = ""
-        c2 = ""
+   
+        # the set of clauses in FOL representation of KB and not q
+        clauses = set(self.kb.clauses())
         
-        this_list = list(self.kb.clauses())        
+        # negate the query          
+        negated_q = self.negate(q)         
         
-        for c in this_list: 
-            print (c)        
+        # the flag for resolution looping        
+        loop_flag = True        
         
-        
-        self.resolve(c1, c2)
-        # clauses = set of clauses in FOL representation of KB and not q
-        
-        # new, make this a set?
-        
-        # CHANGE BELOW
-        #clauses = KB.clauses + conjuncts(to_cnf(~alpha))
-        #new = set()
-        #while True:
-        #    n = len(clauses)
-        #    pairs = [(clauses[i], clauses[j]) for i in range(n) for j in range(i+1, n)]
-        #    
-        #    for (ci, cj) in pairs:
-        #        resolvents = pl_resolve(ci, cj)
+        # add the negated query to the list of clauses
+        clauses.add(negated_q)
+
+        # for testing
+        print(clauses)         
+         
+
+        # loop until no new clauses can be added (which means KB does not entail q), or
+        # two clauses yield the empty clause (which means KB entails q)
+        while loop_flag:
+            # variable to keep track of the length of clause list            
+            clause_len = len(clauses)
+
+            # make a list of all clauses (bc easier to deal with then set)                
+            clause_list = list(clauses)
+            # make a list of all clause pairs            
+            clause_pairs = []
+            for i in range (0, clause_len):
+                for j in range (i+1, clause_len):
+                    clause_pairs.append([clause_list[i], clause_list[j]])
+            
+            # the set of new clauses
+            # when no new clauses can be added, KB does not entail q
+            new = set()
+    
+                
+            
+            
+            # for testing
+            print(clause_pairs)            
+            print(len(clause_pairs)) 
+            pairs_len = len(clause_pairs)
+            
+            
+            print(clause_pairs[0])            
+            print(clause_pairs[0][0])
+            print(clause_pairs[0][1])  
+
+            for pair_index in range (0, pairs_len - 1):
+                # get indices for two of the pairs in the list                
+                val_index = 0
+                ci = clause_pairs[pair_index][val_index] 
+                val_index = val_index + 1
+                cj = clause_pairs[pair_index][val_index] 
+            
+                # resolve returns the set of all possible clauses obtained by resolving ci and cj            
+                resolvents = self.resolve(ci, cj)
+                
+                
         #        if FALSE in resolvents: 
         #            return True
         #        new.union_update(set(resolvents))
@@ -215,38 +248,135 @@ class InferenceEngine:
         #    for c in new:
        #         if c not in clauses: clauses.append(c)        
         
+            loop_flag = False 
             
-        #print(clauses)
-               
-
-    # DO UNIFICATION, but where? look at other algo        
-    def resolve(self, c1, c2):
-        print("in resolve")
-        """Return all clauses that can be obtained by resolving clauses ci and cj.
-        >>> pl_resolve(to_cnf(A|B|C), to_cnf(~B|~C|F))
-        [(A | C | ~C | F), (A | B | ~B | F)]
+            #print(clauses)           
+ 
+        """Return all clauses that can be obtained by resolving clauses ci and cj. Each pair
+        that contans complementary literals is resolved to produce a new clause, which is added
+        to the set if it is not alredy present. 
+        Remember: Horn clauses are going to be disjunctions
+        note: a disjunction is true only if at least one of each pair that contains complementary literals
+        is resolved to produce a new clause. New clauses are added to the new set in resolution. 
         """
-        #clauses = []
-        #or di in disjuncts(ci):
-        #    for dj in disjuncts(cj):
-        #        if di == ~dj or ~di == dj:
+    def resolve(self, ci, cj):
+        clauses = []
+        disjunct_list_i = []
+        disjunct_list_j = []        
+        
+        # slice up disjuncts in ci, store in disjuncts_i
+        if 'v' in ci:          
+            # we have a disjunct, split on the "v" to get the constituent parts
+            # extra space is tdict2 = dict1.copy()o handle the whitespace around or
+            disjunct_list_i = ci.split(" v ")
+        else:
+            # just a normal term
+            disjunct_list_i.append(ci)
+        
+
+        # slice up disjuncts in cj, store in disjuncts_j
+        if 'v' in cj:          
+            # we have a disjunct, split on the "v" to get the constituent parts
+            disjunct_list_j = cj.split(" v ")
+        else:
+            disjunct_list_j.append(cj)
+
+        
+        for i in disjunct_list_i:
+            for j in disjunct_list_j:
+                print("i = {}".format(i))
+                print("j = {}".format(j))                
+                                
+                # before the preprocessing step, remove !() from both i and j (temporarily)  
+                if '!' in i:
+                    i_strip = i.split("!(")
+                    # slice off that last paren
+                    i_bare = i_strip[1][:-1]                    
+                else:
+                    i_bare = i
+                
+                if '!' in j:
+                    j_strip = j.split("!(")
+                    # slice off that last paren
+                    j_bare = j_strip[1][:-1]                                
+                else:
+                    j_bare = j
+                
+                self.preprocess_unify(i_bare, j_bare, self.theta)
+
+                print(self.theta)
+                # TODO: get so is working for multiple theta, of different sizes                
+                # there is something in theta we unified, so we can try resolution
+                if len(self.theta) > 1:
+                    # see if we can resolve
+                    # need to match on predicate i.e. B(x,y) and B(0,0)
+                    i_bare_pred = i_bare.split('(')                    
+                    j_bare_pred = j_bare.split('(')                        
+                                    
+                    if i_bare_pred[0] == j_bare_pred[0]:
+                        # i and j have the same predicate
+                        print("resolve")   
+                        # resolve if we have !i == j or !j == i  
+                        # have checked predicate is the same, and they have resolved, so 
+                        if (i[:1] == '!' and j[:1] != '!') or (j[:1] == '!' and i[:1] != '!'):   
+                            # if resolved, remove from disjuncts
+                            # remove i and j from their respective lists
+                            while i in disjunct_list_i:
+                                disjunct_list_i.remove(i)
+                            
+                            while j in disjunct_list_j:
+                                disjunct_list_j.remove(j)     
+                   
+                            # substitute in theta for remaining clauses
+                            disjunct_list_i = self.sub_values(disjunct_list_i, self.theta)
+                            disjunct_list_j = self.sub_values(disjunct_list_j, self.theta)                                
+                                                   
+                            print(disjunct_list_i) 
+                            print(disjunct_list_j)                                
+                            # after sub, remove those keys from theta, so we can try again
+
+                
+
+                
+
+
+                
+                # update clauses in light of these changes
+                
+
+
+
+                      
         #            dnew = unique(removeall(di, disjuncts(ci)) + removeall(dj, disjuncts(cj)))
         #        clauses.append(NaryExpr('|', *dnew))
-    #return clauses
+        return clauses
         
+    def negate(self,q):
+        return "!({})".format(q)       
+             
+    # following resolution, subs in appropriate values from substitution string         
+    def sub_values(self, disjunct_list, theta):      
         
-        
-        
-        
-    # Do we need?     
-    def universal_instantiation(self, theta):
-        print("Not yet implemented") 
-
-    # Do we need?          
-    def existential_instantiation(self, theta):
-        print("Not yet implemented")  
-        
+        # uses key (corresponds to variable) to make appropriate subs in disjunct_list         
+        for key in theta:
+            key_variable = key
+            
+            for value in theta[key_variable]:
+                value_of_key = value
+            
+                # checks if there are values in the list before iterating
+                num_items = len(disjunct_list)        
+                if (num_items > 0):
+                    # checks all the items in disjunct_list for possible substitution
+                    for i in range(0,num_items):
+                        # three different cases where variable could be, after left paren, before right paren, or between two commas
+                        if ("({},".format(key_variable) in disjunct_list[i]) or (",{},".format(key) in disjunct_list[i]) or (",{})".format(key) in disjunct_list[i]):
+                            disjunct_list[i] = disjunct_list[i].replace("{}".format(key_variable), "{}".format(value_of_key))   
+                          
+        return disjunct_list
+                
+                
+                
     def test_resolution(self, kb):
-        print("in test resolution")
-        q = ""
+        q = "B(0,0)"
         self.resolution(kb, q)

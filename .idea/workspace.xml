@@ -2,8 +2,46 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="efac3b79-fa8b-4353-a157-1bbb845d21de" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/test_worlds/probs/size5/probs0.12/test0" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/test_worlds/probs/size5/probs0.12/test1" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/test_worlds/probs/size5/probs0.12/test2" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/test_worlds/probs/size5/probs0.12/test3" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/test_worlds/probs/size5/probs0.12/test4" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/test_worlds/probs/size5/probs0.23/test0" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/test_worlds/probs/size5/probs0.23/test1" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/test_worlds/probs/size5/probs0.23/test2" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/test_worlds/probs/size5/probs0.23/test3" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/test_worlds/probs/size5/probs0.23/test4" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/test_worlds/sizes/size10/test0" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/test_worlds/sizes/size10/test1" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/test_worlds/sizes/size10/test2" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/test_worlds/sizes/size10/test3" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/test_worlds/sizes/size10/test4" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/test_worlds/sizes/size15/test0" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/test_worlds/sizes/size15/test1" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/test_worlds/sizes/size15/test2" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/test_worlds/sizes/size15/test3" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/test_worlds/sizes/size15/test4" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/test_worlds/sizes/size20/test0" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/test_worlds/sizes/size20/test1" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/test_worlds/sizes/size20/test2" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/test_worlds/sizes/size20/test3" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/test_worlds/sizes/size20/test4" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/test_worlds/sizes/size25/test0" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/test_worlds/sizes/size25/test1" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/test_worlds/sizes/size25/test2" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/test_worlds/sizes/size25/test3" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/test_worlds/sizes/size25/test4" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/test_worlds/sizes/size5/test0" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/test_worlds/sizes/size5/test1" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/test_worlds/sizes/size5/test2" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/test_worlds/sizes/size5/test3" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/test_worlds/sizes/size5/test4" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Dudes.py" afterPath="$PROJECT_DIR$/Dudes.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/InferenceEngine.py" afterPath="$PROJECT_DIR$/InferenceEngine.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/KnowledgeBase.py" afterPath="$PROJECT_DIR$/KnowledgeBase.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Move.py" afterPath="$PROJECT_DIR$/Move.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/RunModels.py" afterPath="$PROJECT_DIR$/RunModels.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/WorldGenerator.py" afterPath="$PROJECT_DIR$/WorldGenerator.py" />
     </list>
     <ignored path="AIProject2.iws" />
@@ -48,7 +86,7 @@
         <entry file="file://$PROJECT_DIR$/Dudes.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="1496">
-              <caret line="91" column="0" selection-start-line="91" selection-start-column="0" selection-end-line="91" selection-end-column="0" />
+              <caret line="133" column="0" selection-start-line="133" selection-start-column="0" selection-end-line="133" selection-end-column="0" />
               <folding>
                 <element signature="e#0#20#0" expanded="true" />
               </folding>
@@ -59,8 +97,8 @@
       <file leaf-file-name="KnowledgeBase.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/KnowledgeBase.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="539">
-              <caret line="183" column="117" selection-start-line="183" selection-start-column="117" selection-end-line="183" selection-end-column="117" />
+            <state relative-caret-position="661">
+              <caret line="238" column="22" selection-start-line="238" selection-start-column="22" selection-end-line="238" selection-end-column="22" />
               <folding />
             </state>
           </provider>
@@ -69,9 +107,11 @@
       <file leaf-file-name="Move.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Move.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2567">
-              <caret line="151" column="0" selection-start-line="151" selection-start-column="0" selection-end-line="151" selection-end-column="0" />
-              <folding />
+            <state relative-caret-position="3349">
+              <caret line="197" column="0" selection-start-line="197" selection-start-column="0" selection-end-line="197" selection-end-column="0" />
+              <folding>
+                <marker date="1477017076445" expanded="true" signature="0:6" ph="..." />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -79,8 +119,8 @@
       <file leaf-file-name="RunModels.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/RunModels.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="68">
-              <caret line="5" column="0" selection-start-line="5" selection-start-column="0" selection-end-line="5" selection-end-column="0" />
+            <state relative-caret-position="884">
+              <caret line="53" column="0" selection-start-line="53" selection-start-column="0" selection-end-line="53" selection-end-column="0" />
               <folding>
                 <element signature="e#0#12#0" expanded="true" />
               </folding>
@@ -103,8 +143,8 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/KnowledgeBase.py" />
         <option value="$PROJECT_DIR$/WorldGenerator.py" />
+        <option value="$PROJECT_DIR$/KnowledgeBase.py" />
       </list>
     </option>
   </component>
@@ -414,7 +454,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="2567">
           <caret line="151" column="0" selection-start-line="151" selection-start-column="0" selection-end-line="151" selection-end-column="0" />
-          <folding />
+          <folding>
+            <marker date="1477017076445" expanded="true" signature="0:6" ph="..." />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -466,7 +508,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="2567">
           <caret line="151" column="0" selection-start-line="151" selection-start-column="0" selection-end-line="151" selection-end-column="0" />
-          <folding />
+          <folding>
+            <marker date="1477017076445" expanded="true" signature="0:6" ph="..." />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -499,7 +543,7 @@
     <entry file="file://$PROJECT_DIR$/Dudes.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1496">
-          <caret line="91" column="0" selection-start-line="91" selection-start-column="0" selection-end-line="91" selection-end-column="0" />
+          <caret line="133" column="0" selection-start-line="133" selection-start-column="0" selection-end-line="133" selection-end-column="0" />
           <folding>
             <element signature="e#0#20#0" expanded="true" />
           </folding>
@@ -508,16 +552,18 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Move.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2567">
-          <caret line="151" column="0" selection-start-line="151" selection-start-column="0" selection-end-line="151" selection-end-column="0" />
-          <folding />
+        <state relative-caret-position="3349">
+          <caret line="197" column="0" selection-start-line="197" selection-start-column="0" selection-end-line="197" selection-end-column="0" />
+          <folding>
+            <marker date="1477017076445" expanded="true" signature="0:6" ph="..." />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/RunModels.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="68">
-          <caret line="5" column="0" selection-start-line="5" selection-start-column="0" selection-end-line="5" selection-end-column="0" />
+        <state relative-caret-position="884">
+          <caret line="53" column="0" selection-start-line="53" selection-start-column="0" selection-end-line="53" selection-end-column="0" />
           <folding>
             <element signature="e#0#12#0" expanded="true" />
           </folding>
@@ -542,8 +588,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/KnowledgeBase.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="539">
-          <caret line="183" column="117" selection-start-line="183" selection-start-column="117" selection-end-line="183" selection-end-column="117" />
+        <state relative-caret-position="661">
+          <caret line="238" column="22" selection-start-line="238" selection-start-column="22" selection-end-line="238" selection-end-column="22" />
           <folding />
         </state>
       </provider>

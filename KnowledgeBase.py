@@ -2,13 +2,19 @@ import WorldGenerator as wg
 
 # the explorer's knowledge base, reflects what it knows about the environment
 class KnowledgeBase:
-    def __init__(self, size, oProbs, pProbs, wProbs):
-        
-        self.unknown_map = wg.createWorld(size, oProbs, pProbs, wProbs)
+    def __init__(self, size, oProbs, pProbs, wProbs, unknown_map):
+
+        if unknown_map == None:
+            self.unknown_map, self.numWumpii = wg.createWorld(size, oProbs, pProbs, wProbs)
+        else:
+            self.unknown_map = unknown_map[0]
+            self.numWumpii = unknown_map[1]
         self.known_map = wg.createGrid(size);
         self.percepts = {} 
         self.facts = {}
-        self.clause_list = []        
+        self.clause_list = []
+        self.ppits = []
+        self.pwumpi = []
         
         print("Actual map")        
         wg.printGrid(self.unknown_map)     
@@ -18,8 +24,10 @@ class KnowledgeBase:
 
     def update_cell(self, x, y, char):
         self.known_map[x][y] = char
-        if char != "_": # limit amount of maps printed
-            wg.printGrid(self.known_map)
+        wg.printGrid(self.known_map)
+
+    def update_unknown_cell(self, x, y, char):
+        self.unknown_map[x][y] = char
 
     # update the percepts according to the environment    
     def update_percept(self, x, y):
@@ -54,21 +62,25 @@ class KnowledgeBase:
             if self.unknown_map[x + 1][y] == 'p':    
                 print("Explorer feels a breeze in ({},{})".format(x,y))
                 percept_breeze = 'b'
+                self.set_potentials(x, y, 'd')
             if (x - 1) >= 0:        
                 if self.unknown_map[x - 1][y] == 'p':    
                     print("Explorer feels a breeze in ({},{})".format(x,y))
                     percept_breeze = 'b'
+                    self.set_potentials(x, y, 'd')
         
         # make sure is a valid choice for this y value   
         if y < len(self.known_map) - 1:        
             if self.unknown_map[x][y + 1] == 'p':    
                 print("Explorer feels a breeze in ({},{})".format(x,y))
                 percept_breeze = 'b'
+                self.set_potentials(x, y, 'd')
                 
             if y - 1 >= 0:          
                 if self.unknown_map[x][y - 1] == 'p': 
                     print("Explorer feels a breeze in ({},{})".format(x,y))
                     percept_breeze = 'b'
+                    self.set_potentials(x, y, 'd')
         
         # no breeze perceived, update percept accordingly
         if ('b' not in percept_breeze):
@@ -84,21 +96,25 @@ class KnowledgeBase:
             if self.unknown_map[x + 1][y] == 'w':    
                 print("Explorer smells a stench in ({},{})".format(x,y))
                 percept_stench = 's'
+                self.set_potentials(x, y, 'm')
         if (x - 1) >= 0:        
             if self.unknown_map[x - 1][y] == 'w':    
                 print("Explorer smells a stench in ({},{})".format(x,y))
                 percept_stench = 's'
+                self.set_potentials(x, y, 'm')
         
         # make sure is a valid choice for this y value   
         if y < len(self.known_map) - 1:        
             if self.unknown_map[x][y + 1] == 'w':    
                 print("Explorer smells a stench in ({},{})".format(x,y))
                 percept_stench = 's'
+                self.set_potentials(x, y, 'm')
                 
             if y - 1 >= 0:          
                 if self.unknown_map[x][y - 1] == 'w': 
                     print("Explorer smells a stench in ({},{})".format(x,y))
                     percept_stench = 's'
+                    self.set_potentials(x, y, 'm')
         
         # no stench perceived, update percept accordingly
         if ('s' not in percept_stench):
@@ -130,7 +146,29 @@ class KnowledgeBase:
         for value in self.percepts[percept_key]:
             if (value != '_'):
                 self.tell(percept_key, value, x, y) 
-                
+
+
+    def set_potentials(self, x, y, char):
+        dont_overwrite = ['s', 'o', 'p', 'w']
+        if x > 0:
+            if self.known_map[x-1][y] not in dont_overwrite:
+                self.update_cell(x-1, y, char)
+        if x < len(self.known_map) - 1:
+            if self.known_map[x + 1][y] not in dont_overwrite:
+                self.update_cell(x+1, y, char)
+
+        if y < len(self.known_map) - 1:
+            if self.known_map[x][y+1] not in dont_overwrite:
+                self.update_cell(x, y +1, char)
+
+        if y > 0:
+            if self.known_map[x][y -1] not in dont_overwrite:
+                self.update_cell(x, y-1, char)
+
+
+
+
+
     # TODO: add safe spaces
     # TODO: add death info to cell, add inferred info to cell     
     # update the knowledge base with information gathered from percept
@@ -173,6 +211,7 @@ class KnowledgeBase:
         Possible Predicates: SAFE(X,Y), BREEZE(X,Y), STENCH(X,Y), BUMP(X,Y), PIT(X,Y), WUMPUS(X,Y), OBSTACLE(X,Y),
         GOLD(X,Y), POSSPIT(X,Y), POSSWUMP(X,Y), AT(X,Y)(?)
         """
+
         self.clause_list.append("BUMP(X,Y) => OBSTACLE(X,Y)") #If there's a bump, there must be an obstacle
         self.clause_list.append("SAFE(X,Y) <=> !(PIT(X,Y)) ^ !(WUMPUS(X,Y)") #If it's safe there are no pits or wumpi
         self.clause_list.append("BREEZE(X,Y) <=> (PIT(X+1,Y) v PIT(X-1,Y) v PIT(X,Y+1) v PIT(X,Y-1))") #A breeze means there must be a pit in one of the surrounding cells
@@ -184,17 +223,20 @@ class KnowledgeBase:
         self.clause_list.append("BREEZE(X,Y) => (POSSPIT(X+1,Y) ^ POSSPIT(X-1,Y) ^ POSSPIT(X,Y+1) ^ POSSPIT(X,Y-1))")
         self.clause_list.append("STENCH(X,Y) => (POSSWUMP(X+1,Y) ^ POSSWUMP(X-1,Y) ^ POSSWUMP(X,Y+1) ^ POSSWUMP(X,Y-1))")
 
+        #self.clause_list.append("A(x,y) v B(x,y) v C(x,y)")
+        #self.clause_list.append("B(x,y) v C(x,y)")
+        #self.clause_list.append("C(X,Y)")   
+        #self.clause_list.append("D(X,Y)")   
+        #self.clause_list.append("E(X,Y)")   
+
+
 
         
         # Jani: change this if needed, was just testing to make sure I could reach this 
 
-        for c in self.clause_list:
-            if "magic regex" in c: #TODO: find implications and remove them from clause list
-                print(c)
 
-                
-        for c in self.clause_list: 
-            print (c)
+        #for c in self.clause_list: 
+        #    print (c)
         
         return self.clause_list
 
