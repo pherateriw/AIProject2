@@ -111,8 +111,7 @@ class ReactiveDude(AbstractDude):
         self.x, self.y, gold_found = self.move.move_direction(self.x, self.y, random.choice(choices))
         return gold_found
 
-# TODO: comment this, change so works as expected
-# TODO: how to turn right/left? double check with Lisa
+
 class InformedDude(AbstractDude):
 
     def __init__(self, kb):
@@ -125,10 +124,10 @@ class InformedDude(AbstractDude):
 
     def rounds(self):
         t = 0 # time sequence TODO time?
-        go_on = True
-        while go_on:
-            choice = self.ie.ask("What Next?")
-            go_on = self.make_move(choice) # currently move does the telling, which is not according to design doc, but leaving for now
+        stop = False
+        while not stop:
+            choices = self.ie.ask("What Next?", self.x, self.y)
+            stop = self.make_move(random.choice(choices)) # currently move does the telling, which is not according to design doc, but leaving for now
 
     def makePerceptSentence(self, x, y):
         #Percept structure: [GLITTER, BUMP, STENCH, BREEZE, TIMESTEP]
@@ -141,11 +140,11 @@ class InformedDude(AbstractDude):
     # inputs: percepts
     # persistent: kb, plan (action sequence, starts empty)
     # TELL(KB, MAKE-PERCEPT-SENTENCE(percept,t))
-    # TELL the KB the temporal physics sentences for time t    
+    # TELL the KB the temporal physics sentences for time t
 
     def make_move(self, choice):
-        go_on = self.move.move_direction(self.x, self.y, choice)
-        return go_on
+        self.x, self.y, stop = self.move.move_direction(self.x, self.y, choice)
+        return stop
 
 
 

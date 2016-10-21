@@ -122,16 +122,19 @@ class Move:
         # don't update percept for square with obstacle
         elif self.kb.unknown_map[x][y] == 'o':
             self.kb.update_cell(x, y, "o")
+            self.kb.tell('o', x, y)
             return False
         # if in square with pit, call pit fall handler
         elif self.kb.unknown_map[x][y] == 'p':    
             self.pit_fall()
             self.kb.update_cell(x, y, "p")
+            self.kb.tell('p', x, y)
             return False
         # if in square with wumpus, call wumpus handler
         elif self.kb.unknown_map[x][y] == 'w':    
             self.wumpus_encounter()
             self.kb.update_cell(x, y, "w")
+            self.kb.tell('w', x, y)
             return False
         else:
             self.kb.update_cell(self.dude.prevx, self.dude.prevy, 's')

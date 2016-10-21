@@ -1,5 +1,6 @@
 import WorldGenerator as wg
 
+
 # the explorer's knowledge base, reflects what it knows about the environment
 class KnowledgeBase:
     def __init__(self, size, oProbs, pProbs, wProbs, unknown_map):
@@ -144,9 +145,8 @@ class KnowledgeBase:
 
         # take the information gathered from percepts, add it to the knowledge base
         for value in self.percepts[percept_key]:
-            if (value != '_'):
+            if value != '_':
                 self.tell(value, x, y)
-
 
     def set_potentials(self, x, y, char):
         dont_overwrite = ['s', 'o', 'p', 'w']
@@ -166,11 +166,6 @@ class KnowledgeBase:
                 self.update_cell(x, y-1, char)
 
 
-
-
-
-    # TODO: add safe spaces
-    # TODO: add death info to cell, add inferred info to cell     
     # update the knowledge base with information gathered from percept
     def tell(self, assertion, x, y):
         key = "{%s,%s}" % (x, y)
@@ -187,16 +182,24 @@ class KnowledgeBase:
             assertion = "BUMP({},{})".format(x,y)
         elif (assertion == 'a'):
             assertion = "SAFE({},{})".format(x, y)
-       
+        elif (assertion == 'o'):
+            assertion = "OBSTACLE({},{})".format(x, y)
+        elif (assertion == 'w'):
+            assertion = "WUMPUS({},{})".format(x, y)
+        elif (assertion == 'p'):
+            assertion = "PIT({},{})".format(x, y)
+
        # check that this rule is not already in dictionary
         if (assertion not in self.facts[key]):
-            self.facts[key].append(assertion)       
-        
+            self.facts[key].append(assertion)
+            # TODO unify and resolve to see if new facts come out
+
         print("########Information in Knowledge Base:")
         for key, value in self.facts.items():
             print(key, value)
         print("##################################")
-        print()        
+        print()
+
 
     # TODO: write this
     # ask questions of the knowledge base
@@ -265,8 +268,22 @@ class KnowledgeBase:
 
 
 
+        #self.clause_list.append("!BUMP(X,Y) v (OBSTACLE(X,Y))") #If there's a bump, there must be an obstacle
+        #self.clause_list.append("SAFE(X,Y) <=> !(PIT(X,Y)) ^ !(WUMPUS(X,Y)") #If it's safe there are no pits or wumpi
+        #self.clause_list.append("BREEZE(X,Y) <=> (PIT(X+1,Y) v PIT(X-1,Y) v PIT(X,Y+1) v PIT(X,Y-1))") #A breeze means there must be a pit in one of the surrounding cells
+        #self.clause_list.append("STENCH(X,Y) <=> (WUMPUS(X+1,Y) v WUMPUS(X-1,Y) v WUMPUS(X,Y+1) v WUMPUS(X,Y-1))") #A stench means there must be a wumpus in one of the surrounding cells
+        #self.clause_list.append("!POSSPIT(X,Y) v !SAFE(X,Y) v !PIT(X,Y)") #A Possible Pit that is already safe means there is no pit there
+        #self.clause_list.append("!POSSWUMP(X,Y) v !SAFE(X,Y) v !WUMPUS(X,Y)")#A Possible Wumpus that is already safe means there is no wumpus there
+        #self.clause_list.append("!PIT(X,Y) v (!SAFE(X,Y) ^ !WUMPUS(X,Y))") #Pits, wumpi and safe can not be in the same cells
+        #self.clause_list.append("!WUMPUS(X,Y) v !SAFE(X,Y) ^ !PIT(X,Y)")
+        #self.clause_list.append("!BREEZE(X,Y) v (POSSPIT(X+1,Y) ^ POSSPIT(X-1,Y) ^ POSSPIT(X,Y+1) ^ POSSPIT(X,Y-1))")
+        #self.clause_list.append("!STENCH(X,Y) v (POSSWUMP(X+1,Y) ^ POSSWUMP(X-1,Y) ^ POSSWUMP(X,Y+1) ^ POSSWUMP(X,Y-1))")
 
-
+        # FOR TESTING
+        #self.clause_list.append("MOTHER(Lulu,Fifi)")
+        #self.clause_list.append("ALIVE(Lulu)")
+        #self.clause_list.append("!(MOTHER(x,y)) v PARENT(x,y)")
+        #self.clause_list.append("!(PARENT(x,y)) v !(ALIVE(x)) v OLDER(x,y)")
         
         return self.clause_list
 
