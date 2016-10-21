@@ -1,5 +1,3 @@
-import KnowledgeBase
-
 class InferenceEngine:
     def __init__(self, kb):
         # theta is a dictionary of all substitutions where the variable is the key, values are the values 
@@ -9,7 +7,7 @@ class InferenceEngine:
         self.clauses = ""
 
         # testing unification and resolution
-        #self.test_unify(self.theta)
+        # self.test_unify(self.theta)
         # self.test_resolution(self.kb)
 
     # preprocesses sentences to check that the predicates match, and to get the relevant arguments
@@ -417,7 +415,8 @@ class InferenceEngine:
         # after sub, remove those keys from theta, so we can try again
         self.theta.clear()
         return local_clauses
-        
+
+    # negate a clause
     def negate(self,q):
         return "!({})".format(q)       
              
@@ -460,17 +459,19 @@ class InferenceEngine:
         q = "B(0,0)"
         self.resolution(kb, q)
 
+    # pass on to KnowledgeBase
     def tell(self, key, assertion, x, y):
         self.kb.tell(key, assertion, x, y)
 
+    # Ask for best choice for dude given choices/neighbors
     def ask(self, query, x, y):
-        possibles = ['^', '>', 'v', '<', 's^', 's>', 'sv', 's<'] # move these directions or shoot these directions
         choices = self.get_neighbors(x, y)
         choice = self.best_choice(choices)
         return choice
 
+    # get neighbors and their known_map char's
     def get_neighbors(self, x, y):
-        neighbors = {'_': [], 'm':[], 'd': [], 's': [], 'w':[], 'p':[], 'o':[]}
+        neighbors = {'_': [], 'm': [], 'd': [], 's': [], 'w': [], 'p':[], 'o': []}
         if x > 0:
             neighbors.get(self.kb.known_map[x - 1][y]).append('^')
         if x < len(self.kb.known_map) - 1:
@@ -481,12 +482,16 @@ class InferenceEngine:
             neighbors.get(self.kb.known_map[x][y + 1]).append('>')
         return neighbors
 
+    # Choose according to priorities:
+    # unexplored
+    # possible pit or possible wumpus
+    # shoot a wumpus or travel previously explored cell
     def best_choice(self, choices):
-        if len(choices.get('_')) > 0: #unexplored
+        if len(choices.get('_')) > 0: # unexplored
             return choices.get('_')
-        elif len(choices.get('m')) > 0 or len(choices.get('d')) > 0: #potentials
+        elif len(choices.get('m')) > 0 or len(choices.get('d')) > 0:  # potentially unsafe cells
             return list(choices.get('m') + choices.get('d'))
-        elif len(choices.get('s')) > 0 and len(choices.get('w')) > 0: #Random choice between safe space and kill wumpi
+        elif len(choices.get('s')) > 0 and len(choices.get('w')) > 0:  # Random choice between safe space and kill wumpi
             rand = 0, 1
             import random
             rand = random.choice(rand)
@@ -497,9 +502,9 @@ class InferenceEngine:
                 for c in choices.get('w'):
                     l.append('%sk' % c)
                 return l
-        elif len(choices.get('s')) > 0:
+        elif len(choices.get('s')) > 0:  # previously travelled
             return choices.get('s')
-        elif len(choices.get('w')) > 0:
+        elif len(choices.get('w')) > 0:  # kill a wumpus
             l = []
             for c in choices.get('w'):
                 l.append('%sk' % c)

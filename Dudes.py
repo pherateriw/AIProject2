@@ -142,6 +142,9 @@ class InformedDude(AbstractDude):
         while not stop:
             # TODO Move is telling percepts to Knowledge Base, rather than Dude, contrary to design doc
             choices = self.ie.ask("What Next?", self.x, self.y) # Ask Inference Engine for best possible choices
+            if 'stuck' in choices:
+                stop = True
+                break
             stop = self.make_move(random.choice(choices))
 
     # Make move, return new x, new y, and if gold found
