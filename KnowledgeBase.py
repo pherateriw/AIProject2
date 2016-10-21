@@ -238,6 +238,12 @@ class KnowledgeBase:
 
         self.clause_list.append("(MOVE(x,y)) v !(SAFE(x,y)) v !(MOVE(x,y)) v (SAFE(x,y))")
         self.clause_list.append("(GRABGOLD(x,y)) v !(GLIMMER(x,y)) v !(GRABGOLD(x,y)) v (GLIMMER(x,y))")
+        self.clause_list.append("(SHOOTARROW(x,y)) <=> (WUMPUS(x,y))")
+        self.clause_list.append("(SHOOTARROW(x,y)) v !(WUMPUS(x,y)) v !(SHOOTARROW(x,y)) v (WUMPUS(x,y))")
+        self.clause_list.append("(TURNL90(x,y)) <=> (PIT(x,y)) v (OBSTACLE(x,y)) v ")
+
+        self.clause_list.append("FACING(NORTH) <=> (TURNL90(x,y) ^ FACING(EAST)) v (TURNR90(x,y) ^ FACING(WEST)")
+
 
 
         
