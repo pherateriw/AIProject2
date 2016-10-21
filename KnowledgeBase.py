@@ -181,7 +181,7 @@ class KnowledgeBase:
         self.clause_list.append("POSSWUMP(X,Y) ^ SAFE(X,Y) => !WUMPUS(X,Y)")#A Possible Wumpus that is already safe means there is no wumpus there
         self.clause_list.append("PIT(X,Y) => !SAFE(X,Y) ^ !WUMPUS(X,Y)") #Pits, wumpi and safe can not be in the same cells
         self.clause_list.append("WUMPUS(X,Y) => !SAFE(X,Y) ^ !PIT(X,Y)")
-        self.clause_list.append("BREEZE(X,Y) => (POSSPIT(X+1,Y) ^ POSSPIT(X-1,Y) ^ POSSPIT(X,Y+1) ^ POSSPIT(X,Y-1))") 
+        self.clause_list.append("BREEZE(X,Y) => (POSSPIT(X+1,Y) ^ POSSPIT(X-1,Y) ^ POSSPIT(X,Y+1) ^ POSSPIT(X,Y-1))")
         self.clause_list.append("STENCH(X,Y) => (POSSWUMP(X+1,Y) ^ POSSWUMP(X-1,Y) ^ POSSWUMP(X,Y+1) ^ POSSWUMP(X,Y-1))")
 
 

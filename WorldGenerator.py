@@ -25,9 +25,11 @@ def addObstacles(caves, oProbs):
         rcol = random.randint(0, len(caves) - 1)
         rrow = random.randint(0, len(caves) - 1)
         #While the location is full, keep generating random numbers
-        while caves[rcol][rrow] != '_' or (rcol == 0 and rrow == 0):
+        count = 0
+        while caves[rcol][rrow] != '_' or (rcol == 0 and rrow == 0) or count <= len(caves) ** 2:
             rcol = random.randint(0, len(caves)-1)
             rrow = random.randint(0, len(caves)-1)
+            count += 1
         #Change _ to o
         caves[rcol][rrow] = 'o'
     return caves
@@ -42,9 +44,11 @@ def addPits(caves, pProbs):
         rcol = random.randint(0, len(caves) - 1)
         rrow = random.randint(0, len(caves) - 1)
         # While the location is full, keep generating random numbers
-        while caves[rcol][rrow] != '_' or (rcol == 0 and rrow == 0):
+        count = 0
+        while caves[rcol][rrow] != '_' or (rcol == 0 and rrow == 0)or count <= len(caves) ** 2:
             rcol = random.randint(0, len(caves)-1)
             rrow = random.randint(0, len(caves)-1)
+            count += 1
         #Change _ to 'p'
         caves[rcol][rrow] = 'p'
     return caves
@@ -58,9 +62,11 @@ def addWumpus(caves, wProbs):
         rcol = random.randint(0, len(caves) - 1)
         rrow = random.randint(0, len(caves) - 1)
         # While the location is full, keep generating random numbers
-        while caves[rcol][rrow] != '_' or (rcol == 0 and rrow == 0):
+        count = 0
+        while caves[rcol][rrow] != '_' or (rcol == 0 and rrow == 0)or count <= len(caves) ** 2:
             rcol = random.randint(0, len(caves)-1)
             rrow = random.randint(0, len(caves)-1)
+            count += 1
         #Change _ to 'w'
         caves[rcol][rrow] = 'w'
     return caves
@@ -69,9 +75,11 @@ def addGold(caves):
     rcol = random.randint(0, len(caves) - 1)
     rrow = random.randint(0, len(caves) - 1)
     # While the location is full, keep generating random numbers
-    while caves[rcol][rrow] != '_' or (rcol == 0 and rrow == 0):
-        rcol = random.randint(0, len(caves)-1)
-        rrow = random.randint(0, len(caves)-1)
+    count = 0
+    while caves[rcol][rrow] != '_' or (rcol == 0 and rrow == 0)or count <= len(caves) ** 2:
+            rcol = random.randint(0, len(caves)-1)
+            rrow = random.randint(0, len(caves)-1)
+            count += 1
     #change _ to money moneyyyyyyyyy
     caves[rcol][rrow] = '$'
     return caves
