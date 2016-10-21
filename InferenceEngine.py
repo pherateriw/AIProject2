@@ -385,5 +385,7 @@ class InferenceEngine:
         self.kb.tell(key, assertion, x, y)
 
     def ask(self, query):
-        print("telling %s" % query)
-        return ""
+        print("Asking %s" % query)
+        possibles = ['^', '>', 'v', '<', 's^', 's>', 'sv', 's<'] # move these directions or shoot these directions
+        choice = 'v'
+        return choice

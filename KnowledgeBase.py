@@ -145,7 +145,7 @@ class KnowledgeBase:
         # take the information gathered from percepts, add it to the knowledge base
         for value in self.percepts[percept_key]:
             if (value != '_'):
-                self.tell(percept_key, value, x, y) 
+                self.tell(value, x, y)
 
 
     def set_potentials(self, x, y, char):
@@ -172,7 +172,8 @@ class KnowledgeBase:
     # TODO: add safe spaces
     # TODO: add death info to cell, add inferred info to cell     
     # update the knowledge base with information gathered from percept
-    def tell(self, key, assertion, x, y):        
+    def tell(self, assertion, x, y):
+        key = "{%s,%s}" % (x, y)
         self.facts.setdefault(key,[])
         
         # for percept information, builds the appropriate assertion
@@ -184,6 +185,8 @@ class KnowledgeBase:
             assertion = "STENCH({},{})".format(x,y)
         elif (assertion == 't'):
             assertion = "BUMP({},{})".format(x,y)
+        elif (assertion == 'a'):
+            assertion = "SAFE({},{})".format(x, y)
        
        # check that this rule is not already in dictionary
         if (assertion not in self.facts[key]):
@@ -198,7 +201,7 @@ class KnowledgeBase:
     # TODO: write this
     # ask questions of the knowledge base
     # input: kb, query
-    def ask():
+    def ask(self):
         print("not implemented yet")
 
     # TODO: quantifiers?

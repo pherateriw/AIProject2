@@ -121,16 +121,14 @@ class InformedDude(AbstractDude):
         super(InformedDude, self).__init__(kb)
         self.ie = InferenceEngine.InferenceEngine(kb)
         self.move.place_dude()
-        self.ie.tell('{0,0}', 'a', self.x, self.y) # 0, 0 is safe
         self.rounds()
 
     def rounds(self):
-        t = 0 # time sequence
+        t = 0 # time sequence TODO time?
         go_on = True
         while go_on:
-            choice = self.ie.ask()
-            percept, go_one = self.make_move(choice)
-            self.ie.tell(percept)
+            choice = self.ie.ask("What Next?")
+            go_on = self.make_move(choice) # currently move does the telling, which is not according to design doc, but leaving for now
 
     def makePerceptSentence(self, x, y):
         #Percept structure: [GLITTER, BUMP, STENCH, BREEZE, TIMESTEP]
@@ -146,9 +144,8 @@ class InformedDude(AbstractDude):
     # TELL the KB the temporal physics sentences for time t    
 
     def make_move(self, choice):
-        percept = ""
-        go_on = True
-        return percept, go_on
+        go_on = self.move.move_direction(self.x, self.y, choice)
+        return go_on
 
 
 
