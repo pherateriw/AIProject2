@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="efac3b79-fa8b-4353-a157-1bbb845d21de" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/KnowledgeBase.py" afterPath="$PROJECT_DIR$/KnowledgeBase.py" />
     </list>
     <ignored path="AIProject2.iws" />
@@ -46,7 +45,7 @@
       <file leaf-file-name="Dudes.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Dudes.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1747">
+            <state relative-caret-position="1734">
               <caret line="141" column="12" selection-start-line="141" selection-start-column="12" selection-end-line="141" selection-end-column="12" />
               <folding>
                 <element signature="e#0#20#0" expanded="true" />
@@ -58,8 +57,8 @@
       <file leaf-file-name="KnowledgeBase.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/KnowledgeBase.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="370">
-              <caret line="244" column="111" selection-start-line="244" selection-start-column="111" selection-end-line="244" selection-end-column="111" />
+            <state relative-caret-position="118">
+              <caret line="244" column="129" selection-start-line="244" selection-start-column="129" selection-end-line="244" selection-end-column="129" />
               <folding />
             </state>
           </provider>
@@ -68,7 +67,7 @@
       <file leaf-file-name="Move.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Move.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="3349">
+            <state relative-caret-position="319">
               <caret line="199" column="0" selection-start-line="199" selection-start-column="0" selection-end-line="199" selection-end-column="0" />
               <folding />
             </state>
@@ -526,24 +525,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Move.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3349">
-          <caret line="199" column="0" selection-start-line="199" selection-start-column="0" selection-end-line="199" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Dudes.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1747">
-          <caret line="141" column="12" selection-start-line="141" selection-start-column="12" selection-end-line="141" selection-end-column="12" />
-          <folding>
-            <element signature="e#0#20#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/RunModels.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="68">
@@ -552,10 +533,28 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/Dudes.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1734">
+          <caret line="141" column="12" selection-start-line="141" selection-start-column="12" selection-end-line="141" selection-end-column="12" />
+          <folding>
+            <element signature="e#0#20#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Move.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="319">
+          <caret line="199" column="0" selection-start-line="199" selection-start-column="0" selection-end-line="199" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/KnowledgeBase.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="370">
-          <caret line="244" column="111" selection-start-line="244" selection-start-column="111" selection-end-line="244" selection-end-column="111" />
+        <state relative-caret-position="118">
+          <caret line="244" column="129" selection-start-line="244" selection-start-column="129" selection-end-line="244" selection-end-column="129" />
           <folding />
         </state>
       </provider>
