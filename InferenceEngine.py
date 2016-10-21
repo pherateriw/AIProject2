@@ -200,7 +200,7 @@ class InferenceEngine:
 
         # loop until no new clauses can be added (which means KB does not entail q), or
         # two clauses yield the empty clause (which means KB entails q)
-        while loop_flag:
+        while True:
             # variable to keep track of the length of clause list            
             clause_len = len(clauses)
 
@@ -216,9 +216,6 @@ class InferenceEngine:
             # when no new clauses can be added, KB does not entail q
             new = set()
     
-                
-            
-            
             # for testing
             print(clause_pairs)            
             print(len(clause_pairs)) 
@@ -238,27 +235,29 @@ class InferenceEngine:
             
                 # resolve returns the set of all possible clauses obtained by resolving ci and cj            
                 resolvents = self.resolve(ci, cj)
-                
-                
-        #        if FALSE in resolvents: 
-        #            return True
-        #        new.union_update(set(resolvents))
-        #    if new.issubset(set(clauses)): return False
 
-        #    for c in new:
-       #         if c not in clauses: clauses.append(c)        
-        
-            loop_flag = False 
+                # all we have left is the empty clause
+                # resolution is finished                
+                if len(resolvents) == 0:                    
+                    return True
+                                
+                # new becomes the union of new and resolvents
+                # TODO: we might want union here, not totally sure I get the difference
+                new.union_update(set(resolvents))                
             
-            #print(clauses)           
- 
-        """Return all clauses that can be obtained by resolving clauses ci and cj. Each pair
-        that contans complementary literals is resolved to produce a new clause, which is added
-        to the set if it is not alredy present. 
-        Remember: Horn clauses are going to be disjunctions
-        note: a disjunction is true only if at least one of each pair that contains complementary literals
-        is resolved to produce a new clause. New clauses are added to the new set in resolution. 
-        """
+            # checks if new is a subset of the clauses, if it is, keeps looping
+            if new.issubset(set(clauses)):
+                return False
+                
+            clauses.add(clauses.union_update(new))
+          
+    """Return all clauses that can be obtained by resolving clauses ci and cj. Each pair
+    that contans complementary literals is resolved to produce a new clause, which is added
+    to the set if it is not alredy present. 
+    Remember: Horn clauses are going to be disjunctions
+    note: a disjunction is true only if at least one of each pair that contains complementary literals
+    is resolved to produce a new clause. New clauses are added to the new set in resolution. 
+    """
     def resolve(self, ci, cj):
         clauses = []
         disjunct_list_i = []
@@ -298,14 +297,12 @@ class InferenceEngine:
                 if '!' in j:
                     j_strip = j.split("!(")
                     # slice off that last paren
-                    j_bare = j_strip[1][:-1]                                
+                    j_bare = j_strip[1][:-1]                                                   
                 else:
                     j_bare = j
                 
                 self.preprocess_unify(i_bare, j_bare, self.theta)
-
-                print(self.theta)
-                # TODO: get so is working for multiple theta, of different sizes                
+             
                 # there is something in theta we unified, so we can try resolution
                 if len(self.theta) > 1:
                     # see if we can resolve
@@ -333,22 +330,24 @@ class InferenceEngine:
                                                    
                             print(disjunct_list_i) 
                             print(disjunct_list_j)                                
+                            
+                            # make the new list of disjuncts
+                            updated_disjuncts = set()
+                            for i in disjunct_list_i:
+                                updated_disjuncts.add(i)                                
+                            
+                            for j in disjunct_list_j:
+                                updated_disjuncts.add(j)
+                            
+                            updated_disjuncts = list(updated_disjuncts)
+                            print(updated_disjuncts)
+                            
+                            for a in updated_disjuncts:
+                                clauses.append(a)                            
+
                             # after sub, remove those keys from theta, so we can try again
-
-                
-
-                
-
-
-                
-                # update clauses in light of these changes
-                
-
-
-
-                      
-        #            dnew = unique(removeall(di, disjuncts(ci)) + removeall(dj, disjuncts(cj)))
-        #        clauses.append(NaryExpr('|', *dnew))
+                            self.theta.clear()   
+                            print(clauses)    
         return clauses
         
     def negate(self,q):
@@ -375,8 +374,7 @@ class InferenceEngine:
                           
         return disjunct_list
                 
-                
-                
+                    
     def test_resolution(self, kb):
-        q = "B(0,0)"
+        q = "OLDER(Lulu,Fifi)"
         self.resolution(kb, q)
