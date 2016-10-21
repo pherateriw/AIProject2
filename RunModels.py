@@ -31,6 +31,7 @@ class RunModels:
                 self.save_file(fn, kb.numWumpii, kb)
 
     def create_probs(self, obstacles, wumpi, pits):
+        print("DONT DO THIS UNLESS YOU PLAN ON IT TAKING FOREVER!!!")
         probs5 = [.12, .23/3, .46/3, .69/3, .92/3]
         self.create_single_prob(5, probs5)
         probs10 = [.03, .245/3, .49/3, .735/3, .98/3]
@@ -40,6 +41,8 @@ class RunModels:
         probs20 = [.009, .249/3, .498/3, .746/3, .995/3]
         self.create_single_prob(20, probs20)
         probs25 = [.006, .25/3, .5/3, .75/3, .997/3]
+        probs25 = [.75/3]
+
         self.create_single_prob(25, probs25)
 
     def create_single_prob(self, size, prob):
@@ -63,7 +66,7 @@ def main():
     save_file = True
 
     # rm.create_sizes(args.obstacles, args.wumpi, args.pits)
-    rm.create_probs(args.obstacles, args.wumpi, args.pits)
+    # rm.create_probs(args.obstacles, args.wumpi, args.pits)
 
     # if load_file:
     #     kb = KnowledgeBase.KnowledgeBase(args.size, args.obstacles, args.wumpi, args.pits, rm.load_file("test1"))
@@ -72,11 +75,12 @@ def main():
     # arrows = kb.numWumpii
     # if save_file:
     #     rm.save_file("test_worlds/size5/test2", arrows, kb)
+    kb = KnowledgeBase.KnowledgeBase(args.size, args.obstacles, args.wumpi, args.pits, rm.load_file("test_worlds/sizes/size5/test4"))
 
 
     # TODO: make a choice for user, make sure we pass same world to both
     # rDude = Dudes.ReactiveDude(kb)
-    # iDude = Dudes.InformedDude(kb)
+    iDude = Dudes.InformedDude(kb)
 
 
 

@@ -110,6 +110,7 @@ class Move:
         print("Placing Dude at (0, 0), facing south")
         self.kb.update_cell(0, 0, "v")
         self.kb.update_percept(0, 0)
+        self.kb.tell('a', 0, 0)  # 0, 0 is safe
 
     # upon move, interacts with the world (if in a relevant part of the map)
     def successful_move(self, x, y, direction):
@@ -134,6 +135,7 @@ class Move:
             return False
         else:
             self.kb.update_cell(self.dude.prevx, self.dude.prevy, 's')
+            self.kb.tell('a', x, y)
         return True
 
     def change_direction(self, direction):
