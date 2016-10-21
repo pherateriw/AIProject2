@@ -5,7 +5,8 @@ class Move:
     SOUTH = 'v'
     WEST = '<'
 
-    def __init__(self, kb, dude):
+    def __init__(self, logger, kb, dude):
+        self.logger = logger
         self.gold_found = False
         self.kb = kb # Knowledge Base
         self.moves = 0
@@ -24,28 +25,28 @@ class Move:
         # Direction contains shoot char and direction to shoot
         if len(direction) > 1:
             self.shoot_wumpus(direction)
-            return x, y, self.gold_found
+            return x, y, self.gold_found, self.cur_percept
         # Else moving a direction
         elif direction == "^":
-            print("Moving North")
+            self.logger.info("Moving North")
             temp = x
             temp -= 1
             if self.successful_move(temp, y, direction):
                 x = temp
         elif direction == "v":
-            print("Moving South")
+            self.logger.info("Moving South")
             temp = x
             temp += 1
             if self.successful_move(temp, y, direction):
                 x = temp
         elif direction == ">":
-            print("Moving East")
+            self.logger.info("Moving East")
             temp = y
             temp += 1
             if self.successful_move(x, temp, direction):
                 y = temp
         elif direction == "<":
-            print("Moving West")
+            self.logger.info("Moving West")
             temp = y
             temp -= 1
             if self.successful_move(x, temp, direction):
@@ -57,10 +58,10 @@ class Move:
 
     # Shooting an arrow in direction specified and listening for scream
     def shoot_wumpus(self, direction):
-        print("Killing a wumpus!!!")
+        self.logger.info("Killing a wumpus!!!")
         self.cost -= 10
         if direction[0] == '^':
-            print("Shooting arrow north")
+            self.logger.info("Shooting arrow north")
             i = self.dude.x
             y = self.dude.y
             while i >= 0:
@@ -69,7 +70,7 @@ class Move:
                     break
                 i -= 1
         elif direction[0] == '>':
-            print("Shooting arrow west")
+            self.logger.info("Shooting arrow west")
             x = self.dude.x
             i = self.dude.y
             while i < len(self.kb.known_map):
@@ -78,7 +79,7 @@ class Move:
                     break
                 i += 1
         elif direction[0] == 'v':
-            print("Shooting arrow south")
+            self.logger.info("Shooting arrow south")
             i = self.dude.x
             y = self.dude.y
             while i < len(self.kb.known_map):
@@ -87,7 +88,7 @@ class Move:
                     break
                 i += 1
         elif direction[0] == '<':
-            print("Shooting arrow east")
+            self.logger.info("Shooting arrow east")
             x = self.dude.x
             i = self.dude.y
             while i >= 0:
@@ -99,7 +100,7 @@ class Move:
 
     # Sucessfully killed a wumpus, sound scream and update stats
     def wumpus_death(self, x, y):
-        print("AAAIIIIEEEEE")
+        self.logger.info("AAAIIIIEEEEE")
         self.kb.update_cell(x, y, '_')
         self.kb.update_unknown_cell(x, y, '_')
         self.dude.arrows -= 1
@@ -108,7 +109,7 @@ class Move:
 
     # places the explorer in the starting cell, facing south, update percept and tell KnowledgeBase cell is safe
     def place_dude(self):
-        print("Placing Dude at (0, 0), facing south")
+        self.logger.info("Placing Dude at (0, 0), facing south")
         self.kb.update_cell(0, 0, "v")
         self.kb.update_percept(0, 0)
         self.kb.tell('a', 0, 0)  # 0, 0 is safe
@@ -155,57 +156,57 @@ class Move:
         if direction == current:
             return
         elif direction - current == -1:
-            print("Turning Left")
+            self.logger.info("Turning Left")
             self.kb.update_cell(self.dude.x, self.dude.y, direction_list[direction])
             self.cost -= 1
         elif direction - current == 1:
-            print("Turning Right")
+            self.logger.info("Turning Right")
             self.kb.update_cell(self.dude.x, self.dude.y, direction_list[direction])
             self.cost -= 1
         elif direction - current == -2:
-            print("Turning Left")
+            self.logger.info("Turning Left")
             self.kb.update_cell(self.dude.x, self.dude.y, direction_list[direction + 1])
             self.cost -= 1
-            print("Turning Left")
+            self.logger.info("Turning Left")
             self.kb.update_cell(self.dude.x, self.dude.y, direction_list[direction])
             self.cost -= 1
         elif direction - current == 2:
-            print("Turning Right")
+            self.logger.info("Turning Right")
             self.kb.update_cell(self.dude.x, self.dude.y, direction_list[direction - 1])
             self.cost -= 1
-            print("Turning Right")
+            self.logger.info("Turning Right")
             self.kb.update_cell(self.dude.x, self.dude.y, direction_list[direction])
             self.cost -= 1
         elif direction - current == 3:
-            print("Turning Left")
+            self.logger.info("Turning Left")
             self.kb.update_cell(self.dude.x, self.dude.y, direction_list[direction])
             self.cost -= 1
         elif direction - current == -3:
-            print("Turning Right")
+            self.logger.info("Turning Right")
             self.kb.update_cell(self.dude.x, self.dude.y, direction_list[direction])
             self.cost -= 1
         else:
-            print("Got turned around...")
+            self.logger.info("Got turned around...")
 
     # End game and update stats
     def grab_gold(self):
-        print("Gold found!")
+        self.logger.info("Gold found!")
         self.moves += 1
         self.cost += 1000
         self.gold_found = True
 
     # Death and update of stats
     def pit_fall(self):
-        print("Ahhhhhhhhhhhhhhhhhhhh!")
-        print("RIP Explorer, you fell into a pit.")
+        self.logger.info("Ahhhhhhhhhhhhhhhhhhhh!")
+        self.logger.info("RIP Explorer, you fell into a pit.")
         self.moves += 1
         self.cost -= 1000
         self.dude.death_by_pit += 1
 
     # Death and update of stats
     def wumpus_encounter(self):
-        print("Crunch.")        
-        print("RIP Explorer, you were eaten by a wumpus.")
+        self.logger.info("Crunch.")        
+        self.logger.info("RIP Explorer, you were eaten by a wumpus.")
         self.moves += 1
         self.cost -= 1000
         self.dude.death_by_wumpii += 1

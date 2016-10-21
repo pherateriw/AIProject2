@@ -95,12 +95,11 @@ def createWorld(size, oProbs, pProbs, wProbs):
     return world, numWumpii
 
 
-def printGrid(grid):
-    #print(" N ")
-    #print("W E")
-    #print(" S ")
+def printGrid(logger, grid):
+    #self.logger.info(" N ")
+    #self.logger.info("W E")
+    #self.logger.info(" S ")
     
     for row in grid:
-        print(row)
-    print()
-    
+        logger.info(row)
+    logger.info("")
