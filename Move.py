@@ -19,6 +19,7 @@ class Move:
         ie = InferenceEngine(self.kb)
         
     def move_direction(self, x, y, direction):
+        self.dude.cells_explored += 1
         self.dude.prevx = x
         self.dude.prevy = y
         self.moves += 1
@@ -56,6 +57,7 @@ class Move:
 
     def shoot_wumpus(self, direction):
         print("Killing a wumpus!!!")
+        self.cost -= 10
         if direction[0] == '^':
             print("Shooting arrow north")
             i = self.dude.x
@@ -99,7 +101,7 @@ class Move:
         self.kb.update_cell(x, y, '_')
         self.kb.update_unknown_cell(x, y, '_')
         self.dude.arrows -= 1
-        self.cost -= 1
+        self.cost += 10
         self.dude.killed_wumpii += 1
 
 
