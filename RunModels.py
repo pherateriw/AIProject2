@@ -79,8 +79,8 @@ def main():
 
 
     # TODO: make a choice for user, make sure we pass same world to both
-    rDude = Dudes.ReactiveDude(kb)
-    #iDude = Dudes.InformedDude(kb)
+    # rDude = Dudes.ReactiveDude(kb)
+    iDude = Dudes.InformedDude(kb)
 
 
 if __name__ == '__main__':

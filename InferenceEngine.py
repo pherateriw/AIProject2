@@ -493,13 +493,16 @@ class InferenceEngine:
             if rand == 0:
                 return choices.get('s')
             else:
-                return choices.get('w')
+                l = []
+                for c in choices.get('w'):
+                    l.append('%sk' % c)
+                return l
         elif len(choices.get('s')) > 0:
             return choices.get('s')
         elif len(choices.get('w')) > 0:
             l = []
             for c in choices.get('w'):
-                l.append('k%s' % c)
+                l.append('%sk' % c)
             return l
 
         else:
