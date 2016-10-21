@@ -62,8 +62,8 @@ def main():
     args = parser.parse_args()
     rm = RunModels()
 
-    load_file = False
-    save_file = True
+    #load_file = False
+    #save_file = True
 
     # rm.create_sizes(args.obstacles, args.wumpi, args.pits)
     # rm.create_probs(args.obstacles, args.wumpi, args.pits)
@@ -71,7 +71,7 @@ def main():
     # if load_file:
     #     kb = KnowledgeBase.KnowledgeBase(args.size, args.obstacles, args.wumpi, args.pits, rm.load_file("test1"))
     # else:
-    #     kb = KnowledgeBase.KnowledgeBase(args.size, args.obstacles, args.wumpi, args.pits,  None)
+    kb = KnowledgeBase.KnowledgeBase(args.size, args.obstacles, args.wumpi, args.pits,  None)
     # arrows = kb.numWumpii
     # if save_file:
     #     rm.save_file("test_worlds/size5/test2", arrows, kb)
@@ -79,9 +79,8 @@ def main():
 
 
     # TODO: make a choice for user, make sure we pass same world to both
-    # rDude = Dudes.ReactiveDude(kb)
-    iDude = Dudes.InformedDude(kb)
-
+    rDude = Dudes.ReactiveDude(kb)
+    #iDude = Dudes.InformedDude(kb)
 
 
 if __name__ == '__main__':

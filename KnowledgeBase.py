@@ -188,7 +188,7 @@ class KnowledgeBase:
             assertion = "WUMPUS({},{})".format(x, y)
         elif (assertion == 'p'):
             assertion = "PIT({},{})".format(x, y)
-       
+
        # check that this rule is not already in dictionary
         if (assertion not in self.facts[key]):
             self.facts[key].append(assertion)
@@ -214,54 +214,55 @@ class KnowledgeBase:
         Uninstantiated variables lowercase char (cannot include v since v means or)
         All sentences in clause form
         Possble Actions: GRAB, TURN90, MOVEFORWARD, SHOOTARROW
-        Possible Predicates: SAFE(X,Y), BREEZE(X,Y), STENCH(X,Y), BUMP(X,Y), PIT(X,Y), WUMPUS(X,Y), OBSTACLE(X,Y),
-        GOLD(X,Y), POSSPIT(X,Y), POSSWUMP(X,Y), AT(X,Y)(?)
+        Possible Predicates: SAFE(x,y), BREEZE(x,y), STENCH(x,y), BUMP(x,y), PIT(x,y), WUMPUS(x,y), OBSTACLE(x,y),
+        GOLD(x,y), POSSPIT(x,y), POSSWUMP(x,y), AT(x,y)(?), FACING(d)
         """
 
-        self.clause_list.append("!BUMP(X,Y) v OBSTACLE(X,Y)") #If there's a bump, there must be an obstacle
-        self.clause_list.append("SAFE(X,Y) v PIT(X,Y) v WUMPUS(X,Y) v !SAFE(X,Y) v !PIT(X,Y)") #If it's safe there are no pits or wumpi
-        self.clause_list.append("SAFE(X,Y) v PIT(X,Y) v WUMPUS(X,Y) v !SAFE(X,Y) v !WUMPUS(X,Y))")
-        self.clause_list.append(
-            "BREEZE(X,Y) v !PIT(X+1,Y) v !BREEZE(X,Y) v PIT(X+1,Y) v PIT(X-1,Y) v PIT(X,Y+1) v PIT(X,Y-1)") #A breeze means there must be a pit in one of the surrounding cells
-        self.clause_list.append(
-            "BREEZE(X,Y) v !PIT(X-1,Y) v !BREEZE(X,Y) v PIT(X+1,Y) v PIT(X-1,Y) v PIT(X,Y+1) v PIT(X,Y-1)")  # A breeze means there must be a pit in one of the surrounding cells
-        self.clause_list.append(
-            "BREEZE(X,Y) v !PIT(X,Y+1) v !BREEZE(X,Y) v PIT(X+1,Y) v PIT(X-1,Y) v PIT(X,Y+1) v PIT(X,Y-1)")  # A breeze means there must be a pit in one of the surrounding cells
-        self.clause_list.append(
-            "BREEZE(X,Y) v !PIT(X,Y-1) v !BREEZE(X,Y) v PIT(X+1,Y) v PIT(X-1,Y) v PIT(X,Y+1) v PIT(X,Y-1)")  # A breeze means there must be a pit in one of the surrounding cells
+        self.clause_list.append("!(BUMP(x,y)) v (OBSTACLE(x,y))") #If there's a bump, there must be an obstacle
+        self.clause_list.append("(SAFE(x,y)) v (PIT(x,y)) v (WUMPUS(x,y)) v !(SAFE(x,y)) v !(PIT(x,y))") #If it's safe there are no pits or wumpi
+        self.clause_list.append("(SAFE(x,y) v (PIT(x,y)) v (WUMPUS(x,y)) v !(SAFE(x,y)) v !(WUMPUS(x,y))")
 
-        self.clause_list.append("STENCH(X,Y) <=> !WUMPUS(X+1,Y) v !STENCH(X,Y) v WUMPUS(X+1,Y) v WUMPUS(X-1,Y) v WUMPUS(X,Y+1) v WUMPUS(X,Y-1)") #A stench means there must be a wumpus in one of the surrounding cells
-        self.clause_list.append(
-            "STENCH(X,Y) <=> (WUMPUS(X+1,Y) v WUMPUS(X-1,Y) v WUMPUS(X,Y+1) v WUMPUS(X,Y-1))")  # A stench means there must be a wumpus in one of the surrounding cells
-        self.clause_list.append(
-            "STENCH(X,Y) <=> (WUMPUS(X+1,Y) v WUMPUS(X-1,Y) v WUMPUS(X,Y+1) v WUMPUS(X,Y-1))")  # A stench means there must be a wumpus in one of the surrounding cells
-        self.clause_list.append(
-            "STENCH(X,Y) <=> (WUMPUS(X+1,Y) v WUMPUS(X-1,Y) v WUMPUS(X,Y+1) v WUMPUS(X,Y-1))")  # A stench means there must be a wumpus in one of the surrounding cells
+        self.clause_list.append("!(POSSPIT(x,y)) v !(SAFE(x,y)) v !(PIT(x,y))") #A Possible Pit that is already safe means there is no pit there
+        self.clause_list.append("!(POSSWUMP(x,y)) v !(SAFE(x,y)) v !(WUMPUS(x,y))")#A Possible Wumpus that is already safe means there is no wumpus there
+        self.clause_list.append("!(PIT(x,y)) v !(SAFE(x,y))")
+        self.clause_list.append("!(PIT(x,y)) v !(WUMPUS(x,y))") #Pits, wumpi and safe can not be in the same cells
+        self.clause_list.append("!(WUMPUS(x,y)) v !(SAFE(x,y))")
+        self.clause_list.append("!(WUMPUS(x,y)) v  !(PIT(x,y))")
 
-        self.clause_list.append("!POSSPIT(X,Y) v !SAFE(X,Y) v !PIT(X,Y)") #A Possible Pit that is already safe means there is no pit there
-        self.clause_list.append("!POSSWUMP(X,Y) v !SAFE(X,Y) v !WUMPUS(X,Y)")#A Possible Wumpus that is already safe means there is no wumpus there
-        self.clause_list.append("!PIT(X,Y) v !SAFE(X,Y)")
-        self.clause_list.append("!PIT(X,Y) v !WUMPUS(X,Y)") #Pits, wumpi and safe can not be in the same cells
-        self.clause_list.append("!WUMPUS(X,Y) v !SAFE(X,Y) ")
-        self.clause_list.append("!WUMPUS(X,Y) v  !PIT(X,Y)")
-        self.clause_list.append("!BREEZE(X,Y) v (POSSPIT(X+1,Y) ^ POSSPIT(X-1,Y) ^ POSSPIT(X,Y+1) ^ POSSPIT(X,Y-1))")
-        self.clause_list.append("!STENCH(X,Y) v (POSSWUMP(X+1,Y) ^ POSSWUMP(X-1,Y) ^ POSSWUMP(X,Y+1) ^ POSSWUMP(X,Y-1))")
-        self.clause_list.append("")
+        self.clause_list.append("!(BREEZE(x,y)) v (POSSPIT(x+1,y))")
+        self.clause_list.append("!(BREEZE(x,y)) v (POSSPIT(x-1,y))")
+        self.clause_list.append("!(BREEZE(x,y)) v (POSSPIT(x,y+1))")
+        self.clause_list.append("!(BREEZE(x,y)) v (POSSPIT(x,y-1))")
 
-        #self.clause_list.append("A(x,y) v B(x,y) v C(x,y)")
-        #self.clause_list.append("B(x,y) v C(x,y)")
-        #self.clause_list.append("C(X,Y)")   
-        #self.clause_list.append("D(X,Y)")   
-        #self.clause_list.append("E(X,Y)")   
+        self.clause_list.append("!(STENCH(x,y)) v (POSSWUMP(x+1,y))")
+        self.clause_list.append("!(STENCH(x,y)) v (POSSWUMP(x-1,y))")
+        self.clause_list.append("!(STENCH(x,y)) v (POSSWUMP(x,y+1))")
+        self.clause_list.append("!(STENCH(x,y)) v (POSSWUMP(x,y-1))")
 
+        self.clause_list.append("(MOVE(x,y)) v !(SAFE(x,y)) v !(MOVE(x,y)) v (SAFE(x,y))")
+        self.clause_list.append("(GRABGOLD(x,y)) v !(GLIMMER(x,y)) v !(GRABGOLD(x,y)) v (GLIMMER(x,y))")
+        self.clause_list.append("(SHOOTARROW(x,y)) <=> (WUMPUS(x,y))")
+        self.clause_list.append("(SHOOTARROW(x,y)) v !(WUMPUS(x,y)) v !(SHOOTARROW(x,y)) v (WUMPUS(x,y))")
+        self.clause_list.append("(TURNL90(x,y)) <=> (PIT(x,y)) v (OBSTACLE(x,y)) v ")
 
+        self.clause_list.append("FACING(NORTH) <=> (TURNL90(x,y) ^ FACING(EAST)) v (TURNR90(x,y) ^ FACING(WEST)")
 
-        
-        # Jani: change this if needed, was just testing to make sure I could reach this 
+        #self.clause_list.append("!BUMP(X,Y) v (OBSTACLE(X,Y))") #If there's a bump, there must be an obstacle
+        #self.clause_list.append("SAFE(X,Y) <=> !(PIT(X,Y)) ^ !(WUMPUS(X,Y)") #If it's safe there are no pits or wumpi
+        #self.clause_list.append("BREEZE(X,Y) <=> (PIT(X+1,Y) v PIT(X-1,Y) v PIT(X,Y+1) v PIT(X,Y-1))") #A breeze means there must be a pit in one of the surrounding cells
+        #self.clause_list.append("STENCH(X,Y) <=> (WUMPUS(X+1,Y) v WUMPUS(X-1,Y) v WUMPUS(X,Y+1) v WUMPUS(X,Y-1))") #A stench means there must be a wumpus in one of the surrounding cells
+        #self.clause_list.append("!POSSPIT(X,Y) v !SAFE(X,Y) v !PIT(X,Y)") #A Possible Pit that is already safe means there is no pit there
+        #self.clause_list.append("!POSSWUMP(X,Y) v !SAFE(X,Y) v !WUMPUS(X,Y)")#A Possible Wumpus that is already safe means there is no wumpus there
+        #self.clause_list.append("!PIT(X,Y) v (!SAFE(X,Y) ^ !WUMPUS(X,Y))") #Pits, wumpi and safe can not be in the same cells
+        #self.clause_list.append("!WUMPUS(X,Y) v !SAFE(X,Y) ^ !PIT(X,Y)")
+        #self.clause_list.append("!BREEZE(X,Y) v (POSSPIT(X+1,Y) ^ POSSPIT(X-1,Y) ^ POSSPIT(X,Y+1) ^ POSSPIT(X,Y-1))")
+        #self.clause_list.append("!STENCH(X,Y) v (POSSWUMP(X+1,Y) ^ POSSWUMP(X-1,Y) ^ POSSWUMP(X,Y+1) ^ POSSWUMP(X,Y-1))")
 
-
-        #for c in self.clause_list: 
-        #    print (c)
+        # FOR TESTING
+        #self.clause_list.append("MOTHER(Lulu,Fifi)")
+        #self.clause_list.append("ALIVE(Lulu)")
+        #self.clause_list.append("!(MOTHER(x,y)) v PARENT(x,y)")
+        #self.clause_list.append("!(PARENT(x,y)) v !(ALIVE(x)) v OLDER(x,y)")
         
         return self.clause_list
 
