@@ -136,8 +136,21 @@ class InformedDude(AbstractDude):
         safe_directions = self.get_possible_directions(self.x, self.y)
         self.x, self.y, gold_found = self.move.move_direction(self.x, self.y, random.choice(safe_directions))
         return gold_found
-        
-    # TODO: make sure matches design doc    
+
+    def makePerceptSentence(self, x, y):
+        #Percept structure: [GLITTER, BUMP, STENCH, BREEZE, TIMESTEP]
+        percept  = [True, False, True, False, 3]
+        return percept
+
+    def ask(self):
+        pass
+    def tell(self):
+        pass
+    def plan_route(self):
+        pass
+    def plan_shot(self):
+        pass
+    # TODO: make sure matches design doc
     # R & N pg 270, adapted to FOL
     # inputs: percepts
     # persistent: kb, plan (action sequence, starts empty)
