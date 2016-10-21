@@ -9,7 +9,6 @@ class AbstractDude:
         self.kb = kb
         self.size = len(kb.known_map)
         self.move = Move.Move(self.kb, self)
-        self.move.place_dude()
         self.x = 0
         self.y = 0
         self.prevx = 0
@@ -91,6 +90,7 @@ class ReactiveDude(AbstractDude):
     def __init__(self, kb):
         print("Reactive dude created!")
         super(ReactiveDude, self).__init__(kb)
+        self.move.place_dude()
         self.rounds()
 
     def rounds(self):
@@ -119,31 +119,33 @@ class InformedDude(AbstractDude):
         print("Informed dude created!")
         print()
         super(InformedDude, self).__init__(kb)
+        self.ie = InferenceEngine.InferenceEngine(kb)
+        self.move.place_dude()
         self.rounds()
 
     def rounds(self):
-        self.move.informed_dude_move(self.kb)
+        t = 0 # time sequence TODO time?
+        go_on = True
+        while go_on:
+            choice = self.ie.ask("What Next?")
+            go_on = self.make_move(choice) # currently move does the telling, which is not according to design doc, but leaving for now
 
-        #go_on = False
-        #while not go_on :
-        #    go_on = self.get_random_safe()
-        #print("Total Moves")
-        #print(self.move.moves)
-        #print("Total Cost")
-        #print(self.move.cost)
+    def makePerceptSentence(self, x, y):
+        #Percept structure: [GLITTER, BUMP, STENCH, BREEZE, TIMESTEP]
+        percept  = [True, False, True, False, 3]
+        return percept
 
-    def get_random_safe(self):
-        safe_directions = self.get_possible_directions(self.x, self.y)
-        self.x, self.y, gold_found = self.move.move_direction(self.x, self.y, random.choice(safe_directions))
-        return gold_found
-        
-    # TODO: make sure matches design doc    
+
+    # TODO: make sure matches design doc
     # R & N pg 270, adapted to FOL
     # inputs: percepts
     # persistent: kb, plan (action sequence, starts empty)
     # TELL(KB, MAKE-PERCEPT-SENTENCE(percept,t))
     # TELL the KB the temporal physics sentences for time t    
 
+    def make_move(self, choice):
+        go_on = self.move.move_direction(self.x, self.y, choice)
+        return go_on
 
 
 

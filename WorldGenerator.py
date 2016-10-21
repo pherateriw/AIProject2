@@ -26,7 +26,7 @@ def addObstacles(caves, oProbs):
         rrow = random.randint(0, len(caves) - 1)
         #While the location is full, keep generating random numbers
         count = 0
-        while caves[rcol][rrow] != '_' or (rcol == 0 and rrow == 0) or count <= len(caves) ** 2:
+        while caves[rcol][rrow] != '_' or (rcol == 0 and rrow == 0) or count <= len(caves) ** 3:
             rcol = random.randint(0, len(caves)-1)
             rrow = random.randint(0, len(caves)-1)
             count += 1
@@ -45,7 +45,7 @@ def addPits(caves, pProbs):
         rrow = random.randint(0, len(caves) - 1)
         # While the location is full, keep generating random numbers
         count = 0
-        while caves[rcol][rrow] != '_' or (rcol == 0 and rrow == 0)or count <= len(caves) ** 2:
+        while caves[rcol][rrow] != '_' or (rcol == 0 and rrow == 0)or count <= len(caves) ** 3:
             rcol = random.randint(0, len(caves)-1)
             rrow = random.randint(0, len(caves)-1)
             count += 1
@@ -63,7 +63,7 @@ def addWumpus(caves, wProbs):
         rrow = random.randint(0, len(caves) - 1)
         # While the location is full, keep generating random numbers
         count = 0
-        while caves[rcol][rrow] != '_' or (rcol == 0 and rrow == 0)or count <= len(caves) ** 2:
+        while caves[rcol][rrow] != '_' or (rcol == 0 and rrow == 0)or count <= len(caves) ** 3:
             rcol = random.randint(0, len(caves)-1)
             rrow = random.randint(0, len(caves)-1)
             count += 1
@@ -76,7 +76,7 @@ def addGold(caves):
     rrow = random.randint(0, len(caves) - 1)
     # While the location is full, keep generating random numbers
     count = 0
-    while caves[rcol][rrow] != '_' or (rcol == 0 and rrow == 0)or count <= len(caves) ** 2:
+    while caves[rcol][rrow] != '_' or (rcol == 0 and rrow == 0)or count <= len(caves) ** 3:
             rcol = random.randint(0, len(caves)-1)
             rrow = random.randint(0, len(caves)-1)
             count += 1
