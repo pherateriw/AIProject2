@@ -2,8 +2,10 @@ import Dudes
 import argparse
 import KnowledgeBase
 
+
 class RunModels:
 
+    # Save world to file
     def save_file(self, fn, arrows, kb):
         outf = open(fn, 'w')
         outf.write(str(arrows))
@@ -14,7 +16,7 @@ class RunModels:
             outf.write('\n')
         outf.close()
 
-
+    # Load world to use in game
     def load_file(self, fn):
         infile = open(fn, 'r')
         line = infile.readline()
@@ -23,6 +25,7 @@ class RunModels:
         infile.close()
         return result, num_arrows
 
+    # Create 5 worlds of each size
     def create_sizes(self, obstacles, wumpi, pits):
         for i in range(5, 30, 5):
             for k in range(5):
@@ -30,8 +33,9 @@ class RunModels:
                 fn = "test_worlds/sizes/size%s/test%s" % (i, k)
                 self.save_file(fn, kb.numWumpii, kb)
 
+    # create 5 worlds for each size and each prob
     def create_probs(self, obstacles, wumpi, pits):
-        print("DONT DO THIS UNLESS YOU PLAN ON IT TAKING FOREVER!!!")
+        print("DON'T DO THIS UNLESS YOU PLAN ON IT TAKING FOREVER!!!")
         probs5 = [.12, .23/3, .46/3, .69/3, .92/3]
         self.create_single_prob(5, probs5)
         probs10 = [.03, .245/3, .49/3, .735/3, .98/3]
@@ -41,10 +45,9 @@ class RunModels:
         probs20 = [.009, .249/3, .498/3, .746/3, .995/3]
         self.create_single_prob(20, probs20)
         probs25 = [.006, .25/3, .5/3, .75/3, .997/3]
-        probs25 = [.75/3]
-
         self.create_single_prob(25, probs25)
 
+    # Create 5 worlds given a size and probability
     def create_single_prob(self, size, prob):
         for p in prob:
             for i in range(5):
@@ -52,6 +55,8 @@ class RunModels:
                 fn = "test_worlds/probs/size{}/probs{:.3f}/test{}".format(size, p, i)
                 self.save_file(fn, kb.numWumpii, kb)
 
+
+# Parse arguments for size and probabilities, create world world worlds and choose dude type to explore them
 def main():
     print("Hello Wumpus World!")
     parser = argparse.ArgumentParser()
@@ -59,28 +64,29 @@ def main():
     parser.add_argument("obstacles", help="Probability of obstacles", type=float)
     parser.add_argument("pits", help="Probability of pits", type=float)
     parser.add_argument("wumpi", help="Probability of wumpi", type=float)
+    parser.add_argument("dude", help="Type of dude, i or r", type=str)
     args = parser.parse_args()
     rm = RunModels()
 
-    #load_file = False
-    #save_file = True
-
+    # Create Testing rules. TAKES FOREVER!!!!!
     # rm.create_sizes(args.obstacles, args.wumpi, args.pits)
     # rm.create_probs(args.obstacles, args.wumpi, args.pits)
 
-    # if load_file:
-    #     kb = KnowledgeBase.KnowledgeBase(args.size, args.obstacles, args.wumpi, args.pits, rm.load_file("test1"))
-    # else:
-    kb = KnowledgeBase.KnowledgeBase(args.size, args.obstacles, args.wumpi, args.pits,  None)
-    # arrows = kb.numWumpii
-    # if save_file:
-    #     rm.save_file("test_worlds/size5/test2", arrows, kb)
-    kb = KnowledgeBase.KnowledgeBase(args.size, args.obstacles, args.wumpi, args.pits, rm.load_file("test_worlds/sizes/size5/test4"))
+    load_file = False
+    save_file = False
 
+    if load_file:
+        kb = KnowledgeBase.KnowledgeBase(args.size, args.obstacles, args.wumpi, args.pits, rm.load_file("test_worlds/sizes/size5/test4"))
+    else:
+        kb = KnowledgeBase.KnowledgeBase(args.size, args.obstacles, args.wumpi, args.pits,  None)
+    arrows = kb.numWumpii
+    if save_file:
+        rm.save_file("test_worlds/size5/test2", arrows, kb)
 
-    # TODO: make a choice for user, make sure we pass same world to both
-    # rDude = Dudes.ReactiveDude(kb)
-    iDude = Dudes.InformedDude(kb)
+    if args.dude == 'i':
+        iDude = Dudes.InformedDude(kb)
+    else:
+        rDude = Dudes.ReactiveDude(kb)
 
 
 if __name__ == '__main__':
