@@ -1,5 +1,3 @@
-# TODO: add other percept call
-
 class Move:
 
     NORTH = '^'
@@ -9,52 +7,55 @@ class Move:
 
     def __init__(self, kb, dude):
         self.gold_found = False
-        self.kb = kb
+        self.kb = kb # Knowledge Base
         self.moves = 0
         self.cost = 0
         self.dude = dude
+        self.cur_percept = None
 
-    def informed_dude_move(self, kb):
-        from InferenceEngine import InferenceEngine
-        ie = InferenceEngine(self.kb)
-        
+    # Given direction, attempt to move in that direction or to shoot a wumpii.
+    # Update Maps/knowledgeBase according to percepts
+    # Keep track of stats for each type of move
     def move_direction(self, x, y, direction):
-        self.dude.cells_explored += 1
         self.dude.prevx = x
         self.dude.prevy = y
         self.moves += 1
         self.cost -= 1
+        # Direction contains shoot char and direction to shoot
         if len(direction) > 1:
             self.shoot_wumpus(direction)
             return x, y, self.gold_found
-        if direction == "^":
+        # Else moving a direction
+        elif direction == "^":
             print("Moving North")
             temp = x
             temp -= 1
             if self.successful_move(temp, y, direction):
                 x = temp
-        if direction == "v":
+        elif direction == "v":
             print("Moving South")
             temp = x
             temp += 1
             if self.successful_move(temp, y, direction):
                 x = temp
-        if direction == ">":
+        elif direction == ">":
             print("Moving East")
             temp = y
             temp += 1
             if self.successful_move(x, temp, direction):
                 y = temp
-        if direction == "<":
+        elif direction == "<":
             print("Moving West")
             temp = y
             temp -= 1
             if self.successful_move(x, temp, direction):
                 y = temp
-        self.kb.update_cell(x, y, direction)
-        self.kb.update_percept(x, y)
-        return x, y, self.gold_found
 
+        self.kb.update_cell(x, y, direction)
+        self.cur_percept = self.kb.update_percept(x, y)
+        return x, y, self.gold_found, self.cur_percept
+
+    # Shooting an arrow in direction specified and listening for scream
     def shoot_wumpus(self, direction):
         print("Killing a wumpus!!!")
         self.cost -= 10
@@ -64,7 +65,7 @@ class Move:
             y = self.dude.y
             while i >= 0:
                 if self.kb.unknown_map[i][y] == 'w':
-                    self.kill_wumpi(i, y)
+                    self.wumpus_death(i, y)
                     break
                 i -= 1
         elif direction[0] == '>':
@@ -73,7 +74,7 @@ class Move:
             i = self.dude.y
             while i < len(self.kb.known_map):
                 if self.kb.unknown_map[x][i] == 'w':
-                    self.kill_wumpi(x, i)
+                    self.wumpus_death(x, i)
                     break
                 i += 1
         elif direction[0] == 'v':
@@ -82,7 +83,7 @@ class Move:
             y = self.dude.y
             while i < len(self.kb.known_map):
                 if self.kb.unknown_map[i][y] == 'w':
-                    self.kill_wumpi(i, y)
+                    self.wumpus_death(i, y)
                     break
                 i += 1
         elif direction[0] == '<':
@@ -91,12 +92,13 @@ class Move:
             i = self.dude.y
             while i >= 0:
                 if self.kb.unknown_map[x][i] == 'w':
-                    self.kill_wumpi(x, i)
+                    self.wumpus_death(x, i)
                     break
                 i -= 1
 
 
-    def kill_wumpi(self, x, y):
+    # Sucessfully killed a wumpus, sound scream and update stats
+    def wumpus_death(self, x, y):
         print("AAAIIIIEEEEE")
         self.kb.update_cell(x, y, '_')
         self.kb.update_unknown_cell(x, y, '_')
@@ -104,15 +106,14 @@ class Move:
         self.cost += 10
         self.dude.killed_wumpii += 1
 
-
-    # places the explorer in the starting cell, facing south
+    # places the explorer in the starting cell, facing south, update percept and tell KnowledgeBase cell is safe
     def place_dude(self):
         print("Placing Dude at (0, 0), facing south")
         self.kb.update_cell(0, 0, "v")
         self.kb.update_percept(0, 0)
         self.kb.tell('a', 0, 0)  # 0, 0 is safe
 
-    # upon move, interacts with the world (if in a relevant part of the map)
+    # upon move, check cell for event, update map and percepts accordingly
     def successful_move(self, x, y, direction):
         self.change_direction(direction)
         # if in square with gold, grab gold
@@ -137,10 +138,13 @@ class Move:
             self.kb.tell('w', x, y)
             return False
         else:
+            # cell is safe and explored
+            self.dude.cells_explored += 1
             self.kb.update_cell(self.dude.prevx, self.dude.prevy, 's')
             self.kb.tell('a', x, y)
         return True
 
+    # Given starting direction and ending direction, turn left or right until correct
     def change_direction(self, direction):
         direction_dict = {'^': 0, '>': 1, 'v': 2, '<': 3}
         direction_list = ['^', '>', 'v', '<']
@@ -183,25 +187,26 @@ class Move:
         else:
             print("Got turned around...")
 
+    # End game and update stats
     def grab_gold(self):
         print("Gold found!")
         self.moves += 1
         self.cost += 1000
         self.gold_found = True
-        
+
+    # Death and update of stats
     def pit_fall(self):
         print("Ahhhhhhhhhhhhhhhhhhhh!")
         print("RIP Explorer, you fell into a pit.")
         self.moves += 1
         self.cost -= 1000
         self.dude.death_by_pit += 1
-        self.game_over = True     
 
+    # Death and update of stats
     def wumpus_encounter(self):
         print("Crunch.")        
         print("RIP Explorer, you were eaten by a wumpus.")
         self.moves += 1
         self.cost -= 1000
         self.dude.death_by_wumpii += 1
-        self.game_over = True  
 
