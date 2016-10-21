@@ -11,6 +11,7 @@ class Move:
         self.moves = 0
         self.cost = 0
         self.dude = dude
+        self.cur_percept = None
 
     # Given direction, attempt to move in that direction or to shoot a wumpii.
     # Update Maps/knowledgeBase according to percepts
@@ -51,10 +52,8 @@ class Move:
                 y = temp
 
         self.kb.update_cell(x, y, direction)
-        if x != self.dude.prevx and y != self.dude.prevy:
-            # If in same spot, don't update percept
-            self.kb.update_percept(x, y)
-        return x, y, self.gold_found
+        self.cur_percept = self.kb.update_percept(x, y)
+        return x, y, self.gold_found, self.cur_percept
 
     # Shooting an arrow in direction specified and listening for scream
     def shoot_wumpus(self, direction):

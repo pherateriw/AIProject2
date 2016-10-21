@@ -146,9 +146,11 @@ class KnowledgeBase:
         print()        
 
         # take the information gathered from percepts, add it to the knowledge base
-        for value in self.percepts[percept_key]:
-            if value != '_':
-                self.tell(value, x, y)
+        # for value in self.percepts[percept_key]:
+        #     if value != '_':
+        #         self.tell(value, x, y)
+        # return latest percept
+        return self.percepts[percept_key]
 
     # if a breeze or stench is sensed, update neighbors to reflect potential danger
     def set_potentials(self, x, y, char):

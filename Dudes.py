@@ -133,6 +133,7 @@ class InformedDude(AbstractDude):
         super(InformedDude, self).__init__(kb)
         self.ie = InferenceEngine.InferenceEngine(kb)
         self.move.place_dude()
+        self.ie.tell(['a'], self.x, self.y)
         self.rounds()
 
     # while not gold found or stuck, keep moving.
@@ -140,17 +141,18 @@ class InformedDude(AbstractDude):
         t = 0 # time step TODO time?
         stop = False
         while not stop:
-            # TODO Move is telling percepts to Knowledge Base, rather than Dude, contrary to design doc
-            choices = self.ie.ask("What Next?", self.x, self.y) # Ask Inference Engine for best possible choices
+            choices = self.ie.ask("What Next?", self.x, self.y)  # Ask Inference Engine for best possible choices
             if 'stuck' in choices:
                 stop = True
                 break
-            stop = self.make_move(random.choice(choices))
+            stop, percept = self.make_move(random.choice(choices))
+            if percept:  # new percept
+                self.ie.tell(percept, self.x, self.y)
 
     # Make move, return new x, new y, and if gold found
     def make_move(self, choice):
-        self.x, self.y, stop = self.move.move_direction(self.x, self.y, choice)
-        return stop
+        self.x, self.y, stop, percept = self.move.move_direction(self.x, self.y, choice)
+        return stop, percept
 
 
 

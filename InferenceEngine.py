@@ -460,8 +460,10 @@ class InferenceEngine:
         self.resolution(kb, q)
 
     # pass on to KnowledgeBase
-    def tell(self, key, assertion, x, y):
-        self.kb.tell(key, assertion, x, y)
+    def tell(self, assertion, x, y):
+        for a in assertion:
+            if a != '_':
+                self.kb.tell(a, x, y)
 
     # Ask for best choice for dude given choices/neighbors
     def ask(self, query, x, y):
