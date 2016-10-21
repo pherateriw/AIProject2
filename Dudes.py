@@ -138,16 +138,18 @@ class InformedDude(AbstractDude):
 
     # while not gold found or stuck, keep moving.
     def rounds(self):
-        t = 0 # time step TODO time?
+        t = 0  # time step TODO time?
         stop = False
         while not stop:
             choices = self.ie.ask("What Next?", self.x, self.y)  # Ask Inference Engine for best possible choices
-            if 'stuck' in choices:
+            if 'Stuck' in choices:
                 stop = True
+                print("Explorer is stuck!")
                 break
             stop, percept = self.make_move(random.choice(choices))
             if percept:  # new percept
                 self.ie.tell(percept, self.x, self.y)
+        self.print_stats()
 
     # Make move, return new x, new y, and if gold found
     def make_move(self, choice):
