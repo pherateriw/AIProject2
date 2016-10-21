@@ -267,7 +267,7 @@ class InferenceEngine:
         # slice up disjuncts in ci, store in disjuncts_i
         if 'v' in ci:          
             # we have a disjunct, split on the "v" to get the constituent parts
-            # extra space is to handle the whitespace around or
+            # extra space is tdict2 = dict1.copy()o handle the whitespace around or
             disjunct_list_i = ci.split(" v ")
         else:
             # just a normal term
@@ -286,10 +286,7 @@ class InferenceEngine:
             for j in disjunct_list_j:
                 print("i = {}".format(i))
                 print("j = {}".format(j))                
-                
-                # TODO: remember to try with everything in theta    
-                # TODO: maybe theta should not be persistent? change scope if so
-                
+                                
                 # before the preprocessing step, remove !() from both i and j (temporarily)  
                 if '!' in i:
                     i_strip = i.split("!(")
@@ -322,23 +319,24 @@ class InferenceEngine:
                         # resolve if we have !i == j or !j == i  
                         # have checked predicate is the same, and they have resolved, so 
                         if (i[:1] == '!' and j[:1] != '!') or (j[:1] == '!' and i[:1] != '!'):   
-                            
                             # if resolved, remove from disjuncts
                             # remove i and j from their respective lists
                             while i in disjunct_list_i:
                                 disjunct_list_i.remove(i)
                             
-                            while j in disjunct_list_i:
-                                disjunct_list_j.remove(i)     
+                            while j in disjunct_list_j:
+                                disjunct_list_j.remove(j)     
                    
-                       # sub in theta for remaining clauses
-                       
-                
-                # remove that from theta, so we can try again
+                            # substitute in theta for remaining clauses
+                            disjunct_list_i = self.sub_values(disjunct_list_i, self.theta)
+                            disjunct_list_j = self.sub_values(disjunct_list_j, self.theta)                                
+                                                   
+                            print(disjunct_list_i) 
+                            print(disjunct_list_j)                                
+                            # after sub, remove those keys from theta, so we can try again
 
                 
 
-                # note, will have to try for everything in theta
                 
 
 
@@ -355,6 +353,29 @@ class InferenceEngine:
         
     def negate(self,q):
         return "!({})".format(q)       
+             
+    # following resolution, subs in appropriate values from substitution string         
+    def sub_values(self, disjunct_list, theta):      
+        
+        # uses key (corresponds to variable) to make appropriate subs in disjunct_list         
+        for key in theta:
+            key_variable = key
+            
+            for value in theta[key_variable]:
+                value_of_key = value
+            
+                # checks if there are values in the list before iterating
+                num_items = len(disjunct_list)        
+                if (num_items > 0):
+                    # checks all the items in disjunct_list for possible substitution
+                    for i in range(0,num_items):
+                        # three different cases where variable could be, after left paren, before right paren, or between two commas
+                        if ("({},".format(key_variable) in disjunct_list[i]) or (",{},".format(key) in disjunct_list[i]) or (",{})".format(key) in disjunct_list[i]):
+                            disjunct_list[i] = disjunct_list[i].replace("{}".format(key_variable), "{}".format(value_of_key))   
+                          
+        return disjunct_list
+                
+                
                 
     def test_resolution(self, kb):
         q = "B(0,0)"
