@@ -13,6 +13,8 @@ class AbstractDude:
         self.y = 0
         self.prevx = 0
         self.prvey = 0
+
+        #stats
         self.death_by_pit = 0
         self.death_by_wumpii = 0
         self.killed_wumpii = 0
@@ -86,6 +88,9 @@ class AbstractDude:
 
 
 class ReactiveDude(AbstractDude):
+    """
+    Reactive Dude does not do any reasoning about world, he simply choose randomly from among his possible choices.
+    """
 
     def __init__(self, kb):
         print("Reactive dude created!")
@@ -93,14 +98,17 @@ class ReactiveDude(AbstractDude):
         self.move.place_dude()
         self.rounds()
 
+    # while not gold found or stuck, keep moving.
     def rounds(self):
-        go_on = False
-        while not go_on :
-            go_on = self.get_random_safe()
+        stop = False
+        while not stop:
+            stop = self.make_move()
         self.print_stats()
 
-    def get_random_safe(self):
+    # Get directions to move in, move, return result
+    def make_move(self):
         safe, unsafe = self.get_possible_directions(self.x, self.y)
+        # No safe or unsafe choices
         if len(safe) > 0:
             choices = safe
         elif len(unsafe) >0:
@@ -108,11 +116,16 @@ class ReactiveDude(AbstractDude):
         else:
             print("Explorer is stuck!!")
             return True
+        # new x, new y and bool for found gold
         self.x, self.y, gold_found = self.move.move_direction(self.x, self.y, random.choice(choices))
         return gold_found
 
 
 class InformedDude(AbstractDude):
+    """
+    Informed dude will explore the world, updated the Knowledge Base as he does so and querying the Inference Engine
+    for next move.
+    """
 
     def __init__(self, kb):
         print("Informed dude created!")
@@ -122,26 +135,16 @@ class InformedDude(AbstractDude):
         self.move.place_dude()
         self.rounds()
 
+    # while not gold found or stuck, keep moving.
     def rounds(self):
-        t = 0 # time sequence TODO time?
+        t = 0 # time step TODO time?
         stop = False
         while not stop:
-            choices = self.ie.ask("What Next?", self.x, self.y)
-            stop = self.make_move(random.choice(choices)) # currently move does the telling, which is not according to design doc, but leaving for now
+            # TODO Move is telling percepts to Knowledge Base, rather than Dude, contrary to design doc
+            choices = self.ie.ask("What Next?", self.x, self.y) # Ask Inference Engine for best possible choices
+            stop = self.make_move(random.choice(choices))
 
-    def makePerceptSentence(self, x, y):
-        #Percept structure: [GLITTER, BUMP, STENCH, BREEZE, TIMESTEP]
-        percept  = [True, False, True, False, 3]
-        return percept
-
-
-    # TODO: make sure matches design doc
-    # R & N pg 270, adapted to FOL
-    # inputs: percepts
-    # persistent: kb, plan (action sequence, starts empty)
-    # TELL(KB, MAKE-PERCEPT-SENTENCE(percept,t))
-    # TELL the KB the temporal physics sentences for time t
-
+    # Make move, return new x, new y, and if gold found
     def make_move(self, choice):
         self.x, self.y, stop = self.move.move_direction(self.x, self.y, choice)
         return stop
