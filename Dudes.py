@@ -9,7 +9,6 @@ class AbstractDude:
         self.kb = kb
         self.size = len(kb.known_map)
         self.move = Move.Move(self.kb, self)
-        self.move.place_dude()
         self.x = 0
         self.y = 0
         self.prevx = 0
@@ -91,6 +90,7 @@ class ReactiveDude(AbstractDude):
     def __init__(self, kb):
         print("Reactive dude created!")
         super(ReactiveDude, self).__init__(kb)
+        self.move.place_dude()
         self.rounds()
 
     def rounds(self):
@@ -119,17 +119,18 @@ class InformedDude(AbstractDude):
         print("Informed dude created!")
         print()
         super(InformedDude, self).__init__(kb)
+        self.ie = InferenceEngine.InferenceEngine(kb)
+        self.move.place_dude()
+        self.ie.tell('{0,0}', 'a', self.x, self.y) # 0, 0 is safe
         self.rounds()
-        self.ie = InferenceEngine()
 
     def rounds(self):
         t = 0 # time sequence
         go_on = True
-        percept = None
         while go_on:
-            self.ie.tell(percept)
             choice = self.ie.ask()
-            percept, go_one = self.move(choice)
+            percept, go_one = self.make_move(choice)
+            self.ie.tell(percept)
 
     def makePerceptSentence(self, x, y):
         #Percept structure: [GLITTER, BUMP, STENCH, BREEZE, TIMESTEP]
@@ -144,7 +145,7 @@ class InformedDude(AbstractDude):
     # TELL(KB, MAKE-PERCEPT-SENTENCE(percept,t))
     # TELL the KB the temporal physics sentences for time t    
 
-    def move(self, choice):
+    def make_move(self, choice):
         percept = ""
         go_on = True
         return percept, go_on

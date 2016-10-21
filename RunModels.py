@@ -75,7 +75,7 @@ def main():
     # arrows = kb.numWumpii
     # if save_file:
     #     rm.save_file("test_worlds/size5/test2", arrows, kb)
-    kb = KnowledgeBase.KnowledgeBase(args.size, args.obstacles, args.wumpi, args.pits, rm.load_file("test_worlds/probs/size5/probs0.077/test0"))
+    kb = KnowledgeBase.KnowledgeBase(args.size, args.obstacles, args.wumpi, args.pits, rm.load_file("test_worlds/sizes/size5/test4"))
 
 
     # TODO: make a choice for user, make sure we pass same world to both

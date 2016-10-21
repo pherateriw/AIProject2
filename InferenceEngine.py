@@ -9,7 +9,7 @@ class InferenceEngine:
         
         # testing unification and resolution
         #self.test_unify(self.theta)
-        self.test_resolution(self.kb)
+        # self.test_resolution(self.kb)
 
     # preprocesses sentences to check that the predicates match, and to get the relevant arguments
     def preprocess_unify(self, P, Q, theta):
@@ -381,9 +381,8 @@ class InferenceEngine:
         q = "B(0,0)"
         self.resolution(kb, q)
 
-    def tell(self, statement):
-        print("telling %s" % statement)
-
+    def tell(self, key, assertion, x, y):
+        self.kb.tell(key, assertion, x, y)
 
     def ask(self, query):
         print("telling %s" % query)
