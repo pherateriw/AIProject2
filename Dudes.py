@@ -22,6 +22,10 @@ class AbstractDude:
         self.cells_explored = 0
 
     def print_stats(self):
+        print()
+        print("##########")
+        print("##########")
+        print("Final Stats")
         print("Total Moves: %s" % self.move.moves)
         print("Total Cost: %s" % self.move.cost)
         print("Total Death: %s" % (self.death_by_pit + self.death_by_wumpii))
@@ -29,6 +33,8 @@ class AbstractDude:
         print("Pit Deaths: %s" % self.death_by_pit)
         print("Wumpii Killed: %s" % self.killed_wumpii)
         print("Cells explored: %s" % self.cells_explored)
+        print("##########")
+        print("##########")
 
     # get potential directions to go in preference order of:
     # unexplored and safe seeming cells
