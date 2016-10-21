@@ -120,36 +120,23 @@ class InformedDude(AbstractDude):
         print()
         super(InformedDude, self).__init__(kb)
         self.rounds()
+        self.ie = InferenceEngine()
 
     def rounds(self):
-        self.move.informed_dude_move(self.kb)
-
-        #go_on = False
-        #while not go_on :
-        #    go_on = self.get_random_safe()
-        #print("Total Moves")
-        #print(self.move.moves)
-        #print("Total Cost")
-        #print(self.move.cost)
-
-    def get_random_safe(self):
-        safe_directions = self.get_possible_directions(self.x, self.y)
-        self.x, self.y, gold_found = self.move.move_direction(self.x, self.y, random.choice(safe_directions))
-        return gold_found
+        t = 0 # time sequence
+        go_on = True
+        percept = None
+        while go_on:
+            self.ie.tell(percept)
+            choice = self.ie.ask()
+            percept, go_one = self.move(choice)
 
     def makePerceptSentence(self, x, y):
         #Percept structure: [GLITTER, BUMP, STENCH, BREEZE, TIMESTEP]
         percept  = [True, False, True, False, 3]
         return percept
 
-    def ask(self):
-        pass
-    def tell(self):
-        pass
-    def plan_route(self):
-        pass
-    def plan_shot(self):
-        pass
+
     # TODO: make sure matches design doc
     # R & N pg 270, adapted to FOL
     # inputs: percepts
@@ -157,6 +144,10 @@ class InformedDude(AbstractDude):
     # TELL(KB, MAKE-PERCEPT-SENTENCE(percept,t))
     # TELL the KB the temporal physics sentences for time t    
 
+    def move(self, choice):
+        percept = ""
+        go_on = True
+        return percept, go_on
 
 
 

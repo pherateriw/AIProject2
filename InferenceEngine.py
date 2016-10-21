@@ -380,3 +380,11 @@ class InferenceEngine:
     def test_resolution(self, kb):
         q = "B(0,0)"
         self.resolution(kb, q)
+
+    def tell(self, statement):
+        print("telling %s" % statement)
+
+
+    def ask(self, query):
+        print("telling %s" % query)
+        return ""
