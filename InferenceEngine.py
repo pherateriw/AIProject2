@@ -384,8 +384,44 @@ class InferenceEngine:
     def tell(self, key, assertion, x, y):
         self.kb.tell(key, assertion, x, y)
 
-    def ask(self, query):
-        print("Asking %s" % query)
+    def ask(self, query, x, y):
         possibles = ['^', '>', 'v', '<', 's^', 's>', 'sv', 's<'] # move these directions or shoot these directions
-        choice = 'v'
+        choices = self.get_neighbors(x, y)
+        choice = self.best_choice(choices)
         return choice
+
+    def get_neighbors(self, x, y):
+        neighbors = {'_': [], 'm':[], 'd': [], 's': [], 'w':[], 'p':[], 'o':[]}
+        if x > 0:
+            neighbors.get(self.kb.known_map[x - 1][y]).append('^')
+        if x < len(self.kb.known_map) - 1:
+            neighbors.get(self.kb.known_map[x + 1][y]).append('v')
+        if y > 0:
+            neighbors.get(self.kb.known_map[x][y - 1]).append('<')
+        if y < len(self.kb.known_map) - 1:
+            neighbors.get(self.kb.known_map[x][y + 1]).append('>')
+        return neighbors
+
+    def best_choice(self, choices):
+        if len(choices.get('_')) > 0: #unexplored
+            return choices.get('_')
+        elif len(choices.get('m')) > 0 or len(choices.get('d')) > 0: #potentials
+            return list(choices.get('m') + choices.get('d'))
+        elif len(choices.get('s')) > 0 and len(choices.get('w')) > 0: #Random choice between safe space and kill wumpi
+            rand = 0, 1
+            import random
+            rand = random.choice(rand)
+            if rand == 0:
+                return choices.get('s')
+            else:
+                return choices.get('w')
+        elif len(choices.get('s')) > 0:
+            return choices.get('s')
+        elif len(choices.get('w')) > 0:
+            l = []
+            for c in choices.get('w'):
+                l.append('k%s' % c)
+            return l
+
+        else:
+            return ["Stuck"]

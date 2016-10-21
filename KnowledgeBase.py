@@ -1,5 +1,6 @@
 import WorldGenerator as wg
 
+
 # the explorer's knowledge base, reflects what it knows about the environment
 class KnowledgeBase:
     def __init__(self, size, oProbs, pProbs, wProbs, unknown_map):
@@ -144,9 +145,8 @@ class KnowledgeBase:
 
         # take the information gathered from percepts, add it to the knowledge base
         for value in self.percepts[percept_key]:
-            if (value != '_'):
+            if value != '_':
                 self.tell(value, x, y)
-
 
     def set_potentials(self, x, y, char):
         dont_overwrite = ['s', 'o', 'p', 'w']
@@ -166,11 +166,6 @@ class KnowledgeBase:
                 self.update_cell(x, y-1, char)
 
 
-
-
-
-    # TODO: add safe spaces
-    # TODO: add death info to cell, add inferred info to cell     
     # update the knowledge base with information gathered from percept
     def tell(self, assertion, x, y):
         key = "{%s,%s}" % (x, y)
@@ -187,16 +182,24 @@ class KnowledgeBase:
             assertion = "BUMP({},{})".format(x,y)
         elif (assertion == 'a'):
             assertion = "SAFE({},{})".format(x, y)
+        elif (assertion == 'o'):
+            assertion = "OBSTACLE({},{})".format(x, y)
+        elif (assertion == 'w'):
+            assertion = "WUMPUS({},{})".format(x, y)
+        elif (assertion == 'p'):
+            assertion = "PIT({},{})".format(x, y)
        
        # check that this rule is not already in dictionary
         if (assertion not in self.facts[key]):
-            self.facts[key].append(assertion)       
-        
+            self.facts[key].append(assertion)
+            # TODO unify and resolve to see if new facts come out
+
         print("########Information in Knowledge Base:")
         for key, value in self.facts.items():
             print(key, value)
         print("##################################")
-        print()        
+        print()
+
 
     # TODO: write this
     # ask questions of the knowledge base
