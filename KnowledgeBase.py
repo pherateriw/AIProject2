@@ -209,7 +209,7 @@ class KnowledgeBase:
         All sentences in clause form
         Possble Actions: GRAB, TURN90, MOVEFORWARD, SHOOTARROW
         Possible Predicates: SAFE(x,y), BREEZE(x,y), STENCH(x,y), BUMP(x,y), PIT(x,y), WUMPUS(x,y), OBSTACLE(x,y),
-        GOLD(x,y), POSSPIT(x,y), POSSWUMP(x,y), AT(x,y)(?)
+        GOLD(x,y), POSSPIT(x,y), POSSWUMP(x,y), AT(x,y)(?), FACING(d)
         """
 
         self.clause_list.append("!(BUMP(x,y)) v (OBSTACLE(x,y))") #If there's a bump, there must be an obstacle
@@ -222,24 +222,21 @@ class KnowledgeBase:
         self.clause_list.append("!(PIT(x,y)) v !(WUMPUS(x,y))") #Pits, wumpi and safe can not be in the same cells
         self.clause_list.append("!(WUMPUS(x,y)) v !(SAFE(x,y))")
         self.clause_list.append("!(WUMPUS(x,y)) v  !(PIT(x,y))")
-        self.clause_list.append("!(BREEZE(x,y)) v (POSSPIT(x+1,y)) ^ (POSSPIT(x-1,y)) ^ (POSSPIT(x,y+1)) ^ (POSSPIT(x,y-1))")
-        self.clause_list.append("!(STENCH(x,y)) v (POSSWUMP(x+1,y)) ^ (POSSWUMP(x-1,y)) ^ (POSSWUMP(x,y+1)) ^ (POSSWUMP(x,y-1))")
+
+        self.clause_list.append("!(BREEZE(x,y)) v (POSSPIT(x+1,y))")
+        self.clause_list.append("!(BREEZE(x,y)) v (POSSPIT(x-1,y))")
+        self.clause_list.append("!(BREEZE(x,y)) v (POSSPIT(x,y+1))")
+        self.clause_list.append("!(BREEZE(x,y)) v (POSSPIT(x,y-1))")
+
+        self.clause_list.append("!(STENCH(x,y)) v (POSSWUMP(x+1,y))")
+        self.clause_list.append("!(STENCH(x,y)) v (POSSWUMP(x-1,y))")
+        self.clause_list.append("!(STENCH(x,y)) v (POSSWUMP(x,y+1))")
+        self.clause_list.append("!(STENCH(x,y)) v (POSSWUMP(x,y-1))")
+
         self.clause_list.append("(MOVE(x,y)) v !(SAFE(x,y)) v !(MOVE(x,y)) v (SAFE(x,y))")
-
-        #self.clause_list.append("A(x,y) v B(x,y) v C(x,y)")
-        #self.clause_list.append("B(x,y) v C(x,y)")
-        #self.clause_list.append("C(x,y)")   
-        #self.clause_list.append("D(x,y)")   
-        #self.clause_list.append("E(x,y)")   
+        self.clause_list.append("(GRABGOLD(x,y)) v !(GLIMMER(x,y)) v !(GRABGOLD(x,y)) v (GLIMMER(x,y))")
 
 
-
-        
-        # Jani: change this if needed, was just testing to make sure I could reach this 
-
-
-        #for c in self.clause_list: 
-        #    print (c)
         
         return self.clause_list
 
