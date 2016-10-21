@@ -46,7 +46,7 @@ class RunModels:
         for p in prob:
             for i in range(5):
                 kb = KnowledgeBase.KnowledgeBase(size, p, p, p, None)
-                fn = "test_worlds/probs/size%s/probs%s/test%s" % (size, str(p), i)
+                fn = "test_worlds/probs/size{}/probs{:.3f}/test{}".format(size, p, i)
                 self.save_file(fn, kb.numWumpii, kb)
 
 def main():
