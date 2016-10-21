@@ -5,28 +5,30 @@ import WorldGenerator as wg
 class KnowledgeBase:
     def __init__(self, size, oProbs, pProbs, wProbs, unknown_map):
 
+        # World will be sent in if loading from file, else create world
         if unknown_map == None:
             self.unknown_map, self.numWumpii = wg.createWorld(size, oProbs, pProbs, wProbs)
         else:
             self.unknown_map = unknown_map[0]
             self.numWumpii = unknown_map[1]
-        self.known_map = wg.createGrid(size);
+
+        # known_map is the one the Dudes see
+        self.known_map = wg.createGrid(size)
+
         self.percepts = {} 
         self.facts = {}
         self.clause_list = []
-        self.ppits = []
-        self.pwumpi = []
         
         print("Actual map")        
         wg.printGrid(self.unknown_map)     
-                
-        print("Known map")
-        wg.printGrid(self.known_map)
 
+
+    # Update the cell of the map dude's can see with char
     def update_cell(self, x, y, char):
         self.known_map[x][y] = char
         wg.printGrid(self.known_map)
 
+    # Update the cell of the real world with char
     def update_unknown_cell(self, x, y, char):
         self.unknown_map[x][y] = char
 
@@ -35,7 +37,7 @@ class KnowledgeBase:
         percept_key = "{%d,%d}" % (x, y)    
         self.percepts.setdefault(percept_key,[])
         
-        pCount = 0;
+        pCount = 0
         percept_glimmer = ''
         percept_breeze = ''
         percept_stench = '' 
@@ -148,6 +150,7 @@ class KnowledgeBase:
             if value != '_':
                 self.tell(value, x, y)
 
+    # if a breeze or stench is sensed, update neighbors to reflect potential danger
     def set_potentials(self, x, y, char):
         dont_overwrite = ['s', 'o', 'p', 'w']
         if x > 0:
@@ -165,28 +168,27 @@ class KnowledgeBase:
             if self.known_map[x][y -1] not in dont_overwrite:
                 self.update_cell(x, y-1, char)
 
-
     # update the knowledge base with information gathered from percept
     def tell(self, assertion, x, y):
         key = "{%s,%s}" % (x, y)
         self.facts.setdefault(key,[])
         
         # for percept information, builds the appropriate assertion
-        if (assertion == '$'):
+        if assertion == '$':
             assertion = "GLIMMER({},{})".format(x,y)
-        elif (assertion == 'b'):
+        elif assertion == 'b':
             assertion = "BREEZE({},{})".format(x,y)
-        elif (assertion == 's'):
+        elif assertion == 's':
             assertion = "STENCH({},{})".format(x,y)
-        elif (assertion == 't'):
+        elif assertion == 't':
             assertion = "BUMP({},{})".format(x,y)
-        elif (assertion == 'a'):
+        elif assertion == 'a':
             assertion = "SAFE({},{})".format(x, y)
-        elif (assertion == 'o'):
+        elif assertion == 'o':
             assertion = "OBSTACLE({},{})".format(x, y)
-        elif (assertion == 'w'):
+        elif assertion == 'w':
             assertion = "WUMPUS({},{})".format(x, y)
-        elif (assertion == 'p'):
+        elif assertion == 'p':
             assertion = "PIT({},{})".format(x, y)
 
        # check that this rule is not already in dictionary
@@ -200,14 +202,13 @@ class KnowledgeBase:
         print("##################################")
         print()
 
+    # see if query is in Knowledge Base
+    def ask(self, query):
+        if query in self.facts:
+            return True
+        else:
+            return False
 
-    # TODO: write this
-    # ask questions of the knowledge base
-    # input: kb, query
-    def ask(self):
-        print("not implemented yet")
-
-    # TODO: quantifiers?
     def clauses(self):
         """Creates and returns a list of clauses in the knowledge base.
         All Predicates with all caps, Instantiated variables with single capital letter at beginning,
@@ -215,7 +216,7 @@ class KnowledgeBase:
         All sentences in clause form
         Possble Actions: GRAB, TURN90, MOVEFORWARD, SHOOTARROW
         Possible Predicates: SAFE(x,y), BREEZE(x,y), STENCH(x,y), BUMP(x,y), PIT(x,y), WUMPUS(x,y), OBSTACLE(x,y),
-        GOLD(x,y), POSSPIT(x,y), POSSWUMP(x,y), AT(x,y)(?), FACING(d)
+        GOLD(x,y), AT(x,y)(?), FACING(d)
         """
 
         self.clause_list.append("!(BUMP(x,y)) v (OBSTACLE(x,y))") #If there's a bump, there must be an obstacle
