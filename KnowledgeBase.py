@@ -251,20 +251,14 @@ class KnowledgeBase:
         #self.clause_list.append("(TURNL90(x,y)) v ((!(PIT(x,y+1)) ^ !(OBSTACLE(x,y+1)) ^ !(POSSPIT(x,y+1))) v !(FACING(S)) v !(TURNL90(x,y)) v (((PIT(x,y+1)) v (OBSTACLE(x,y+1)) v (POSSPIT(x,y+1))) ^ (FACING(S))")
 
 
-        "(TURNL90(x,y)) <=> ((PIT(x,y-1)) v (OBSTACLE(x,y-1)) v (POSSPIT(x,y-1))) ^ (FACING(N))")
-        self.clause_list.append(
-            "(TURNL90(x,y)) <=> ((PIT(x+1,y)) v (OBSTACLE(x+1,y)) v (POSSPIT(x+1,y))) ^ (FACING(E))")
-        self.clause_list.append(
-            "(TURNL90(x,y)) <=> ((PIT(x-1,y)) v (OBSTACLE(x-1,y)) v (POSSPIT(x-1,y))) ^ (FACING(W))")
+        #"(TURNL90(x,y)) <=> ((PIT(x,y-1)) v (OBSTACLE(x,y-1)) v (POSSPIT(x,y-1))) ^ (FACING(N))")
+        self.clause_list.append("(TURNL90(x,y)) <=> ((PIT(x+1,y)) v (OBSTACLE(x+1,y)) v (POSSPIT(x+1,y))) ^ (FACING(E))")
+        self.clause_list.append("(TURNL90(x,y)) <=> ((PIT(x-1,y)) v (OBSTACLE(x-1,y)) v (POSSPIT(x-1,y))) ^ (FACING(W))")
 
-        self.clause_list.append(
-            "(TURNR90(x,y)) <=> ((PIT(x,y+1)) v (OBSTACLE(x,y+1)) v (POSSPIT(x,y+1))) ^ (FACING(S))")
-        self.clause_list.append(
-            "(TURNR90(x,y)) <=> ((PIT(x,y-1)) v (OBSTACLE(x,y-1)) v (POSSPIT(x,y-1))) ^ (FACING(N))")
-        self.clause_list.append(
-            "(TURNR90(x,y)) <=> ((PIT(x+1,y)) v (OBSTACLE(x+1,y)) v (POSSPIT(x+1,y))) ^ (FACING(E))")
-        self.clause_list.append(
-            "(TURNR90(x,y)) <=> ((PIT(x-1,y)) v (OBSTACLE(x-1,y)) v (POSSPIT(x-1,y))) ^ (FACING(W))")
+        self.clause_list.append("(TURNR90(x,y)) <=> ((PIT(x,y+1)) v (OBSTACLE(x,y+1)) v (POSSPIT(x,y+1))) ^ (FACING(S))")
+        self.clause_list.append("(TURNR90(x,y)) <=> ((PIT(x,y-1)) v (OBSTACLE(x,y-1)) v (POSSPIT(x,y-1))) ^ (FACING(N))")
+        self.clause_list.append("(TURNR90(x,y)) <=> ((PIT(x+1,y)) v (OBSTACLE(x+1,y)) v (POSSPIT(x+1,y))) ^ (FACING(E))")
+        self.clause_list.append("(TURNR90(x,y)) <=> ((PIT(x-1,y)) v (OBSTACLE(x-1,y)) v (POSSPIT(x-1,y))) ^ (FACING(W))")
 
 
 
