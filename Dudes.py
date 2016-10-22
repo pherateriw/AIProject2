@@ -135,9 +135,9 @@ class InformedDude(AbstractDude):
     """
 
     def __init__(self, logger, kb):
+        super(InformedDude, self).__init__(logger, kb)
         self.logger.info("Informed dude created!")
         self.logger.info()
-        super(InformedDude, self).__init__(logger, kb)
         self.ie = InferenceEngine.InferenceEngine(kb)
         self.move.place_dude()
         self.ie.tell(['a'], self.x, self.y)
@@ -147,7 +147,14 @@ class InformedDude(AbstractDude):
     def rounds(self):
         t = 0  # time step TODO time?
         stop = False
+        
         while not stop:
+            # update percepts
+            current_percepts = self.update_percepts(self.x, self.y)
+            print(current_percepts)
+
+
+
             choices = self.ie.ask("What Next?", self.x, self.y)  # Ask Inference Engine for best possible choices
             if 'Stuck' in choices:
                 stop = True
