@@ -3,8 +3,8 @@ import WorldGenerator as wg
 
 # the explorer's knowledge base, reflects what it knows about the environment
 class KnowledgeBase:
-    def __init__(self, size, oProbs, pProbs, wProbs, unknown_map):
-
+    def __init__(self, logger, size, oProbs, pProbs, wProbs, unknown_map):
+        self.logger = logger
         # World will be sent in if loading from file, else create world
         if unknown_map == None:
             self.unknown_map, self.numWumpii = wg.createWorld(size, oProbs, pProbs, wProbs)
@@ -19,14 +19,14 @@ class KnowledgeBase:
         self.facts = {}
         self.clause_list = []
         
-        print("Actual map")        
-        wg.printGrid(self.unknown_map)     
+        self.logger.info("Actual map")        
+        wg.printGrid(self.logger, self.unknown_map)
 
 
     # Update the cell of the map dude's can see with char
     def update_cell(self, x, y, char):
         self.known_map[x][y] = char
-        wg.printGrid(self.known_map)
+        wg.printGrid(self.logger, self.known_map)
 
     # Update the cell of the real world with char
     def update_unknown_cell(self, x, y, char):
@@ -48,7 +48,7 @@ class KnowledgeBase:
         
         # gold is in this cell, glimmer ($) is perceived, else (_) 
         if self.unknown_map[x][y] == '$':            
-            print("Explorer sees a glimmer in ({},{})".format(x,y))
+            self.logger.info("Explorer sees a glimmer in ({},{})".format(x,y))
             percept_glimmer = '$'
         else: 
             # no gold is perceived, update percept
@@ -63,25 +63,25 @@ class KnowledgeBase:
         # make sure is a valid choice for this x value
         if x < len(self.known_map) - 1:
             if self.unknown_map[x + 1][y] == 'p':    
-                print("Explorer feels a breeze in ({},{})".format(x,y))
+                self.logger.info("Explorer feels a breeze in ({},{})".format(x,y))
                 percept_breeze = 'b'
                 self.set_potentials(x, y, 'd')
             if (x - 1) >= 0:        
                 if self.unknown_map[x - 1][y] == 'p':    
-                    print("Explorer feels a breeze in ({},{})".format(x,y))
+                    self.logger.info("Explorer feels a breeze in ({},{})".format(x,y))
                     percept_breeze = 'b'
                     self.set_potentials(x, y, 'd')
         
         # make sure is a valid choice for this y value   
         if y < len(self.known_map) - 1:        
             if self.unknown_map[x][y + 1] == 'p':    
-                print("Explorer feels a breeze in ({},{})".format(x,y))
+                self.logger.info("Explorer feels a breeze in ({},{})".format(x,y))
                 percept_breeze = 'b'
                 self.set_potentials(x, y, 'd')
                 
             if y - 1 >= 0:          
                 if self.unknown_map[x][y - 1] == 'p': 
-                    print("Explorer feels a breeze in ({},{})".format(x,y))
+                    self.logger.info("Explorer feels a breeze in ({},{})".format(x,y))
                     percept_breeze = 'b'
                     self.set_potentials(x, y, 'd')
         
@@ -97,25 +97,25 @@ class KnowledgeBase:
         # make sure is a valid choice for this x value
         if x < len(self.known_map) - 1:
             if self.unknown_map[x + 1][y] == 'w':    
-                print("Explorer smells a stench in ({},{})".format(x,y))
+                self.logger.info("Explorer smells a stench in ({},{})".format(x,y))
                 percept_stench = 's'
                 self.set_potentials(x, y, 'm')
         if (x - 1) >= 0:        
             if self.unknown_map[x - 1][y] == 'w':    
-                print("Explorer smells a stench in ({},{})".format(x,y))
+                self.logger.info("Explorer smells a stench in ({},{})".format(x,y))
                 percept_stench = 's'
                 self.set_potentials(x, y, 'm')
         
         # make sure is a valid choice for this y value   
         if y < len(self.known_map) - 1:        
             if self.unknown_map[x][y + 1] == 'w':    
-                print("Explorer smells a stench in ({},{})".format(x,y))
+                self.logger.info("Explorer smells a stench in ({},{})".format(x,y))
                 percept_stench = 's'
                 self.set_potentials(x, y, 'm')
                 
             if y - 1 >= 0:          
                 if self.unknown_map[x][y - 1] == 'w': 
-                    print("Explorer smells a stench in ({},{})".format(x,y))
+                    self.logger.info("Explorer smells a stench in ({},{})".format(x,y))
                     percept_stench = 's'
                     self.set_potentials(x, y, 'm')
         
@@ -129,7 +129,7 @@ class KnowledgeBase:
 
         # obstacle is in this cell, thump (t) is perceived, else (_) 
         if self.unknown_map[x][y] == 'o':            
-            print("Explorer feels a thump in ({},{})".format(x,y))
+            self.logger.info("Explorer feels a thump in ({},{})".format(x,y))
             percept_thump = 't'
         else: 
             # no obstacle is perceived, update percept
@@ -139,11 +139,16 @@ class KnowledgeBase:
         if (pCount == 0):        
             self.percepts[percept_key].append(percept_thump)  
 
-        print("########Explorer's Percepts:")
+        self.logger.info("########Explorer's Percepts:")
         for key, value in self.percepts.items():
-            print(key, value)
-        print("############################")
-        print()        
+            x = '['
+            for v in value:
+                x += v
+                x += ', '
+            x += ']'
+            self.logger.info(key + ':' + x)
+        self.logger.info("############################")
+        self.logger.info("")
 
         # take the information gathered from percepts, add it to the knowledge base
         # for value in self.percepts[percept_key]:
@@ -198,11 +203,16 @@ class KnowledgeBase:
             self.facts[key].append(assertion)
             # TODO unify and resolve to see if new facts come out
 
-        print("########Information in Knowledge Base:")
+        self.logger.info("########Information in Knowledge Base:")
         for key, value in self.facts.items():
-            print(key, value)
-        print("##################################")
-        print()
+            x = '['
+            for v in value:
+                x += v
+                x += ', '
+            x += ']'
+            self.logger.info(key + ':' + x)
+            self.logger.info("##################################")
+        self.logger.info("")
 
     # see if query is in Knowledge Base
     def ask(self, query):

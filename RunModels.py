@@ -1,9 +1,13 @@
 import Dudes
 import argparse
 import KnowledgeBase
+import logging
 
 
 class RunModels:
+
+    def __init__(self, logger):
+        self.logger = logger
 
     # Save world to file
     def save_file(self, fn, arrows, kb):
@@ -35,7 +39,7 @@ class RunModels:
 
     # create 5 worlds for each size and each prob
     def create_probs(self, obstacles, wumpi, pits):
-        print("DON'T DO THIS UNLESS YOU PLAN ON IT TAKING FOREVER!!!")
+        self.logger.info("DON'T DO THIS UNLESS YOU PLAN ON IT TAKING FOREVER!!!")
         probs5 = [.12, .23/3, .46/3, .69/3, .92/3]
         self.create_single_prob(5, probs5)
         probs10 = [.03, .245/3, .49/3, .735/3, .98/3]
@@ -51,14 +55,14 @@ class RunModels:
     def create_single_prob(self, size, prob):
         for p in prob:
             for i in range(5):
-                kb = KnowledgeBase.KnowledgeBase(size, p, p, p, None)
+                kb = KnowledgeBase.KnowledgeBase(self.logger, size, p, p, p, None)
                 fn = "test_worlds/probs/size{}/probs{:.3f}/test{}".format(size, p, i)
                 self.save_file(fn, kb.numWumpii, kb)
 
 
 # Parse arguments for size and probabilities, create world world worlds and choose dude type to explore them
-def main():
-    print("Hello Wumpus World!")
+def main(logger):
+    logger.info("Hello Wumpus World!")
     parser = argparse.ArgumentParser()
     parser.add_argument("size", help="Size of world", type=int)
     parser.add_argument("obstacles", help="Probability of obstacles", type=float)
@@ -66,28 +70,34 @@ def main():
     parser.add_argument("wumpi", help="Probability of wumpi", type=float)
     parser.add_argument("dude", help="Type of dude, i or r", type=str)
     args = parser.parse_args()
-    rm = RunModels()
+    rm = RunModels(logger)
 
     # Create Testing rules. TAKES FOREVER!!!!!
     # rm.create_sizes(args.obstacles, args.wumpi, args.pits)
     # rm.create_probs(args.obstacles, args.wumpi, args.pits)
 
-    load_file = False
+    load_file = True
     save_file = False
 
     if load_file:
-        kb = KnowledgeBase.KnowledgeBase(args.size, args.obstacles, args.wumpi, args.pits, rm.load_file("test_worlds/sizes/size5/test4"))
+        kb = KnowledgeBase.KnowledgeBase(logger, args.size, args.obstacles, args.wumpi, args.pits, rm.load_file("test_worlds/sizes/size5/test4"))
     else:
-        kb = KnowledgeBase.KnowledgeBase(args.size, args.obstacles, args.wumpi, args.pits,  None)
+        kb = KnowledgeBase.KnowledgeBase(logger, args.size, args.obstacles, args.wumpi, args.pits,  None)
     arrows = kb.numWumpii
     if save_file:
         rm.save_file("test_worlds/size5/test2", arrows, kb)
 
     if args.dude == 'i':
-        iDude = Dudes.InformedDude(kb)
+        iDude = Dudes.InformedDude(logger, kb)
     else:
-        rDude = Dudes.ReactiveDude(kb)
+        rDude = Dudes.ReactiveDude(logger, kb)
 
 
 if __name__ == '__main__':
-    main()
+    logger = logging.getLogger()
+    hdlr = logging.FileHandler('test.txt')
+    formatter = logging.Formatter('%(message)s')
+    hdlr.setFormatter(formatter)
+    logger.addHandler(hdlr)
+    logger.setLevel(logging.INFO)
+    main(logger)

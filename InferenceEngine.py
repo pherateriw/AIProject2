@@ -118,55 +118,55 @@ class InferenceEngine:
             return self.theta 
                   
     def test_unify(self, theta):
-        # should not work bc predicates don't match, prints false 
+        # should not work bc predicates don't match, self.logger.infos false 
         # 1, 2. WORKING for both
-        print(self.preprocess_unify("KNOWS(John,x)", "FATHER(John,x)", theta))       
-        print(self.preprocess_unify("FATHER(John,x)","KNOWS(John,x)", theta))
+        self.logger.info(self.preprocess_unify("KNOWS(John,x)", "FATHER(John,x)", theta))       
+        self.logger.info(self.preprocess_unify("FATHER(John,x)","KNOWS(John,x)", theta))
 
         # predicates are the same, return empty theta
         # 3. WORKS    
         self.preprocess_unify("KNOWS(John,x)", "KNOWS(John,x)", theta)
-        print(self.theta)
+        self.logger.info(self.theta)
         
         # should substitute x/John
         # 4. WORKS
         self.preprocess_unify("KNOWS(John)", "KNOWS(x)", theta)
-        print(self.theta)
+        self.logger.info(self.theta)
         
         # x/John already in theta, should not re-add
         # 5. WORKS    
         self.preprocess_unify("KNOWS(x)", "KNOWS(John)", theta)        
-        print(self.theta)
+        self.logger.info(self.theta)
 
         # should substitute y/John
         # 6. WORKS    
         self.preprocess_unify("KNOWS(y)", "KNOWS(John)", theta)        
-        print(self.theta)
+        self.logger.info(self.theta)
 
         # should not add anything to theta
         # 7. WORKS    
         self.preprocess_unify("KNOWS(John)", "KNOWS(Richard)", theta)        
-        print(self.theta)
+        self.logger.info(self.theta)
         
         # should substitute y/Richard
         # 8. WORKS    
         self.preprocess_unify("KNOWS(y)", "KNOWS(Richard)", theta)        
-        print(self.theta)        
+        self.logger.info(self.theta)        
         
         # should substitute x/Jane
         # 9. WORKS        
         self.preprocess_unify("KNOWS(John,x)", "KNOWS(John,Jane)", theta)                 
-        print(self.theta)         
+        self.logger.info(self.theta)         
 
         # should substitute x/Bill, y/John  
         # 10. WORKS    
         self.preprocess_unify("KNOWS(John,x)", "KNOWS(y,Bill)", theta)                 
-        print(self.theta)          
+        self.logger.info(self.theta)          
         
         # should fail, bc x cannot take on two values at same time
         # 11. WORKS
         self.preprocess_unify("KNOWS(x,John)", "KNOWS(x,Elizabeth)", theta)  
-        print(self.theta)          
+        self.logger.info(self.theta)          
 
     """" This implementation uses the method described by Russell and Norvig to perform resolution (p 255)  
     this method differs from R&N's implementation in that we are using FOL and not
@@ -193,7 +193,7 @@ class InferenceEngine:
         # loop until no new clauses can be added (which means KB does not entail q), or
         # two clauses yield the empty clause (which means KB entails q)
         while True:
-            print("clauses = {}".format(self.clauses))
+            self.logger.info("clauses = {}".format(self.clauses))
 
             # variable to keep track of the length of clause list            
             clause_len = len(self.clauses)
@@ -215,37 +215,37 @@ class InferenceEngine:
                 val_index = val_index + 1
                 cj = clause_pairs[pair_index][val_index] 
             
-                #print("ci = {}".format(ci))
-                #print("cj = {}".format(cj))
+                #self.logger.info("ci = {}".format(ci))
+                #self.logger.info("cj = {}".format(cj))
 
                 # resolve returns the set of all possible clauses obtained by resolving ci and cj
                 resolvents = set(self.resolve(ci, cj))
-                #print(self.resolve(ci, cj, clauses))
-                print("resolvents = {}".format(resolvents))
-                print("clauses = {}".format(self.clauses))
-                print(self.clauses)
-                #print(len(resolvents))
+                #self.logger.info(self.resolve(ci, cj, clauses))
+                self.logger.info("resolvents = {}".format(resolvents))
+                self.logger.info("clauses = {}".format(self.clauses))
+                self.logger.info(self.clauses)
+                #self.logger.info(len(resolvents))
 
                 # all we have left is the empty clause
                 # resolution is finished
                 # is None right here?
                 if None in resolvents or self.clauses == None:
-                    print("clauses = {}".format(self.clauses))
+                    self.logger.info("clauses = {}".format(self.clauses))
                     return True
 
                 # new becomes the union of new and resolvents
                 # TODO: we might want union_update here, not totally sure I get the difference
                 new = new.union(resolvents)
-                #print("new = {}".format(new))
+                #self.logger.info("new = {}".format(new))
 
             # checks if new is a subset of the clauses, if it is, keeps looping
             if self.clauses != None:
                 if new.issubset(set(self.clauses)):
-                    print("clauses = {}".format(self.clauses))
+                    self.logger.info("clauses = {}".format(self.clauses))
                     return False
 
                 self.clauses.union(new)
-                print(self.clauses)
+                self.logger.info(self.clauses)
 
             clause_pairs.clear()
             new.clear()
@@ -279,16 +279,16 @@ class InferenceEngine:
         else:
             disjunct_list_j.append(cj)
 
-        #print("disjunct_list_i {}".format(disjunct_list_i))
-        #print("disjunct_list_j {}".format(disjunct_list_j))
+        #self.logger.info("disjunct_list_i {}".format(disjunct_list_i))
+        #self.logger.info("disjunct_list_j {}".format(disjunct_list_j))
 
-        #print("i size = {}".format(len(disjunct_list_i)))
-        #print("j size = {}".format(len(disjunct_list_j)))
+        #self.logger.info("i size = {}".format(len(disjunct_list_i)))
+        #self.logger.info("j size = {}".format(len(disjunct_list_j)))
 
         for i in disjunct_list_i:
             for j in disjunct_list_j:
-                #print("i = {}".format(i))
-                #print("j = {}".format(j))
+                #self.logger.info("i = {}".format(i))
+                #self.logger.info("j = {}".format(j))
                                 
                 # before the preprocessing step, remove !() from both i and j (temporarily)  
                 if '!' in i:
@@ -305,11 +305,11 @@ class InferenceEngine:
                 else:
                     j_bare = j
                 
-                #print(i_bare)
-                #print(j_bare)
+                #self.logger.info(i_bare)
+                #self.logger.info(j_bare)
 
                 self.preprocess_unify(i_bare, j_bare, self.theta)
-                #print(self.theta)
+                #self.logger.info(self.theta)
 
                 # there is something in theta we unified, so we can try resolution
                 if len(self.theta) > 0:
@@ -318,12 +318,12 @@ class InferenceEngine:
                     i_bare_pred = i_bare.split('(')                    
                     j_bare_pred = j_bare.split('(')                        
 
-                    #print("i bare {} =".format(i_bare_pred))
-                    #print("j_bare {} =".format(j_bare_pred))
+                    #self.logger.info("i bare {} =".format(i_bare_pred))
+                    #self.logger.info("j_bare {} =".format(j_bare_pred))
 
                     if i_bare_pred[0] == j_bare_pred[0]:
                         # i and j have the same predicate
-                        print("resolve i and j")
+                        self.logger.info("resolve i and j")
 
                         # resolve if we have !i == j or !j == i  
                         # have checked predicate is the same, and they have resolved, so 
@@ -332,29 +332,29 @@ class InferenceEngine:
                             disjunct_list_i = self.sub_values(disjunct_list_i, self.theta)
                             disjunct_list_j = self.sub_values(disjunct_list_j, self.theta)
 
-                            print("di = {}".format(disjunct_list_i))
-                            print("dj = {}".format(disjunct_list_j))
+                            self.logger.info("di = {}".format(disjunct_list_i))
+                            self.logger.info("dj = {}".format(disjunct_list_j))
 
                             # if resolved, remove from disjuncts, clauses
                             # remove i and j from their respective lists
-                            print("ci = {}".format(ci))
-                            print("cj = {}".format(cj))
+                            self.logger.info("ci = {}".format(ci))
+                            self.logger.info("cj = {}".format(cj))
 
                             while i in disjunct_list_i:
-                                print("removing {}".format(i))
+                                self.logger.info("removing {}".format(i))
                                 disjunct_list_i.remove(i)
                                 if i in local_clauses:
                                     local_clauses.remove(i)
 
                             while j in disjunct_list_j:
-                                print("removing {}".format(j))
+                                self.logger.info("removing {}".format(j))
                                 disjunct_list_j.remove(j)
                                 if j in local_clauses:
                                     local_clauses.remove(j)
 
 
-                            print("di={}".format(disjunct_list_i))
-                            print("dj={}".format(disjunct_list_j))
+                            self.logger.info("di={}".format(disjunct_list_i))
+                            self.logger.info("dj={}".format(disjunct_list_j))
 
                             # make the new list of disjuncts
                             updated_disjuncts = set()
@@ -369,26 +369,26 @@ class InferenceEngine:
                             for a in updated_disjuncts:
                                 local_clauses.append(a)
 
-                            print("local clauses is now")
-                            print(local_clauses)
+                            self.logger.info("local clauses is now")
+                            self.logger.info(local_clauses)
 
                             # TODO: do this up to four
                             # remove the old disjunct and replace it with the new
                             if (self.clauses != None):
                                 ci_index = list(self.clauses).index(ci) if ci in list(self.clauses) else -1
                                 if ci_index != -1:
-                                    print("ci = {}".format(ci))
+                                    self.logger.info("ci = {}".format(ci))
                                     if ' v ' in ci:
                                         #TODO: handle more than one or
                                         if len(disjunct_list_i) == 1:
-                                            print(self.clauses)
+                                            self.logger.info(self.clauses)
                                             self.clauses.discard(ci)
-                                            print("popped {}".format(ci_index))
-                                            print(self.clauses)
+                                            self.logger.info("popped {}".format(ci_index))
+                                            self.logger.info(self.clauses)
 
                                             replacement_item = disjunct_list_i[0]
                                             self.clauses.add(replacement_item)
-                                            print(self.clauses)
+                                            self.logger.info(self.clauses)
                                             # clear disjunct list
 
                                             disjunct_list_i.clear()
@@ -399,12 +399,12 @@ class InferenceEngine:
                                 # remove the old disjunct and replace it with the new
                                 cj_index = list(self.clauses).index(cj) if cj in list(self.clauses) else -1
                                 if cj_index != -1:
-                                    print("cj = {}".format(cj))
+                                    self.logger.info("cj = {}".format(cj))
                                     if ' v ' in cj:
                                         #TODO: handle more than one or
                                         if len(disjunct_list_j) == 1:
                                             self.clauses.discard(cj)
-                                            print("popped {}".format(ci_index))
+                                            self.logger.info("popped {}".format(ci_index))
                                             replacement_item = disjunct_list_j[0]
                                             self.clauses.add(replacement_item)
                                             # clear disjunct list
@@ -426,11 +426,11 @@ class InferenceEngine:
         # uses key (corresponds to variable) to make appropriate subs in disjunct_list         
         for key in theta:
             key_variable = key
-            #print("key = {}".format(key_variable))
+            #self.logger.info("key = {}".format(key_variable))
 
             for value in theta[key_variable]:
                 value_of_key = value
-                #print("value = {}".format(value_of_key))
+                #self.logger.info("value = {}".format(value_of_key))
                 # checks if there are values in the list before iterating
                 num_items = len(disjunct_list)        
 
@@ -447,7 +447,7 @@ class InferenceEngine:
 
                         if ",{})".format(key_variable) in disjunct_list:
                             disjunct_list = disjunct_list.replace("{}".format(key_variable), "{}".format(value_of_key))
-        #print("dl = {}".format(disjunct_list))
+        #self.logger.info("dl = {}".format(disjunct_list))
         return disjunct_list
                 
 
