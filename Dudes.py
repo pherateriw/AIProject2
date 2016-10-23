@@ -23,19 +23,21 @@ class AbstractDude:
         self.cells_explored = 0
 
     def print_stats(self):
-        self.logger.info("")
-        self.logger.info("##########")
-        self.logger.info("##########")
-        self.logger.info("Final Stats")
-        self.logger.info("Total Moves: %s" % self.move.moves)
-        self.logger.info("Total Cost: %s" % self.move.cost)
-        self.logger.info("Total Death: %s" % (self.death_by_pit + self.death_by_wumpii))
-        self.logger.info("Wumpii Deaths: %s" % self.death_by_wumpii)
-        self.logger.info("Pit Deaths: %s" % self.death_by_pit)
-        self.logger.info("Wumpii Killed: %s" % self.killed_wumpii)
-        self.logger.info("Cells explored: %s" % self.cells_explored)
-        self.logger.info("##########")
-        self.logger.info("##########")
+        self.logger.warning("")
+        self.logger.warning("##########")
+        self.logger.warning("##########")
+        self.logger.warning("Final Stats")
+        self.logger.warning("Total Moves: %s" % self.move.moves)
+        self.logger.warning("Total Cost: %s" % self.move.cost)
+        self.logger.warning("Total Death: %s" % (self.death_by_pit + self.death_by_wumpii))
+        self.logger.warning("Wumpii Deaths: %s" % self.death_by_wumpii)
+        self.logger.warning("Pit Deaths: %s" % self.death_by_pit)
+        self.logger.warning("Wumpii Killed: %s" % self.killed_wumpii)
+        self.logger.warning("Cells explored: %s" % self.cells_explored)
+        self.logger.warning("##########")
+        self.logger.warning("##########")
+        self.logger.warning("")
+        self.logger.warning("")
 
     # get potential directions to go in preference order of:
     # unexplored and safe seeming cells
