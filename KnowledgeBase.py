@@ -228,67 +228,162 @@ class KnowledgeBase:
         All sentences in clause form
         Possble Actions: GRAB, TURN90, MOVEFORWARD, SHOOTARROW
         Possible Predicates: SAFE(x,y), BREEZE(x,y), STENCH(x,y), BUMP(x,y), PIT(x,y), WUMPUS(x,y), OBSTACLE(x,y),
-        GOLD(x,y), AT(x,y)(?), FACING(d)
+        GOLD(x,y), FACING(d)
         """
+        #Eliminate all <=> connectives by replacing each instance of the form (P <=> Q) by expression ((P => Q) ^ (Q => P))
+        self.clause_list.append("!(BUMP(x,y)) v (OBSTACLE(x,y))") #(OBSTACLE(x,y)) <=> (BUMP(x,y))
+        self.clause_list.append("!(OBSTACLE(x,y)) v (BUMP(x,y))")
+        #(SAFE(x,y)) => !(PIT(x,y)) ---> !(SAFE(x,y)) v !(PIT(x,y))
+        #(SAFE(x,y)) => !(PIT(x,y)) ^ !(WUMPUS(x,y)) ^ !(OBSTACLE(x,y)) ---> !(SAFE(x,y)) v (!(PIT(x,y)) ^ !(WUMPUS(x,y)) ^ !(OBSTACLE(x,y))) ---> (!(SAFE(x,y)) v !(PIT(x,y))) ^ (!(SAFE(x,y)) v !(WUMPUS(x,y))) ^ (!(SAFE(x,y)) v !(OBSTACLE(x,y)))
+        #(PIT(x,y)) => !(SAFE(x,y)) ---> !(PIT(x,y)) v !(SAFE(x,y))
+        #(WUMPUS(x,y)) => !(SAFE(x,y)) ---> !(WUMPUS(x,y)) v !(SAFE(x,y))
+        #(BREEZE(x,y)) => (PIT(x+1,y)) v (PIT(x-1,y)) v (PIT(x,y+1)) v (PIT(x,y-1)) ---> !(BREEZE(x,y)) v (PIT(x+1,y)) v (PIT(x-1,y)) v (PIT(x,y+1)) v (PIT(x,y-1))
+        #(PIT(x,y)) => (BREEZE(x+1,y)) ^ (BREEZE(x-1,y)) ^ (BREEZE(x,y+1)) ^ (BREEZE(x,y-1)) ---> !(PIT(x,y)) v ((BREEZE(x+1,y)) ^ (BREEZE(x-1,y)) ^ (BREEZE(x,y+1)) ^ (BREEZE(x,y-1)))
+        #(WUMPUS(x,y)) => !(PIT(x,y)) ---> !(WUMPUS(x,y)) v !(PIT(x,y))
+        self.clause_list.append("!(SAFE(x,y)) v !(PIT(x,y))") #(SAFE(x,y)) <=> !(PIT(x,y))
+        self.clause_list.append("!(SAFE(x,y)) v !(WUMPUS(x,y))") #(SAFE(x,y)) <=> !(WUMPUS(x,y))
+        self.clause_list.append("!(SAFE(x,y)) v !(OBSTACLE(x,y))") #(SAFE(x,y)) <=> !(OBSTACLE(x,y))
 
-        self.clause_list.append("!(BUMP(x,y)) v (OBSTACLE(x,y))") #If there's a bump, there must be an obstacle
-        #self.clause_list.append("(SAFE(x,y)) v (PIT(x,y)) v (WUMPUS(x,y)) v !(SAFE(x,y)) v !(PIT(x,y))") #If it's safe there are no pits or wumpi
-        #self.clause_list.append("(SAFE(x,y) v (PIT(x,y)) v (WUMPUS(x,y)) v !(SAFE(x,y)) v !(WUMPUS(x,y))")
-
-        self.clause_list.append("!(POSSPIT(x,y)) v !(SAFE(x,y)) v !(PIT(x,y))") #A Possible Pit that is already safe means there is no pit there
-        self.clause_list.append("!(POSSWUMP(x,y)) v !(SAFE(x,y)) v !(WUMPUS(x,y))")#A Possible Wumpus that is already safe means there is no wumpus there
-        self.clause_list.append("!(PIT(x,y)) v !(SAFE(x,y))")
-        self.clause_list.append("!(PIT(x,y)) v !(WUMPUS(x,y))") #Pits, wumpi and safe can not be in the same cells
         self.clause_list.append("!(WUMPUS(x,y)) v !(SAFE(x,y))")
-        self.clause_list.append("!(WUMPUS(x,y)) v  !(PIT(x,y))")
+        self.clause_list.append("!(PIT(x,y)) v !(SAFE(x,y))")
+        self.clause_list.append("!(OBSTACLE(x,y)) v !(SAFE(x,y))")
 
-        self.clause_list.append("!(BREEZE(x,y)) v (POSSPIT(x+1,y))")
-        self.clause_list.append("!(BREEZE(x,y)) v (POSSPIT(x-1,y))")
-        self.clause_list.append("!(BREEZE(x,y)) v (POSSPIT(x,y+1))")
-        self.clause_list.append("!(BREEZE(x,y)) v (POSSPIT(x,y-1))")
+        self.clause_list.append("!(BREEZE(x,y)) v (PIT(x+1,y)) v (PIT(x-1,y)) v (PIT(x,y+1)) v (PIT(x,y-1))") #(BREEZE(x,y)) <=> (PIT(x+1,y)) v (PIT(x-1,y)) v (PIT(x,y+1)) v (PIT(x,y-1))
+        self.clause_list.append("!(PIT(x,y)) v (BREEZE(x+1,y))")
+        self.clause_list.append("!(PIT(x,y)) v (BREEZE(x-1,y))")
+        self.clause_list.append("!(PIT(x,y)) v (BREEZE(x,y+1))")
+        self.clause_list.append("!(PIT(x,y)) v (BREEZE(x,y-1))")
 
-        self.clause_list.append("!(STENCH(x,y)) v (POSSWUMP(x+1,y))")
-        self.clause_list.append("!(STENCH(x,y)) v (POSSWUMP(x-1,y))")
-        self.clause_list.append("!(STENCH(x,y)) v (POSSWUMP(x,y+1))")
-        self.clause_list.append("!(STENCH(x,y)) v (POSSWUMP(x,y-1))")
+        self.clause_list.append("!(STENCH(x,y)) v (WUMPUS(x+1,y)) v (WUMPUS(x-1,y)) v (WUMPUS(x,y+1)) v (WUMPUS(x,y-1))") #(STENCH(x,y)) <=> (WUMPUS(x+1,y)) v (WUMPUS(x-1,y)) v (WUMPUS(x,y+1)) v (WUMPUS(x,y-1))
+        self.clause_list.append("!(WUMPUS(x,y)) v (STENCH(x+1,y))")
+        self.clause_list.append("!(WUMPUS(x,y)) v (STENCH(x-1,y))")
+        self.clause_list.append("!(WUMPUS(x,y)) v (STENCH(x,y+1))")
+        self.clause_list.append("!(WUMPUS(x,y)) v (STENCH(x,y-1))")
 
-        self.clause_list.append("(MOVE(x,y)) v !(SAFE(x,y)) v !(MOVE(x,y)) v (SAFE(x,y))")
-        self.clause_list.append("(GRABGOLD(x,y)) v !(GLIMMER(x,y)) v !(GRABGOLD(x,y)) v (GLIMMER(x,y))")
-        self.clause_list.append("(SHOOTARROW(x,y)) v !(WUMPUS(x,y)) v !(SHOOTARROW(x,y)) v (WUMPUS(x,y))")
+        self.clause_list.append("!(WUMPUS(x,y)) v !(PIT(x,y))") #(WUMPUS(x,y)) <=> !(PIT(x,y)) ^ !(OBSTACLE(x,y))
+        self.clause_list.append("!(WUMPUS(x,y)) v !(OBSTACLE(x,y))")
 
-        #self.clause_list.append("(TURNL90(x,y)) <=> ((PIT(x,y+1)) v (OBSTACLE(x,y+1)) v (POSSPIT(x,y+1))) ^ (FACING(S))")
-        #self.clause_list.append("(TURNL90(x,y)) v (!((PIT(x,y+1)) v (OBSTACLE(x,y+1)) v (POSSPIT(x,y+1))) v !(FACING(S)) v !(TURNL90(x,y)) v (((PIT(x,y+1)) v (OBSTACLE(x,y+1)) v (POSSPIT(x,y+1))) ^ (FACING(S))")
-        #self.clause_list.append("(TURNL90(x,y)) v ((!(PIT(x,y+1)) ^ !(OBSTACLE(x,y+1)) ^ !(POSSPIT(x,y+1))) v !(FACING(S)) v !(TURNL90(x,y)) v (((PIT(x,y+1)) v (OBSTACLE(x,y+1)) v (POSSPIT(x,y+1))) ^ (FACING(S))")
+        self.clause_list.append("!(PIT(x,y)) v !(WUMPUS(x,y))")
+        self.clause_list.append("!(PIT(x,y)) v !(OBSTACLE(x,y))")
 
+        self.clause_list.append("!(OBSTACLE(x,y)) v !(PIT(x,y))")
+        self.clause_list.append("!(OBSTACLE(x,y)) v !(WUMPUS(x,y))")
 
-        #"(TURNL90(x,y)) <=> ((PIT(x,y-1)) v (OBSTACLE(x,y-1)) v (POSSPIT(x,y-1))) ^ (FACING(N))")
-        self.clause_list.append("(TURNL90(x,y)) <=> ((PIT(x+1,y)) v (OBSTACLE(x+1,y)) v (POSSPIT(x+1,y))) ^ (FACING(E))")
-        self.clause_list.append("(TURNL90(x,y)) <=> ((PIT(x-1,y)) v (OBSTACLE(x-1,y)) v (POSSPIT(x-1,y))) ^ (FACING(W))")
+        self.clause_list.append("(MOVE(x,y)) v !(SAFE(x,y))") #(MOVE(x,y)) <=> (SAFE(x,y))
+        self.clause_list.append("!(MOVE(x,y)) v (SAFE(x,y))")
 
-        self.clause_list.append("(TURNR90(x,y)) <=> ((PIT(x,y+1)) v (OBSTACLE(x,y+1)) v (POSSPIT(x,y+1))) ^ (FACING(S))")
-        self.clause_list.append("(TURNR90(x,y)) <=> ((PIT(x,y-1)) v (OBSTACLE(x,y-1)) v (POSSPIT(x,y-1))) ^ (FACING(N))")
-        self.clause_list.append("(TURNR90(x,y)) <=> ((PIT(x+1,y)) v (OBSTACLE(x+1,y)) v (POSSPIT(x+1,y))) ^ (FACING(E))")
-        self.clause_list.append("(TURNR90(x,y)) <=> ((PIT(x-1,y)) v (OBSTACLE(x-1,y)) v (POSSPIT(x-1,y))) ^ (FACING(W))")
+        self.clause_list.append("(GRABGOLD(x,y)) v !(GLIMMER(x,y))") #(GRABGOLD(x,y)) <=> (GLIMMER(x,y))
+        self.clause_list.append("!(GRABGOLD(x,y)) v (GLIMMER(x,y))")
 
+        self.clause_list.append("(SHOOTARROW(x,y)) v !(WUMPUS(x,y))") #(SHOOTARROW(x,y)) <=> (WUMPUS(x,y))
+        self.clause_list.append("!(SHOOTARROW(x,y)) v (WUMPUS(x,y))")
 
+        #(TURNL90(x,y)) <=> (FACING(S)) ^ (OBSTACLE(x,y+1)) ---> <
+        #(TURNL90(x,y)) => (FACING(S)) ^ (OBSTACLE(x,y+1)) --->
+        #!(TURNL90(x,y)) v (FACING(S)) ^ (OBSTACLE(x,y+1)) ---> <
+        #!(TURNL90(x,y)) v (FACING(S))
+        #!(TURNL90(x,y)) v (OBSTACLE(x,y+1))
+        #((FACING(S)) ^ (OBSTACLE(x,y+1))) => (TURNL90(x,y)) --->
+        #!(FACING(S)) v !(OBSTACLE(x,y+1)) v (TURNL90(x,y))
+        #Repeat 3 rules for: L and R; N,E, and W; OBSTACLE, WUMPUS, and PIT
+        self.clause_list.append("!(TURNL90(x,y)) v (FACING(S))") #L, S, Obstacle
+        self.clause_list.append("!(TURNL90(x,y)) v (OBSTACLE(x,y+1))")
+        self.clause_list.append("!(FACING(S)) v !(OBSTACLE(x,y+1)) v (TURNL90(x,y))")
 
-        #self.clause_list.append("!BUMP(X,Y) v (OBSTACLE(X,Y))") #If there's a bump, there must be an obstacle
-        #self.clause_list.append("SAFE(X,Y) <=> !(PIT(X,Y)) ^ !(WUMPUS(X,Y)") #If it's safe there are no pits or wumpi
-        #self.clause_list.append("BREEZE(X,Y) <=> (PIT(X+1,Y) v PIT(X-1,Y) v PIT(X,Y+1) v PIT(X,Y-1))") #A breeze means there must be a pit in one of the surrounding cells
-        #self.clause_list.append("STENCH(X,Y) <=> (WUMPUS(X+1,Y) v WUMPUS(X-1,Y) v WUMPUS(X,Y+1) v WUMPUS(X,Y-1))") #A stench means there must be a wumpus in one of the surrounding cells
-        #self.clause_list.append("!POSSPIT(X,Y) v !SAFE(X,Y) v !PIT(X,Y)") #A Possible Pit that is already safe means there is no pit there
-        #self.clause_list.append("!POSSWUMP(X,Y) v !SAFE(X,Y) v !WUMPUS(X,Y)")#A Possible Wumpus that is already safe means there is no wumpus there
-        #self.clause_list.append("!PIT(X,Y) v (!SAFE(X,Y) ^ !WUMPUS(X,Y))") #Pits, wumpi and safe can not be in the same cells
-        #self.clause_list.append("!WUMPUS(X,Y) v !SAFE(X,Y) ^ !PIT(X,Y)")
-        #self.clause_list.append("!BREEZE(X,Y) v (POSSPIT(X+1,Y) ^ POSSPIT(X-1,Y) ^ POSSPIT(X,Y+1) ^ POSSPIT(X,Y-1))")
-        #self.clause_list.append("!STENCH(X,Y) v (POSSWUMP(X+1,Y) ^ POSSWUMP(X-1,Y) ^ POSSWUMP(X,Y+1) ^ POSSWUMP(X,Y-1))")
+        self.clause_list.append("!(TURNR90(x,y)) v (FACING(S))") #R, S, Obstacle
+        self.clause_list.append("!(TURNR90(x,y)) v (OBSTACLE(x,y+1))")
+        self.clause_list.append("!(FACING(S)) v !(OBSTACLE(x,y+1)) v (TURNR90(x,y))")
 
-        # FOR TESTING
-        #self.clause_list.append("MOTHER(Lulu,Fifi)")
-        #self.clause_list.append("ALIVE(Lulu)")
-        #self.clause_list.append("!(MOTHER(x,y)) v PARENT(x,y)")
-        #self.clause_list.append("!(PARENT(x,y)) v !(ALIVE(x)) v OLDER(x,y)")
-        
+        self.clause_list.append("!(TURNL90(x,y)) v (FACING(N))") #L, N, Obstacle
+        self.clause_list.append("!(TURNL90(x,y)) v (OBSTACLE(x,y-1))")
+        self.clause_list.append("!(FACING(N)) v !(OBSTACLE(x,y-1)) v (TURNL90(x,y))")
+
+        self.clause_list.append("!(TURNR90(x,y)) v (FACING(N))") #R, N, Obstacle
+        self.clause_list.append("!(TURNR90(x,y)) v (OBSTACLE(x,y-1))")
+        self.clause_list.append("!(FACING(N)) v !(OBSTACLE(x,y-1)) v (TURNR90(x,y))")
+
+        self.clause_list.append("!(TURNL90(x,y)) v (FACING(E))") #L, E, Obstacle
+        self.clause_list.append("!(TURNL90(x,y)) v (OBSTACLE(x+1,y))")
+        self.clause_list.append("!(FACING(E)) v !(OBSTACLE(x+1,y)) v (TURNL90(x,y))")
+
+        self.clause_list.append("!(TURNR90(x,y)) v (FACING(E))") #R, E, Obstacle
+        self.clause_list.append("!(TURNR90(x,y)) v (OBSTACLE(x+1,y))")
+        self.clause_list.append("!(FACING(E)) v !(OBSTACLE(x+1,y)) v (TURNR90(x,y))")
+
+        self.clause_list.append("!(TURNL90(x,y)) v (FACING(W))") #L, W, Obstacle
+        self.clause_list.append("!(TURNL90(x,y)) v (OBSTACLE(x-1,y))")
+        self.clause_list.append("!(FACING(W)) v !(OBSTACLE(x-1,y)) v (TURNL90(x,y))")
+
+        self.clause_list.append("!(TURNR90(x,y)) v (FACING(W))") #R, W, Obstacle
+        self.clause_list.append("!(TURNR90(x,y)) v (OBSTACLE(x-1,y))")
+        self.clause_list.append("!(FACING(W)) v !(OBSTACLE(x-1,y)) v (TURNR90(x,y))")
+
+        #################
+        self.clause_list.append("!(TURNL90(x,y)) v (FACING(S))")  # L, S, Wumpus
+        self.clause_list.append("!(TURNL90(x,y)) v (WUMPUS(x,y+1))")
+        self.clause_list.append("!(FACING(S)) v !(WUMPUS(x,y+1)) v (TURNL90(x,y))")
+
+        self.clause_list.append("!(TURNR90(x,y)) v (FACING(S))")  # R, S, Wumpus
+        self.clause_list.append("!(TURNR90(x,y)) v (WUMPUS(x,y+1))")
+        self.clause_list.append("!(FACING(S)) v !(WUMPUS(x,y+1)) v (TURNR90(x,y))")
+
+        self.clause_list.append("!(TURNL90(x,y)) v (FACING(N))")  # L, N, Wumpus
+        self.clause_list.append("!(TURNL90(x,y)) v (WUMPUS(x,y-1))")
+        self.clause_list.append("!(FACING(N)) v !(WUMPUS(x,y-1)) v (TURNL90(x,y))")
+
+        self.clause_list.append("!(TURNR90(x,y)) v (FACING(N))")  # R, N, Wumpus
+        self.clause_list.append("!(TURNR90(x,y)) v (WUMPUS(x,y-1))")
+        self.clause_list.append("!(FACING(N)) v !(WUMPUS(x,y-1)) v (TURNR90(x,y))")
+
+        self.clause_list.append("!(TURNL90(x,y)) v (FACING(E))")  # L, E, Wumpus
+        self.clause_list.append("!(TURNL90(x,y)) v (WUMPUS(x+1,y))")
+        self.clause_list.append("!(FACING(E)) v !(WUMPUS(x+1,y)) v (TURNL90(x,y))")
+
+        self.clause_list.append("!(TURNR90(x,y)) v (FACING(E))")  # R, E, Wumpus
+        self.clause_list.append("!(TURNR90(x,y)) v (WUMPUS(x+1,y))")
+        self.clause_list.append("!(FACING(E)) v !(WUMPUS(x+1,y)) v (TURNR90(x,y))")
+
+        self.clause_list.append("!(TURNL90(x,y)) v (FACING(W))")  # L, W, Wumpus
+        self.clause_list.append("!(TURNL90(x,y)) v (WUMPUS(x-1,y))")
+        self.clause_list.append("!(FACING(W)) v !(WUMPUS(x-1,y)) v (TURNL90(x,y))")
+
+        self.clause_list.append("!(TURNR90(x,y)) v (FACING(W))")  # R, W, Wumpus
+        self.clause_list.append("!(TURNR90(x,y)) v (WUMPUS(x-1,y))")
+        self.clause_list.append("!(FACING(W)) v !(WUMPUS(x-1,y)) v (TURNR90(x,y))")
+
+        #################
+        self.clause_list.append("!(TURNL90(x,y)) v (FACING(S))")  # L, S, Pit
+        self.clause_list.append("!(TURNL90(x,y)) v (PIT(x,y+1))")
+        self.clause_list.append("!(FACING(S)) v !(PIT(x,y+1)) v (TURNL90(x,y))")
+
+        self.clause_list.append("!(TURNR90(x,y)) v (FACING(S))")  # R, S, Pit
+        self.clause_list.append("!(TURNR90(x,y)) v (PIT(x,y+1))")
+        self.clause_list.append("!(FACING(S)) v !(PIT(x,y+1)) v (TURNR90(x,y))")
+
+        self.clause_list.append("!(TURNL90(x,y)) v (FACING(N))")  # L, N, Pit
+        self.clause_list.append("!(TURNL90(x,y)) v (PIT(x,y-1))")
+        self.clause_list.append("!(FACING(N)) v !(PIT(x,y-1)) v (TURNL90(x,y))")
+
+        self.clause_list.append("!(TURNR90(x,y)) v (FACING(N))")  # R, N, Pit
+        self.clause_list.append("!(TURNR90(x,y)) v (PIT(x,y-1))")
+        self.clause_list.append("!(FACING(N)) v !(PIT(x,y-1)) v (TURNR90(x,y))")
+
+        self.clause_list.append("!(TURNL90(x,y)) v (FACING(E))")  # L, E, Pit
+        self.clause_list.append("!(TURNL90(x,y)) v (PIT(x+1,y))")
+        self.clause_list.append("!(FACING(E)) v !(PIT(x+1,y)) v (TURNL90(x,y))")
+
+        self.clause_list.append("!(TURNR90(x,y)) v (FACING(E))")  # R, E, Pit
+        self.clause_list.append("!(TURNR90(x,y)) v (PIT(x+1,y))")
+        self.clause_list.append("!(FACING(E)) v !(PIT(x+1,y)) v (TURNR90(x,y))")
+
+        self.clause_list.append("!(TURNL90(x,y)) v (FACING(W))")  # L, W, Pit
+        self.clause_list.append("!(TURNL90(x,y)) v (PIT(x-1,y))")
+        self.clause_list.append("!(FACING(W)) v !(PIT(x-1,y)) v (TURNL90(x,y))")
+
+        self.clause_list.append("!(TURNR90(x,y)) v (FACING(W))")  # R, W, Pit
+        self.clause_list.append("!(TURNR90(x,y)) v (PIT(x-1,y))")
+        self.clause_list.append("!(FACING(W)) v !(PIT(x-1,y)) v (TURNR90(x,y))")
+
         return self.clause_list
 
     def getclauses(self):
