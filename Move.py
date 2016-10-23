@@ -150,9 +150,10 @@ class Move:
         direction_dict = {'^': 0, '>': 1, 'v': 2, '<': 3}
         direction_list = ['^', '>', 'v', '<']
         current = self.kb.known_map[self.dude.x][self.dude.y]
-        current = direction_dict.get(current)
+        current = direction_dict.get(current)        
         direction = direction_dict.get(direction)
-        # No need to turn
+
+       # No need to turn
         if direction == current:
             return
         elif direction - current == -1:
