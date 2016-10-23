@@ -211,8 +211,7 @@ class KnowledgeBase:
                 x += ', '
             x += ']'
             self.logger.info(key + ':' + x)
-            self.logger.info("##################################")
-        self.logger.info("")
+        self.logger.info("##################################")
 
     # see if query is in Knowledge Base
     def ask(self, query):
