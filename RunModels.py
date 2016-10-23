@@ -104,12 +104,12 @@ class RunModels:
                     fn = "test_worlds/probs/size{}/probs{:.3f}/test{}".format(sizes[size_i], p, i)
                     print(fn)
                     logging.warning(dude + " " + fn)
-                    kb = KnowledgeBase.KnowledgeBase(logger, sizes[size_i], 0, 0, 0, self.load_file(fn))
                     if fn in unsolvable:
                         logging.warning('unsolvable')
                     else:
                         for k in range(10):
                             print('k: ' + str(k))
+                            kb = KnowledgeBase.KnowledgeBase(logger, sizes[size_i], 0, 0, 0, self.load_file(fn))
                             logging.warning('Run {}:' .format(k))
                             Dudes.ReactiveDude(self.logger, kb)
             size_i += 1
