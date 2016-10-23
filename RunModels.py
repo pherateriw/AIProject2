@@ -59,7 +59,6 @@ class RunModels:
                 fn = "test_worlds/probs/size{}/probs{:.3f}/test{}".format(size, p, i)
                 self.save_file(fn, kb.numWumpii, kb)
 
-
 # Parse arguments for size and probabilities, create world world worlds and choose dude type to explore them
 def main(logger):
     logger.info("Hello Wumpus World!")
