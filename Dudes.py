@@ -26,7 +26,7 @@ class AbstractDude:
     def print_stats(self):
         # self.logger.warning("")
         # self.logger.warning(self.runnum + "," + self.move.moves + "," + self.moves.cost + "," + (self.death_by_pit + self.death_by_wumpii) +"," + self.death_by_wumpii + "," + self.death_by_pit + "," + self.killed_wumpii + "," + self.cells_explored)
-        self.logger.warning("{},{},{},{},{},{},{}".format(self.runnum, self.move.moves, self.move.cost, (self.death_by_pit + self.death_by_wumpii), self.death_by_pit, self.killed_wumpii, self.cells_explored))
+        self.logger.warning("{},{},{},{},{},{},{},{},{}".format(self.runnum, self.size, (self.arrow*3/self.size), self.move.moves, self.move.cost, (self.death_by_pit + self.death_by_wumpii), self.death_by_pit, self.killed_wumpii, self.cells_explored))
         #Want to be: self.logger.warning(runnum + "," + self.move.moves + "," + self.moves.cost + "," + (self.death_by_pit + self.death_by_wumpii) + "," + self.death_by_wumpii + "," + self.death_by_pit + "," + self.killed_wumpii + "," + self.cells_explored)
         # self.logger.warning("##########")
         #self.logger.warning("##########")
