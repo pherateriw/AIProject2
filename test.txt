@@ -1,0 +1,181 @@
+informed test_worlds/probs/size5/probs0.120/test0
+Run 0:
+
+##########
+##########
+Final Stats
+Total Moves: 3
+Total Cost: -1004
+Total Death: 1
+Wumpii Deaths: 0
+Pit Deaths: 1
+Wumpii Killed: 0
+Cells explored: 0
+##########
+##########
+
+
+Run 1:
+
+##########
+##########
+Final Stats
+Total Moves: 0
+Total Cost: 0
+Total Death: 0
+Wumpii Deaths: 0
+Pit Deaths: 0
+Wumpii Killed: 0
+Cells explored: 0
+##########
+##########
+
+
+Run 2:
+
+##########
+##########
+Final Stats
+Total Moves: 0
+Total Cost: 0
+Total Death: 0
+Wumpii Deaths: 0
+Pit Deaths: 0
+Wumpii Killed: 0
+Cells explored: 0
+##########
+##########
+
+
+Run 3:
+
+##########
+##########
+Final Stats
+Total Moves: 0
+Total Cost: 0
+Total Death: 0
+Wumpii Deaths: 0
+Pit Deaths: 0
+Wumpii Killed: 0
+Cells explored: 0
+##########
+##########
+
+
+Run 4:
+
+##########
+##########
+Final Stats
+Total Moves: 0
+Total Cost: 0
+Total Death: 0
+Wumpii Deaths: 0
+Pit Deaths: 0
+Wumpii Killed: 0
+Cells explored: 0
+##########
+##########
+
+
+Run 5:
+
+##########
+##########
+Final Stats
+Total Moves: 0
+Total Cost: 0
+Total Death: 0
+Wumpii Deaths: 0
+Pit Deaths: 0
+Wumpii Killed: 0
+Cells explored: 0
+##########
+##########
+
+
+Run 6:
+
+##########
+##########
+Final Stats
+Total Moves: 0
+Total Cost: 0
+Total Death: 0
+Wumpii Deaths: 0
+Pit Deaths: 0
+Wumpii Killed: 0
+Cells explored: 0
+##########
+##########
+
+
+Run 7:
+
+##########
+##########
+Final Stats
+Total Moves: 0
+Total Cost: 0
+Total Death: 0
+Wumpii Deaths: 0
+Pit Deaths: 0
+Wumpii Killed: 0
+Cells explored: 0
+##########
+##########
+
+
+Run 8:
+
+##########
+##########
+Final Stats
+Total Moves: 0
+Total Cost: 0
+Total Death: 0
+Wumpii Deaths: 0
+Pit Deaths: 0
+Wumpii Killed: 0
+Cells explored: 0
+##########
+##########
+
+
+Run 9:
+
+##########
+##########
+Final Stats
+Total Moves: 0
+Total Cost: 0
+Total Death: 0
+Wumpii Deaths: 0
+Pit Deaths: 0
+Wumpii Killed: 0
+Cells explored: 0
+##########
+##########
+
+
+informed test_worlds/probs/size5/probs0.120/test1
+unsolvable
+informed test_worlds/probs/size5/probs0.120/test2
+Run 0:
+
+##########
+##########
+Final Stats
+Total Moves: 27
+Total Cost: -4047
+Total Death: 5
+Wumpii Deaths: 4
+Pit Deaths: 1
+Wumpii Killed: 1
+Cells explored: 13
+##########
+##########
+
+
+Run 1:
