@@ -112,7 +112,7 @@ class RunModels:
                             print('k: ' + str(k))
                             kb = KnowledgeBase.KnowledgeBase(logger, sizes[size_i], 0, 0, 0, self.load_file(fn))
                             #logging.warning('Run {}:' .format(k))
-                            Dudes.ReactiveDude(self.logger, kb, k)
+                            Dudes.ReactiveDude(self.logger, kb, k, p)
             size_i += 1
 
 

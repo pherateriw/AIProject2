@@ -5,7 +5,7 @@ import InferenceEngine
 
 class AbstractDude:
 
-    def __init__(self, logger, kb, runnum):
+    def __init__(self, logger, kb, runnum, prob):
         self.logger = logger
         self.kb = kb
         self.size = len(kb.known_map)
@@ -14,6 +14,7 @@ class AbstractDude:
         self.y = 0
         self.prevx = 0
         self.prvey = 0
+        self.prob = prob
 
         #stats
         self.death_by_pit = 0
@@ -24,11 +25,13 @@ class AbstractDude:
         self.runnum = runnum
 
     def print_stats_log(self):
-        self.logger.warning("{},{},{},{},{},{},{}".format(self.runnum, self.move.moves, self.move.cost, (self.death_by_pit + self.death_by_wumpii), self.death_by_pit, self.killed_wumpii, self.cells_explored))
-
+        total_death = self.death_by_pit + self.death_by_wumpii
+        self.logger.warning("{},{:.3f},{},{},{},{},{},{},{},{}".format(
+            self.size, self.prob, self.runnum, self.move.moves,
+            self.move.cost, total_death, self.death_by_pit,
+            self.death_by_wumpii, self.killed_wumpii, self.cells_explored))
 
     def print_stats_console(self):
-
         print("##########")
         print("##########")
         print("Final Stats")
@@ -106,8 +109,8 @@ class ReactiveDude(AbstractDude):
     Reactive Dude does not do any reasoning about world, he simply choose randomly from among his possible choices.
     """
 
-    def __init__(self, logger, kb, k):
-        super(ReactiveDude, self).__init__(logger, kb, k)
+    def __init__(self, logger, kb, k, prob):
+        super(ReactiveDude, self).__init__(logger, kb, k, prob)
         self.logger.info("Reactive dude created!")
         self.move.place_dude()
         self.rounds()
@@ -141,8 +144,8 @@ class InformedDude(AbstractDude):
     for next move.
     """
 
-    def __init__(self, logger, kb, k):
-        super(InformedDude, self).__init__(logger, kb, k)
+    def __init__(self, logger, kb, k, prob):
+        super(InformedDude, self).__init__(logger, kb, k, prob)
         self.logger.info("Informed dude created!")
         self.logger.info()
         self.ie = InferenceEngine.InferenceEngine(kb)
