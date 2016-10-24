@@ -24,8 +24,9 @@ class AbstractDude:
         self.runnum = runnum
 
     def print_stats(self):
-        self.logger.warning("")
-        self.logger.warning(self.runnum+ "," + self.move.moves + "," + self.moves.cost + "," + (self.death_by_pit + self.death_by_wumpii) +"," + self.death_by_wumpii + "," + self.death_by_pit + "," + self.killed_wumpii + "," + self.cells_explored)
+        # self.logger.warning("")
+        # self.logger.warning(self.runnum + "," + self.move.moves + "," + self.moves.cost + "," + (self.death_by_pit + self.death_by_wumpii) +"," + self.death_by_wumpii + "," + self.death_by_pit + "," + self.killed_wumpii + "," + self.cells_explored)
+        self.logger.warning("{},{},{},{},{},{},{}".format(self.runnum, self.move.moves, self.move.cost, (self.death_by_pit + self.death_by_wumpii), self.death_by_pit, self.killed_wumpii, self.cells_explored))
         #Want to be: self.logger.warning(runnum + "," + self.move.moves + "," + self.moves.cost + "," + (self.death_by_pit + self.death_by_wumpii) + "," + self.death_by_wumpii + "," + self.death_by_pit + "," + self.killed_wumpii + "," + self.cells_explored)
         # self.logger.warning("##########")
         #self.logger.warning("##########")
@@ -104,8 +105,8 @@ class ReactiveDude(AbstractDude):
     Reactive Dude does not do any reasoning about world, he simply choose randomly from among his possible choices.
     """
 
-    def __init__(self, logger, kb):
-        super(ReactiveDude, self).__init__(logger, kb)
+    def __init__(self, logger, kb, k):
+        super(ReactiveDude, self).__init__(logger, kb, k)
         self.logger.info("Reactive dude created!")
         self.move.place_dude()
         self.rounds()
@@ -139,8 +140,8 @@ class InformedDude(AbstractDude):
     for next move.
     """
 
-    def __init__(self, logger, kb):
-        super(InformedDude, self).__init__(logger, kb)
+    def __init__(self, logger, kb, k):
+        super(InformedDude, self).__init__(logger, kb, k)
         self.logger.info("Informed dude created!")
         self.logger.info()
         self.ie = InferenceEngine.InferenceEngine(kb)

@@ -103,9 +103,10 @@ class RunModels:
                 for i in range(5):
                     fn = "test_worlds/probs/size{}/probs{:.3f}/test{}".format(sizes[size_i], p, i)
                     print(fn)
-                    logging.warning(dude + " " + fn)
+                    # logging.warning(dude + " " + fn)
                     if fn in unsolvable:
-                        logging.warning('unsolvable')
+                        # logging.warning('unsolvable')
+                        pass
                     else:
                         for k in range(10):
                             print('k: ' + str(k))
