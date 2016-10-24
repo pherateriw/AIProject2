@@ -118,6 +118,8 @@ class Move:
     def successful_move(self, x, y, direction):
         self.change_direction(direction)
         # if in square with gold, grab gold
+        if x < 0 or x >= len(self.kb.unknown_map) or y < 0 or y >= len(self.kb.unknown_map):
+            return False
         if self.kb.unknown_map[x][y] == '$':
             self.grab_gold()
             return True

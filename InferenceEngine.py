@@ -474,14 +474,31 @@ class InferenceEngine:
     # get neighbors and their known_map char's
     def get_neighbors(self, x, y):
         neighbors = {'_': [], 'm': [], 'd': [], 's': [], 'w': [], 'p':[], 'o': []}
-        if x > 0:
-            neighbors.get(self.kb.known_map[x - 1][y]).append('^')
-        if x < len(self.kb.known_map) - 1:
-            neighbors.get(self.kb.known_map[x + 1][y]).append('v')
-        if y > 0:
-            neighbors.get(self.kb.known_map[x][y - 1]).append('<')
-        if y < len(self.kb.known_map) - 1:
-            neighbors.get(self.kb.known_map[x][y + 1]).append('>')
+        try:
+            if x > 0:
+                neighbors.get(self.kb.known_map[x - 1][y]).append('^')
+        except:
+            if neighbors.get(self.kb.known_map[x - 1][y]) == '>' or neighbors.get(self.kb.known_map[x - 1][y]) == 'v' or neighbors.get(self.kb.known_map[x - 1][y]) == '<' or neighbors.get(self.kb.known_map[x - 1][y]) == '^' or neighbors.get(self.kb.known_map[x-1][y]) == '$':
+                neighbors.get('s').append('^')
+        try:
+            if x < len(self.kb.known_map) - 1:
+                neighbors.get(self.kb.known_map[x + 1][y]).append('v')
+        except:
+            if neighbors.get(self.kb.known_map[x + 1][y]) == '>' or neighbors.get(self.kb.known_map[x + 1][y]) == 'v' or neighbors.get(self.kb.known_map[x + 1][y]) == '<' or neighbors.get(self.kb.known_map[x + 1][y]) == '^' or neighbors.get(self.kb.known_map[x+1][y]) == '$':
+                neighbors.get('s').append('v')
+        try:
+            if y > 0:
+                neighbors.get(self.kb.known_map[x][y - 1]).append('<')
+        except:
+            if neighbors.get(self.kb.known_map[x][y-1]) == '>' or neighbors.get(self.kb.known_map[x][y-1]) == 'v' or neighbors.get(self.kb.known_map[x][y-1]) == '<' or neighbors.get(self.kb.known_map[x][y-1]) == '^' or neighbors.get(self.kb.known_map[x][y-1]) == '$':
+                neighbors.get('s').append('<')
+        try:
+            if y < len(self.kb.known_map) - 1:
+                neighbors.get(self.kb.known_map[x][y + 1]).append('>')
+        except:
+            if neighbors.get(self.kb.known_map[x][y+1]) == '>' or neighbors.get(self.kb.known_map[x][y+1]) == 'v' or neighbors.get(self.kb.known_map[x][y+1]) == '<' or neighbors.get(self.kb.known_map[x][y+1]) == '^' or neighbors.get(self.kb.known_map[x][y+1]) == '$':
+                neighbors.get('s').append('>')
+
         return neighbors
 
     # Choose according to priorities:

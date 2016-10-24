@@ -138,7 +138,7 @@ def main(logger):
     load_file = True
     save_file = True
 
-    args.dude = i    
+    args.dude = 'i'
     
     if load_file:
         kb = KnowledgeBase.KnowledgeBase(logger, args.size, args.obstacles, args.wumpi, args.pits, rm.load_file("test_worlds/probs/size5/probs0.077/test0"))
