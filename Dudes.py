@@ -24,6 +24,7 @@ class AbstractDude:
         self.cells_explored = 0
         self.runnum = runnum
 
+
     def print_stats_log(self):
         total_death = self.death_by_pit + self.death_by_wumpii
         self.logger.warning("{},{:.3f},{},{},{},{},{},{},{},{}".format(
@@ -179,6 +180,7 @@ class InformedDude(AbstractDude):
     def make_move(self, choice):
         self.x, self.y, stop, percept = self.move.move_direction(self.x, self.y, choice)
         return stop, percept
+
 
 
 
