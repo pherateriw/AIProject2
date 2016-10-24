@@ -5,7 +5,7 @@ import InferenceEngine
 
 class AbstractDude:
 
-    def __init__(self, logger, kb):
+    def __init__(self, logger, kb, runnum, prob):
         self.logger = logger
         self.kb = kb
         self.size = len(kb.known_map)
@@ -14,6 +14,7 @@ class AbstractDude:
         self.y = 0
         self.prevx = 0
         self.prvey = 0
+        self.prob = prob
 
         #stats
         self.death_by_pit = 0
@@ -21,23 +22,31 @@ class AbstractDude:
         self.killed_wumpii = 0
         self.arrows = self.kb.numWumpii
         self.cells_explored = 0
+        self.runnum = runnum
 
-    def print_stats(self):
-        self.logger.warning("")
-        self.logger.warning("##########")
-        self.logger.warning("##########")
-        self.logger.warning("Final Stats")
-        self.logger.warning("Total Moves: %s" % self.move.moves)
-        self.logger.warning("Total Cost: %s" % self.move.cost)
-        self.logger.warning("Total Death: %s" % (self.death_by_pit + self.death_by_wumpii))
-        self.logger.warning("Wumpii Deaths: %s" % self.death_by_wumpii)
-        self.logger.warning("Pit Deaths: %s" % self.death_by_pit)
-        self.logger.warning("Wumpii Killed: %s" % self.killed_wumpii)
-        self.logger.warning("Cells explored: %s" % self.cells_explored)
-        self.logger.warning("##########")
-        self.logger.warning("##########")
-        self.logger.warning("")
-        self.logger.warning("")
+
+    def print_stats_log(self):
+        total_death = self.death_by_pit + self.death_by_wumpii
+        self.logger.warning("{},{:.3f},{},{},{},{},{},{},{},{}".format(
+            self.size, self.prob, self.runnum, self.move.moves,
+            self.move.cost, total_death, self.death_by_pit,
+            self.death_by_wumpii, self.killed_wumpii, self.cells_explored))
+
+    def print_stats_console(self):
+        print("##########")
+        print("##########")
+        print("Final Stats")
+        print("Total Moves: %s" % self.move.moves)
+        print("Total Cost: %s" % self.move.cost)
+        print("Total Death: %s" % (self.death_by_pit + self.death_by_wumpii))
+        print("Wumpii Deaths: %s" % self.death_by_wumpii)
+        print("Pit Deaths: %s" % self.death_by_pit)
+        print("Wumpii Killed: %s" % self.killed_wumpii)
+        print("Cells explored: %s" % self.cells_explored)
+        print("##########")
+        print("##########")
+        print("")
+        print("")
 
     # get potential directions to go in preference order of:
     # unexplored and safe seeming cells
@@ -101,8 +110,8 @@ class ReactiveDude(AbstractDude):
     Reactive Dude does not do any reasoning about world, he simply choose randomly from among his possible choices.
     """
 
-    def __init__(self, logger, kb):
-        super(ReactiveDude, self).__init__(logger, kb)
+    def __init__(self, logger, kb, k, prob):
+        super(ReactiveDude, self).__init__(logger, kb, k, prob)
         self.logger.info("Reactive dude created!")
         self.move.place_dude()
         self.rounds()
@@ -112,7 +121,7 @@ class ReactiveDude(AbstractDude):
         stop = False
         while not stop:
             stop = self.make_move()
-        self.print_stats()
+        self.print_stats_log()
 
     # Get directions to move in, move, return result
     def make_move(self):
@@ -136,8 +145,8 @@ class InformedDude(AbstractDude):
     for next move.
     """
 
-    def __init__(self, logger, kb):
-        super(InformedDude, self).__init__(logger, kb)
+    def __init__(self, logger, kb, k, prob):
+        super(InformedDude, self).__init__(logger, kb, k, prob)
         self.logger.info("Informed dude created!")
         self.ie = InferenceEngine.InferenceEngine(kb)
         self.move.place_dude()
@@ -277,15 +286,22 @@ class InformedDude(AbstractDude):
                 stop, percept = self.make_move(random.choice(list(current_valid_choices)))   
                 current_valid_choices.clear()
 
-                #if percept:  # new percept
-                #    self.ie.tell(percept, self.x, self.y)
-                    
-        self.print_stats()
+            choices = self.ie.ask("What Next?", self.x, self.y)  # Ask Inference Engine for best possible choices
+            if 'Stuck' in choices:
+                stop = True
+                self.logger.info("Explorer is stuck!")
+                break
+            stop, percept = self.make_move(random.choice(choices))
+            if percept:  # new percept
+                self.ie.tell(percept, self.x, self.y)
+        self.print_stats_log()
+
 
     # Make move, return new x, new y, and if gold found
     def make_move(self, choice):
         self.x, self.y, stop, percept = self.move.move_direction(self.x, self.y, choice)
         return stop, percept
+
 
 
 
