@@ -12,6 +12,7 @@ class KnowledgeBase:
             self.unknown_map = unknown_map[0]
             self.numWumpii = unknown_map[1]
 
+
         # known_map is the one the Dudes see
         self.known_map = wg.createGrid(size)
 

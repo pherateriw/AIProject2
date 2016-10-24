@@ -111,12 +111,10 @@ class RunModels:
                         for k in range(10):
                             print('k: ' + str(k))
                             logging.warning('Run {}:' .format(k))
-                            Dudes.ReactiveDude(self.logger, kb)
+                            Dudes.InformedDude(self.logger, kb)
             size_i += 1
 
 
-
->>>>>>> 222e559b35ba2c27f0438df0b5c51a557ff273fa
 # Parse arguments for size and probabilities, create world world worlds and choose dude type to explore them
 def main(logger):
     logger.info("Hello Wumpus World!")
@@ -132,22 +130,24 @@ def main(logger):
     # Create Testing rules. TAKES FOREVER!!!!!
     # rm.create_sizes(args.obstacles, args.wumpi, args.pits)
     # rm.create_probs(args.obstacles, args.wumpi, args.pits)
-    rm.run_probs('reactive')
-    # load_file = True
-    # save_file = False
-    #
-    # if load_file:
-    #     kb = KnowledgeBase.KnowledgeBase(logger, args.size, args.obstacles, args.wumpi, args.pits, rm.load_file("test_worlds/sizes/size5/test4"))
-    # else:
-    #     kb = KnowledgeBase.KnowledgeBase(logger, args.size, args.obstacles, args.wumpi, args.pits,  None)
-    # arrows = kb.numWumpii
-    # if save_file:
-    #     rm.save_file("test_worlds/size5/test2", arrows, kb)
-    #
-    # if args.dude == 'i':
-    #     iDude = Dudes.InformedDude(logger, kb)
-    # else:
-    #     rDude = Dudes.ReactiveDude(logger, kb)
+    rm.run_probs('informed')
+    load_file = True
+    save_file = True
+
+    args.dude = i    
+    
+    if load_file:
+        kb = KnowledgeBase.KnowledgeBase(logger, args.size, args.obstacles, args.wumpi, args.pits, rm.load_file("test_worlds/probs/size5/probs0.077/test0"))
+    else:
+        kb = KnowledgeBase.KnowledgeBase(logger, args.size, args.obstacles, args.wumpi, args.pits,  None)
+    arrows = kb.numWumpii
+    if save_file:
+        rm.save_file("test_worlds/size5/test2", arrows, kb)
+  
+    if args.dude == 'i':
+        iDude = Dudes.InformedDude(logger, kb)    
+    else:
+        rDude = Dudes.ReactiveDude(logger, kb)
 
 
 if __name__ == '__main__':
