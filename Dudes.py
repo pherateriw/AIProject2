@@ -5,7 +5,7 @@ import InferenceEngine
 
 class AbstractDude:
 
-    def __init__(self, logger, kb):
+    def __init__(self, logger, kb, runnum):
         self.logger = logger
         self.kb = kb
         self.size = len(kb.known_map)
@@ -21,10 +21,11 @@ class AbstractDude:
         self.killed_wumpii = 0
         self.arrows = self.kb.numWumpii
         self.cells_explored = 0
+        self.runnum = runnum
 
     def print_stats(self):
         self.logger.warning("")
-        self.logger.warning(""+ "," + self.move.moves + "," + self.moves.cost + "," + (self.death_by_pit + self.death_by_wumpii) +"," + self.death_by_wumpii + "," + self.death_by_pit + "," + self.killed_wumpii + "," + self.cells_explored)
+        self.logger.warning(self.runnum+ "," + self.move.moves + "," + self.moves.cost + "," + (self.death_by_pit + self.death_by_wumpii) +"," + self.death_by_wumpii + "," + self.death_by_pit + "," + self.killed_wumpii + "," + self.cells_explored)
         #Want to be: self.logger.warning(runnum + "," + self.move.moves + "," + self.moves.cost + "," + (self.death_by_pit + self.death_by_wumpii) + "," + self.death_by_wumpii + "," + self.death_by_pit + "," + self.killed_wumpii + "," + self.cells_explored)
         # self.logger.warning("##########")
         #self.logger.warning("##########")
