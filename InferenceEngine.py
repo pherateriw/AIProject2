@@ -418,6 +418,13 @@ class InferenceEngine:
 
     # negate a clause
     def negate(self,q):
+        # if clause already negated
+        if '!' in q:
+            split_q = q.split("!(")
+            q = split_q[1]
+            split_q = q.split(")")
+            q = split_string[0]
+            return "({})".format(q)   
         return "!({})".format(q)       
              
     # following resolution, subs in appropriate values from substitution string         
