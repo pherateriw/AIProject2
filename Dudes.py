@@ -23,25 +23,27 @@ class AbstractDude:
         self.cells_explored = 0
         self.runnum = runnum
 
-    def print_stats(self):
-        # self.logger.warning("")
-        # self.logger.warning(self.runnum + "," + self.move.moves + "," + self.moves.cost + "," + (self.death_by_pit + self.death_by_wumpii) +"," + self.death_by_wumpii + "," + self.death_by_pit + "," + self.killed_wumpii + "," + self.cells_explored)
-        self.logger.warning("{},{},{},{},{},{},{},{},{}".format(self.runnum, self.size, (self.arrow*3/self.size), self.move.moves, self.move.cost, (self.death_by_pit + self.death_by_wumpii), self.death_by_pit, self.killed_wumpii, self.cells_explored))
-        #Want to be: self.logger.warning(runnum + "," + self.move.moves + "," + self.moves.cost + "," + (self.death_by_pit + self.death_by_wumpii) + "," + self.death_by_wumpii + "," + self.death_by_pit + "," + self.killed_wumpii + "," + self.cells_explored)
-        # self.logger.warning("##########")
-        #self.logger.warning("##########")
-        #self.logger.warning("Final Stats")
-        #self.logger.warning("Total Moves: %s" % self.move.moves)
-        #self.logger.warning("Total Cost: %s" % self.move.cost)
-        #self.logger.warning("Total Death: %s" % (self.death_by_pit + self.death_by_wumpii))
-        #self.logger.warning("Wumpii Deaths: %s" % self.death_by_wumpii)
-        #self.logger.warning("Pit Deaths: %s" % self.death_by_pit)
-        #self.logger.warning("Wumpii Killed: %s" % self.killed_wumpii)
-        #self.logger.warning("Cells explored: %s" % self.cells_explored)
-        #self.logger.warning("##########")
-        #self.logger.warning("##########")
-        #self.logger.warning("")
-        #self.logger.warning("")
+
+    def print_stats_log(self):
+        self.logger.warning("{},{},{},{},{},{},{}".format(self.runnum, self.move.moves, self.move.cost, (self.death_by_pit + self.death_by_wumpii), self.death_by_pit, self.killed_wumpii, self.cells_explored))
+
+
+    def print_stats_console(self):
+
+        print("##########")
+        print("##########")
+        print("Final Stats")
+        print("Total Moves: %s" % self.move.moves)
+        print("Total Cost: %s" % self.move.cost)
+        print("Total Death: %s" % (self.death_by_pit + self.death_by_wumpii))
+        print("Wumpii Deaths: %s" % self.death_by_wumpii)
+        print("Pit Deaths: %s" % self.death_by_pit)
+        print("Wumpii Killed: %s" % self.killed_wumpii)
+        print("Cells explored: %s" % self.cells_explored)
+        print("##########")
+        print("##########")
+        print("")
+        print("")
 
     # get potential directions to go in preference order of:
     # unexplored and safe seeming cells
@@ -116,7 +118,7 @@ class ReactiveDude(AbstractDude):
         stop = False
         while not stop:
             stop = self.make_move()
-        self.print_stats()
+        self.print_stats_log()
 
     # Get directions to move in, move, return result
     def make_move(self):
@@ -169,12 +171,13 @@ class InformedDude(AbstractDude):
             stop, percept = self.make_move(random.choice(choices))
             if percept:  # new percept
                 self.ie.tell(percept, self.x, self.y)
-        self.print_stats()
+        self.print_stats_log()
 
     # Make move, return new x, new y, and if gold found
     def make_move(self, choice):
         self.x, self.y, stop, percept = self.move.move_direction(self.x, self.y, choice)
         return stop, percept
+
 
 
 
