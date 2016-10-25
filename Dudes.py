@@ -286,14 +286,6 @@ class InformedDude(AbstractDude):
                 stop, percept = self.make_move(random.choice(list(current_valid_choices)))   
                 current_valid_choices.clear()
 
-            choices = self.ie.ask("What Next?", self.x, self.y)  # Ask Inference Engine for best possible choices
-            if 'Stuck' in choices:
-                stop = True
-                self.logger.info("Explorer is stuck!")
-                break
-            stop, percept = self.make_move(random.choice(choices))
-            if percept:  # new percept
-                self.ie.tell(percept, self.x, self.y)
         self.print_stats_log()
 
 
