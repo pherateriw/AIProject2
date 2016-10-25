@@ -33,20 +33,20 @@ class AbstractDude:
             self.death_by_wumpii, self.killed_wumpii, self.cells_explored))
 
     def print_stats_console(self):
-        print("##########")
-        print("##########")
-        print("Final Stats")
-        print("Total Moves: %s" % self.move.moves)
-        print("Total Cost: %s" % self.move.cost)
-        print("Total Death: %s" % (self.death_by_pit + self.death_by_wumpii))
-        print("Wumpii Deaths: %s" % self.death_by_wumpii)
-        print("Pit Deaths: %s" % self.death_by_pit)
-        print("Wumpii Killed: %s" % self.killed_wumpii)
-        print("Cells explored: %s" % self.cells_explored)
-        print("##########")
-        print("##########")
-        print("")
-        print("")
+        self.logger.info("##########")
+        self.logger.info("##########")
+        self.logger.info("Final Stats")
+        self.logger.info("Total Moves: %s" % self.move.moves)
+        self.logger.info("Total Cost: %s" % self.move.cost)
+        self.logger.info("Total Death: %s" % (self.death_by_pit + self.death_by_wumpii))
+        self.logger.info("Wumpii Deaths: %s" % self.death_by_wumpii)
+        self.logger.info("Pit Deaths: %s" % self.death_by_pit)
+        self.logger.info("Wumpii Killed: %s" % self.killed_wumpii)
+        self.logger.info("Cells explored: %s" % self.cells_explored)
+        self.logger.info("##########")
+        self.logger.info("##########")
+        self.logger.info("")
+        self.logger.info("")
 
     # get potential directions to go in preference order of:
     # unexplored and safe seeming cells
@@ -286,7 +286,7 @@ class InformedDude(AbstractDude):
                 stop, percept = self.make_move(random.choice(list(current_valid_choices)))   
                 current_valid_choices.clear()
 
-        self.print_stats_log()
+        self.print_stats_console()
 
 
     # Make move, return new x, new y, and if gold found
