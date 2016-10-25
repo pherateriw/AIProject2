@@ -231,7 +231,7 @@ class InferenceEngine:
                 # resolution is finished
                 # is None right here?
                 if None in resolvents or self.clauses == None:
-                    self.logger.info("clauses = {}".format(self.clauses))
+                    #self.logger.info("clauses = {}".format(self.clauses))
                     return True
 
                 # new becomes the union of new and resolvents
@@ -242,11 +242,11 @@ class InferenceEngine:
             # checks if new is a subset of the clauses, if it is, keeps looping
             if self.clauses != None:
                 if new.issubset(set(self.clauses)):
-                    self.logger.info("clauses = {}".format(self.clauses))
+                    #self.logger.info("clauses = {}".format(self.clauses))
                     return False
 
                 self.clauses.union(new)
-                self.logger.info(self.clauses)
+                #self.logger.info(self.clauses)
 
             clause_pairs.clear()
             new.clear()
@@ -324,7 +324,7 @@ class InferenceEngine:
 
                     if i_bare_pred[0] == j_bare_pred[0]:
                         # i and j have the same predicate
-                        self.logger.info("resolve i and j")
+                        #self.logger.info("resolve i and j")
 
                         # resolve if we have !i == j or !j == i  
                         # have checked predicate is the same, and they have resolved, so 
@@ -333,29 +333,29 @@ class InferenceEngine:
                             disjunct_list_i = self.sub_values(disjunct_list_i, self.theta)
                             disjunct_list_j = self.sub_values(disjunct_list_j, self.theta)
 
-                            self.logger.info("di = {}".format(disjunct_list_i))
-                            self.logger.info("dj = {}".format(disjunct_list_j))
+                            #self.logger.info("di = {}".format(disjunct_list_i))
+                            #self.logger.info("dj = {}".format(disjunct_list_j))
 
                             # if resolved, remove from disjuncts, clauses
                             # remove i and j from their respective lists
-                            self.logger.info("ci = {}".format(ci))
-                            self.logger.info("cj = {}".format(cj))
+                            #self.logger.info("ci = {}".format(ci))
+                            #self.logger.info("cj = {}".format(cj))
 
                             while i in disjunct_list_i:
-                                self.logger.info("removing {}".format(i))
+                                #self.logger.info("removing {}".format(i))
                                 disjunct_list_i.remove(i)
                                 if i in local_clauses:
                                     local_clauses.remove(i)
 
                             while j in disjunct_list_j:
-                                self.logger.info("removing {}".format(j))
+                                #self.logger.info("removing {}".format(j))
                                 disjunct_list_j.remove(j)
                                 if j in local_clauses:
                                     local_clauses.remove(j)
 
 
-                            self.logger.info("di={}".format(disjunct_list_i))
-                            self.logger.info("dj={}".format(disjunct_list_j))
+                            #self.logger.info("di={}".format(disjunct_list_i))
+                            #self.logger.info("dj={}".format(disjunct_list_j))
 
                             # make the new list of disjuncts
                             updated_disjuncts = set()
@@ -378,7 +378,7 @@ class InferenceEngine:
                             if (self.clauses != None):
                                 ci_index = list(self.clauses).index(ci) if ci in list(self.clauses) else -1
                                 if ci_index != -1:
-                                    self.logger.info("ci = {}".format(ci))
+                                    #self.logger.info("ci = {}".format(ci))
                                     if ' v ' in ci:
                                         
                                         if len(disjunct_list_i) == 1:

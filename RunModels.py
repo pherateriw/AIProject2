@@ -61,9 +61,11 @@ class RunModels:
 
     # Create 5 worlds given a size and probability
     def run_probs(self, dude):
-        print("Change the dude !!!!!!!")
+        #print("Change the dude !!!!!!!")
         size_i = 0
-        sizes = [5, 10, 15, 20, 25]
+        #sizes = [5, 10, 15, 20, 25]
+        sizes = [5]
+        
         unsolvable = ["test_worlds/probs/size5/probs0.120/test1",
                       'test_worlds/probs/size5/probs0.230/test3',
                       'test_worlds/probs/size10/probs0.163/test3',
@@ -91,24 +93,29 @@ class RunModels:
                       'test_worlds/probs/size25/probs0.250/test3',
                       'test_worlds/probs/size25/probs0.250/test4']
 
-        probs = [[.12, .23 / 3, .46 / 3, .69 / 3],
-                 [.03, .245 / 3, .49 / 3, .735 / 3],
-                 [.012, .248 / 3, .496 / 3, .743 / 3],
-                 [.009, .249 / 3, .498 / 3, .746 / 3],
-                 [.006, .25 / 3, .5 / 3, .75 / 3]]
+        probs = [[.69 / 3]]
+
+        #probs = [[.12, .23 / 3, .46 / 3, .69 / 3],
+        #         [.03, .245 / 3, .49 / 3, .735 / 3],
+        #         [.012, .248 / 3, .496 / 3, .743 / 3],
+        #         [.009, .249 / 3, .498 / 3, .746 / 3],
+        #         [.006, .25 / 3, .5 / 3, .75 / 3]]
 
 
         for prob in probs:
             for p in prob:
-                for i in range(5):
-                    fn = "test_worlds/probs/size{}/probs{:.3f}/test{}".format(sizes[size_i], p, i)
+                for i in range(1):                
+                #for i in range(5):
+                    #fn = "test_worlds/probs/size{}/probs{:.3f}/test{}".format(sizes[size_i], p, i)
+                    fn = "test_worlds/probs/size{}/probs{:.3f}/test{}".format(5, 0.23, 1)
                     #print(fn)
                     # logging.warning(dude + " " + fn)
                     if fn in unsolvable:
                         # logging.warning('unsolvable')
                         pass
-                    else:
-                        for k in range(10):
+                    else:                       
+                        #for k in range(10):
+                        for k in range(1): 
                             #print('k: ' + str(k))
 
                             #logging.warning('Run {}:' .format(k))
@@ -134,24 +141,24 @@ def main(logger):
     # Create Testing rules. TAKES FOREVER!!!!!
     # rm.create_sizes(args.obstacles, args.wumpi, args.pits)
     # rm.create_probs(args.obstacles, args.wumpi, args.pits)
-    rm.run_probs('informed')
+    # rm.run_probs('informed')
     load_file = True
-    save_file = True
+    save_file = False
 
     args.dude = 'i'
     
     if load_file:
-        kb = KnowledgeBase.KnowledgeBase(logger, args.size, args.obstacles, args.wumpi, args.pits, rm.load_file("test_worlds/probs/size5/probs0.077/test0"))
+        kb = KnowledgeBase.KnowledgeBase(logger, args.size, args.obstacles, args.wumpi, args.pits, rm.load_file("test_worlds/sizes/size5/test0"))
     else:
         kb = KnowledgeBase.KnowledgeBase(logger, args.size, args.obstacles, args.wumpi, args.pits,  None)
     arrows = kb.numWumpii
     if save_file:
         rm.save_file("/WumpusWorld/test.txt", arrows, kb)
   
-    if args.dude == 'i':
-        iDude = Dudes.InformedDude(logger, kb)    
-    else:
-        rDude = Dudes.ReactiveDude(logger, kb)
+    #if args.dude == 'i':
+    #    iDude = Dudes.InformedDude(logger, kb)    
+    #else:
+    Dude = Dudes.InformedDude(logger, kb, 0, 0)
 
 
 if __name__ == '__main__':
@@ -160,5 +167,6 @@ if __name__ == '__main__':
     formatter = logging.Formatter('%(message)s')
     hdlr.setFormatter(formatter)
     logger.addHandler(hdlr)
-    logger.setLevel(logging.WARNING)
+    #logger.setLevel(logging.WARNING)
+    logger.setLevel(logging.INFO)    
     main(logger)
