@@ -636,13 +636,20 @@ class InferenceEngine:
                     # checks all the items in disjunct_list for possible substitution
                     for i in range(0,num_items):
                         # different cases where variable could be, after left paren, before right paren, or between two commas
-                        
+                        if "({}+1,".format(key_variable) in disjunct_list:
+                            sumV = value_of_key + 1                            
+                            disjunct_list = disjunct_list.replace("{}".format(key_variable), "{}".format(sumV))
+                        if "({}-1,".format(key_variable) in disjunct_list:
+                            difV = value_of_key - 1                            
+                            disjunct_list = disjunct_list.replace("{}".format(key_variable), "{}".format(difV))
                         if "({},".format(key_variable) in disjunct_list:
                             disjunct_list = disjunct_list.replace("{}".format(key_variable), "{}".format(value_of_key))
-
-                        if ",{},".format(key_variable) in disjunct_list:
-                            disjunct_list = disjunct_list.replace("{}".format(key_variable), "{}".format(value_of_key))
-
+                        if ",{}+1)".format(key_variable) in disjunct_list:
+                            sumV = value + 1                            
+                            disjunct_list = disjunct_list.replace("{}".format(key_variable), "{}".format(sumV))                        
+                        if ",{}-1)".format(key_variable) in disjunct_list:
+                            difV = value - 1                            
+                            disjunct_list = disjunct_list.replace("{}".format(key_variable), "{}".format(difV))               
                         if ",{})".format(key_variable) in disjunct_list:
                             disjunct_list = disjunct_list.replace("{}".format(key_variable), "{}".format(value_of_key))
         #self.logger.info("dl = {}".format(disjunct_list))
