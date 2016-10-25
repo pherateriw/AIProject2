@@ -141,14 +141,14 @@ def main(logger):
     # Create Testing rules. TAKES FOREVER!!!!!
     # rm.create_sizes(args.obstacles, args.wumpi, args.pits)
     # rm.create_probs(args.obstacles, args.wumpi, args.pits)
-    rm.run_probs('informed')
-    load_file = False
+    # rm.run_probs('informed')
+    load_file = True
     save_file = False
 
     args.dude = 'i'
     
     if load_file:
-        kb = KnowledgeBase.KnowledgeBase(logger, args.size, args.obstacles, args.wumpi, args.pits, rm.load_file("test_worlds/probs/size5/probs0.0230/test1"))
+        kb = KnowledgeBase.KnowledgeBase(logger, args.size, args.obstacles, args.wumpi, args.pits, rm.load_file("test_worlds/sizes/size5/test0"))
     else:
         kb = KnowledgeBase.KnowledgeBase(logger, args.size, args.obstacles, args.wumpi, args.pits,  None)
     arrows = kb.numWumpii
@@ -158,7 +158,7 @@ def main(logger):
     #if args.dude == 'i':
     #    iDude = Dudes.InformedDude(logger, kb)    
     #else:
-    #    rDude = Dudes.ReactiveDude(logger, kb)
+    Dude = Dudes.InformedDude(logger, kb, 0, 0)
 
 
 if __name__ == '__main__':
