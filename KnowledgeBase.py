@@ -14,7 +14,7 @@ class KnowledgeBase:
 
 
         # known_map is the one the Dudes see
-        self.known_map = wg.createGrid(size)
+        self.known_map = wg.createGrid(len(self.unknown_map))
 
         self.percepts = {} 
         self.facts = {}
