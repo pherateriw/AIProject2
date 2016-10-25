@@ -148,7 +148,7 @@ class InformedDude(AbstractDude):
     def __init__(self, logger, kb, k, prob):
         super(InformedDude, self).__init__(logger, kb, k, prob)
         self.logger.info("Informed dude created!")
-        self.ie = InferenceEngine.InferenceEngine(kb)
+        self.ie = InferenceEngine.InferenceEngine(kb, logger)
         self.move.place_dude()
         self.ie.tell(['a'], self.x, self.y)
         self.rounds()
@@ -267,17 +267,17 @@ class InformedDude(AbstractDude):
                         self.kb.tell("SHOOTARROW({},{})".format(self.x, self.y), self.x, self.y)      
                         
                         if list(current_valid_choices)[0] == '<k':
+                            self.move.shoot_wumpus('<')                                                        
                             stop, percept = self.make_move(random.choice('<'))
-                            self.move.shoot_wumpus('<')
                         elif list(current_valid_choices)[0] == '>k':
-                            stop, percept = self.make_move(random.choice('>'))
-                            self.move.shoot_wumpus('>')                            
+                            self.move.shoot_wumpus('>') 
+                            stop, percept = self.make_move(random.choice('>'))                           
                         elif list(current_valid_choices)[0] == 'vk':
-                            stop, percept = self.make_move(random.choice('v'))
                             self.move.shoot_wumpus('v')
+                            stop, percept = self.make_move(random.choice('v'))
                         elif list(current_valid_choices)[0] == '^k':
+                            self.move.shoot_wumpus('^') 
                             stop, percept = self.make_move(random.choice('^'))
-                            self.move.shoot_wumpus('^')
                         else:
                             stop, percept = self.make_move(random.choice(list(current_valid_choices)[0]))                            
                             current_valid_choices.clear()
@@ -286,14 +286,6 @@ class InformedDude(AbstractDude):
                 stop, percept = self.make_move(random.choice(list(current_valid_choices)))   
                 current_valid_choices.clear()
 
-            choices = self.ie.ask("What Next?", self.x, self.y)  # Ask Inference Engine for best possible choices
-            if 'Stuck' in choices:
-                stop = True
-                self.logger.info("Explorer is stuck!")
-                break
-            stop, percept = self.make_move(random.choice(choices))
-            if percept:  # new percept
-                self.ie.tell(percept, self.x, self.y)
         self.print_stats_log()
 
 

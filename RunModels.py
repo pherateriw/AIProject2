@@ -102,16 +102,16 @@ class RunModels:
             for p in prob:
                 for i in range(5):
                     fn = "test_worlds/probs/size{}/probs{:.3f}/test{}".format(sizes[size_i], p, i)
-                    print(fn)
+                    #print(fn)
                     # logging.warning(dude + " " + fn)
                     if fn in unsolvable:
                         # logging.warning('unsolvable')
                         pass
                     else:
                         for k in range(10):
-                            print('k: ' + str(k))
+                            #print('k: ' + str(k))
 
-                            logging.warning('Run {}:' .format(k))
+                            #logging.warning('Run {}:' .format(k))
                             kb = KnowledgeBase.KnowledgeBase(logger, sizes[size_i], 0, 0, 0, self.load_file(fn))
                             #logging.warning('Run {}:' .format(k))
                             Dudes.InformedDude(self.logger, kb, k, p)
@@ -146,7 +146,7 @@ def main(logger):
         kb = KnowledgeBase.KnowledgeBase(logger, args.size, args.obstacles, args.wumpi, args.pits,  None)
     arrows = kb.numWumpii
     if save_file:
-        rm.save_file("test_worlds/size5/test2", arrows, kb)
+        rm.save_file("/WumpusWorld/test.txt", arrows, kb)
   
     if args.dude == 'i':
         iDude = Dudes.InformedDude(logger, kb)    
