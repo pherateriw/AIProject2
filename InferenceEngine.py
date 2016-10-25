@@ -777,29 +777,59 @@ class InferenceEngine:
                 
                 if a == '$':
                     query = "GLIMMER({},{})".format(x,y)
-                    self.resolution(self.kb, query)
+                    if self.resolution(self.kb, query):
+                        self.kb.tell(a, x, y)
                 elif a == 'b':
                     query = "BREEZE({},{})".format(x,y)
-                    self.resolution(self.kb, query)                
+                    if self.resolution(self.kb, query):                
+                        self.kb.tell(a, x, y)
                 elif a == 's':
                     query = "STENCH({},{})".format(x,y)
-                    self.resolution(self.kb, query)
+                    if self.resolution(self.kb, query):
+                        self.kb.tell(a, x, y)
                 elif a == 't':
                     query = "BUMP({},{})".format(x,y)
-                    self.resolution(self.kb, query)
+                    if self.resolution(self.kb, query):
+                        self.kb.tell(a, x, y)
                 elif a == 'a':
                     query = "SAFE({},{})".format(x, y)
-                    self.resolution(self.kb, query)
+                    if self.resolution(self.kb, query):
+                        self.kb.tell(a, x, y)
                 elif a == 'o':
                     query = "OBSTACLE({},{})".format(x, y)
-                    self.resolution(self.kb, query)
+                    if self.resolution(self.kb, query):
+                        self.kb.tell(a, x, y)
                 elif a == 'w':
                     query = "WUMPUS({},{})".format(x, y)
-                    self.resolution(self.kb, query)
+                    if self.resolution(self.kb, query):
+                        self.kb.tell(a, x, y)
                 elif a == 'p':
                     query = "PIT({},{})".format(x, y)                    
-                    self.resolution(self.kb, query)
+                    if self.resolution(self.kb, query):
+                        self.kb.tell(a, x, y)
+                    
+                
+                query = "!(BREEZE({},{}))".format(x,y)
+                self.resolution(self.kb, query)                
 
+                query = "!(STENCH({},{}))".format(x,y)
+                self.resolution(self.kb, query)
+                
+                query = "!(BUMP({},{}))".format(x,y)
+                self.resolution(self.kb, query)
+                
+                query = "!(SAFE({},{}))".format(x, y)
+                self.resolution(self.kb, query)
+                
+                query = "!(OBSTACLE({},{}))".format(x, y)
+                self.resolution(self.kb, query)
+
+                query = "!(WUMPUS({},{}))".format(x, y)
+                self.resolution(self.kb, query)
+
+                query = "!(PIT({},{}))".format(x, y)                    
+                self.resolution(self.kb, query)                    
+                    
     # Ask for best choice for dude given choices/neighbors
     def ask(self, query, x, y):
         choices = self.get_neighbors(x, y)
