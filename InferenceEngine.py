@@ -369,8 +369,8 @@ class InferenceEngine:
                             for a in updated_disjuncts:
                                 local_clauses.append(a)
 
-                            self.logger.info("local clauses is now")
-                            self.logger.info(local_clauses)
+                            #self.logger.info("local clauses is now")
+                            #self.logger.info(local_clauses)
 
                             # TODO: do this up to four
                             # remove the old disjunct and replace it with the new
@@ -379,42 +379,232 @@ class InferenceEngine:
                                 if ci_index != -1:
                                     self.logger.info("ci = {}".format(ci))
                                     if ' v ' in ci:
-                                        #TODO: handle more than one or
+                                        
                                         if len(disjunct_list_i) == 1:
-                                            self.logger.info(self.clauses)
+                                            #self.logger.info(self.clauses)
                                             self.clauses.discard(ci)
                                             self.logger.info("popped {}".format(ci_index))
-                                            self.logger.info(self.clauses)
+                                            #self.logger.info(self.clauses)
 
                                             replacement_item = disjunct_list_i[0]
                                             self.clauses.add(replacement_item)
-                                            self.logger.info(self.clauses)
+                                            #self.logger.info(self.clauses)
                                             # clear disjunct list
-
-                                            disjunct_list_i.clear()
-                                        else:
+                                            disjunct_list_i.remove(ci_index)
+                                            
+                                        elif len(disjunct_list_i) == 2:
                                             self.clauses.discard(ci)
+                                            disjunct_list_i.remove(ci)
+                                
+                                        elif len(disjunct_list_i) == 3:    
+                                            # put back together
+                                            if ci_index == 0:
+                                                self.clauses.discard(ci)
+                                                disjunct_list_i.remove(ci)
+                                                r1 = disjunct_list_i[1]
+                                                r2 = disjunct_list_i[2]
+                                                self.clauses.add("{} v {}".format(r1, r2))  
+                                            elif ci_index == 1:
+                                                self.clauses.discard(ci)
+                                                disjunct_list_i.remove(ci)
+                                                r1 = disjunct_list_i[0]
+                                                r2 = disjunct_list_i[2]
+                                                self.clauses.add("{} v {}".format(r1, r2))  
+                                            elif ci_index == 2:
+                                                self.clauses.discard(ci)
+                                                disjunct_list_i.remove(ci)
+                                                r1 = disjunct_list_i[0]
+                                                r2 = disjunct_list_i[1]
+                                                self.clauses.add("{} v {}".format(r1, r2))                                                  
+                                        elif len(disjunct_list_i) == 4:
+                                            if ci_index == 0:
+                                                self.clauses.discard(ci)
+                                                disjunct_list_i.remove(ci)
+                                                r1 = disjunct_list_i[1]
+                                                r2 = disjunct_list_i[2]
+                                                r3 = disjunct_list_i[3]                                                
+                                                self.clauses.add("{} v {} v {}".format(r1, r2, r3))  
+                                            elif ci_index == 1:
+                                                self.clauses.discard(ci)
+                                                disjunct_list_i.remove(ci)
+                                                r1 = disjunct_list_i[0]
+                                                r2 = disjunct_list_i[1]
+                                                r3 = disjunct_list_i[2]                                                
+                                                self.clauses.add("{} v {} v {}".format(r1, r2, r3))  
+                                            elif ci_index == 2:
+                                                self.clauses.discard(ci)
+                                                disjunct_list_i.remove(ci)
+                                                r1 = disjunct_list_i[0]
+                                                r2 = disjunct_list_i[1]
+                                                r3 = disjunct_list_i[3]                                                
+                                                self.clauses.add("{} v {} v {}".format(r1, r2, r3)) 
+                                            elif ci_index == 3:
+                                                self.clauses.discard(ci)
+                                                disjunct_list_i.remove(ci)
+                                                r1 = disjunct_list_i[0]
+                                                r2 = disjunct_list_i[1]
+                                                r3 = disjunct_list_i[2]                                                
+                                                self.clauses.add("{} v {} v {}".format(r1, r2, r3)) 
+
+                                        elif len(disjunct_list_i) == 5:
+                                            if ci_index == 0:
+                                                self.clauses.discard(ci)
+                                                disjunct_list_i.remove(ci)
+                                                r1 = disjunct_list_i[1]
+                                                r2 = disjunct_list_i[2]
+                                                r3 = disjunct_list_i[3] 
+                                                r4 = disjunct_list_i[4]                                                 
+                                                self.clauses.add("{} v {} v {} v {}".format(r1, r2, r3, r4))                                          
+                                            if ci_index == 1:
+                                                self.clauses.discard(ci)
+                                                disjunct_list_i.remove(ci)
+                                                r1 = disjunct_list_i[0]
+                                                r2 = disjunct_list_i[2]
+                                                r3 = disjunct_list_i[3] 
+                                                r4 = disjunct_list_i[4]                                                 
+                                                self.clauses.add("{} v {} v {} v {}".format(r1, r2, r3, r4))                                         
+                                            if ci_index == 2:
+                                                self.clauses.discard(ci)
+                                                disjunct_list_i.remove(ci)
+                                                r1 = disjunct_list_i[0]
+                                                r2 = disjunct_list_i[1]
+                                                r3 = disjunct_list_i[3] 
+                                                r4 = disjunct_list_i[4]                                                 
+                                                self.clauses.add("{} v {} v {} v {}".format(r1, r2, r3, r4))
+                                            if ci_index == 3:
+                                                self.clauses.discard(ci)
+                                                disjunct_list_i.remove(ci)
+                                                r1 = disjunct_list_i[0]
+                                                r2 = disjunct_list_i[1]
+                                                r3 = disjunct_list_i[2] 
+                                                r4 = disjunct_list_i[4]                                                 
+                                                self.clauses.add("{} v {} v {} v {}".format(r1, r2, r3, r4))  
+                                            if ci_index == 4:
+                                                self.clauses.discard(ci)
+                                                disjunct_list_i.remove(ci)
+                                                r1 = disjunct_list_i[0]
+                                                r2 = disjunct_list_i[1]
+                                                r3 = disjunct_list_i[2] 
+                                                r4 = disjunct_list_i[3]                                                 
+                                                self.clauses.add("{} v {} v {} v {}".format(r1, r2, r3, r4))  
 
 
-                                # remove the old disjunct and replace it with the new
-                                cj_index = list(self.clauses).index(cj) if cj in list(self.clauses) else -1
-                                if cj_index != -1:
-                                    self.logger.info("cj = {}".format(cj))
-                                    if ' v ' in cj:
-                                        #TODO: handle more than one or
-                                        if len(disjunct_list_j) == 1:
-                                            self.clauses.discard(cj)
-                                            self.logger.info("popped {}".format(ci_index))
-                                            replacement_item = disjunct_list_j[0]
-                                            self.clauses.add(replacement_item)
-                                            # clear disjunct list
-                                            disjunct_list_j.clear()
-                                        else:
-                                            self.clauses = self.clauses.discard(cj)
+                                if (self.clauses != None):
+                                    cj_index = list(self.clauses).index(cj) if cj in list(self.clauses) else -1
+                                    if cj_index != -1:
+                                        #self.logger.info("cj = {}".format(ci))
+                                        if ' v ' in cj:
+                                            #TODO: handle more than one or
+                                            if len(disjunct_list_j) == 1:
+                                                #self.logger.info(self.clauses)
+                                                self.clauses.discard(cj)
+                                                self.logger.info("popped {}".format(cj_index))
+                                                #self.logger.info(self.clauses)
 
-        # after sub, remove those keys from theta, so we can try again
-        self.theta.clear()
-        return local_clauses
+                                                replacement_item = disjunct_list_j[0]
+                                                self.clauses.add(replacement_item)
+                                                #self.logger.info(self.clauses)
+                                                # clear disjunct list
+                                                disjunct_list_j.remove(cj_index)
+                                            
+                                            elif len(disjunct_list_j) == 2:
+                                                self.clauses.discard(cj)
+                                                disjunct_list_i.remove(cj)
+                                
+                                            elif len(disjunct_list_j) == 3:    
+                                                # put back together
+                                                if ci_index == 0:
+                                                    self.clauses.discard(cj)
+                                                    disjunct_list_j.remove(cj)
+                                                    r1 = disjunct_list_j[1]
+                                                    r2 = disjunct_list_j[2]
+                                                    self.clauses.add("{} v {}".format(r1, r2))  
+                                                elif cj_index == 1:
+                                                    self.clauses.discard(cj)
+                                                    disjunct_list_j.remove(cj)
+                                                    r1 = disjunct_list_j[0]
+                                                    r2 = disjunct_list_j[2]
+                                                    self.clauses.add("{} v {}".format(r1, r2))  
+                                                elif cj_index == 2:
+                                                    self.clauses.discard(cj)
+                                                    disjunct_list_j.remove(cj)
+                                                    r1 = disjunct_list_j[0]
+                                                    r2 = disjunct_list_j[1]
+                                                    self.clauses.add("{} v {}".format(r1, r2))                                                  
+                                            elif len(disjunct_list_j) == 4:
+                                                if cj_index == 0:
+                                                    self.clauses.discard(cj)
+                                                    disjunct_list_j.remove(cj)
+                                                    r1 = disjunct_list_j[1]
+                                                    r2 = disjunct_list_j[2]
+                                                    r3 = disjunct_list_j[3]                                                
+                                                    self.clauses.add("{} v {} v {}".format(r1, r2, r3))  
+                                                elif cj_index == 1:
+                                                    self.clauses.discard(cj)
+                                                    disjunct_list_j.remove(cj)
+                                                    r1 = disjunct_list_j[0]
+                                                    r2 = disjunct_list_j[1]
+                                                    r3 = disjunct_list_j[2]                                                
+                                                    self.clauses.add("{} v {} v {}".format(r1, r2, r3))  
+                                                elif cj_index == 2:
+                                                    self.clauses.discard(cj)
+                                                    disjunct_list_j.remove(cj)
+                                                    r1 = disjunct_list_j[0]
+                                                    r2 = disjunct_list_j[1]
+                                                    r3 = disjunct_list_j[3]                                                
+                                                    self.clauses.add("{} v {} v {}".format(r1, r2, r3)) 
+                                                elif cj_index == 3:
+                                                    self.clauses.discard(cj)
+                                                    disjunct_list_j.remove(cj)
+                                                    r1 = disjunct_list_j[0]
+                                                    r2 = disjunct_list_j[1]
+                                                    r3 = disjunct_list_j[2]                                                
+                                                    self.clauses.add("{} v {} v {}".format(r1, r2, r3)) 
+
+                                            elif len(disjunct_list_j) == 5:
+                                                if cj_index == 0:
+                                                    self.clauses.discard(cj)
+                                                    disjunct_list_j.remove(cj)
+                                                    r1 = disjunct_list_j[1]
+                                                    r2 = disjunct_list_j[2]
+                                                    r3 = disjunct_list_j[3] 
+                                                    r4 = disjunct_list_j[4]                                                 
+                                                    self.clauses.add("{} v {} v {} v {}".format(r1, r2, r3, r4))                                          
+                                                if cj_index == 1:
+                                                    self.clauses.discard(cj)
+                                                    disjunct_list_j.remove(cj)
+                                                    r1 = disjunct_list_j[0]
+                                                    r2 = disjunct_list_j[2]
+                                                    r3 = disjunct_list_j[3] 
+                                                    r4 = disjunct_list_j[4]                                                 
+                                                    self.clauses.add("{} v {} v {} v {}".format(r1, r2, r3, r4))                                         
+                                                if cj_index == 2:
+                                                    self.clauses.discard(cj)
+                                                    disjunct_list_j.remove(cj)
+                                                    r1 = disjunct_list_j[0]
+                                                    r2 = disjunct_list_j[1]
+                                                    r3 = disjunct_list_j[3] 
+                                                    r4 = disjunct_list_j[4]                                                 
+                                                    self.clauses.add("{} v {} v {} v {}".format(r1, r2, r3, r4))
+                                                if cj_index == 3:
+                                                    self.clauses.discard(cj)
+                                                    disjunct_list_j.remove(cj)
+                                                    r1 = disjunct_list_j[0]
+                                                    r2 = disjunct_list_j[1]
+                                                    r3 = disjunct_list_j[2] 
+                                                    r4 = disjunct_list_j[4]                                                 
+                                                    self.clauses.add("{} v {} v {} v {}".format(r1, r2, r3, r4))  
+                                                if cj_index == 4:
+                                                    self.clauses.discard(cj)
+                                                    disjunct_list_i.remove(cj)
+                                                    r1 = disjunct_list_j[0]
+                                                    r2 = disjunct_list_j[1]
+                                                    r3 = disjunct_list_j[2] 
+                                                    r4 = disjunct_list_j[3]                                                 
+                                                    self.clauses.add("{} v {} v {} v {}".format(r1, r2, r3, r4))  
+            # after sub, remove those keys from theta, so we can try again
+            self.theta.clear()
+            return local_clauses
 
     # negate a clause
     def negate(self,q):
