@@ -142,7 +142,8 @@ class Move:
             return False
         else:
             # cell is safe and explored
-            self.dude.cells_explored += 1
+            if self.kb.known_map[x][y] == '_':
+                self.dude.cells_explored += 1
             self.kb.update_cell(self.dude.prevx, self.dude.prevy, 's')
             self.kb.tell('a', x, y)
         return True
