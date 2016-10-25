@@ -267,17 +267,17 @@ class InformedDude(AbstractDude):
                         self.kb.tell("SHOOTARROW({},{})".format(self.x, self.y), self.x, self.y)      
                         
                         if list(current_valid_choices)[0] == '<k':
+                            self.move.shoot_wumpus('<')                                                        
                             stop, percept = self.make_move(random.choice('<'))
-                            self.move.shoot_wumpus('<')
                         elif list(current_valid_choices)[0] == '>k':
-                            stop, percept = self.make_move(random.choice('>'))
-                            self.move.shoot_wumpus('>')                            
+                            self.move.shoot_wumpus('>') 
+                            stop, percept = self.make_move(random.choice('>'))                           
                         elif list(current_valid_choices)[0] == 'vk':
-                            stop, percept = self.make_move(random.choice('v'))
                             self.move.shoot_wumpus('v')
+                            stop, percept = self.make_move(random.choice('v'))
                         elif list(current_valid_choices)[0] == '^k':
+                            self.move.shoot_wumpus('^') 
                             stop, percept = self.make_move(random.choice('^'))
-                            self.move.shoot_wumpus('^')
                         else:
                             stop, percept = self.make_move(random.choice(list(current_valid_choices)[0]))                            
                             current_valid_choices.clear()
