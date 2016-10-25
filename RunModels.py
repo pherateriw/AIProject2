@@ -146,7 +146,7 @@ def main(logger):
         kb = KnowledgeBase.KnowledgeBase(logger, args.size, args.obstacles, args.wumpi, args.pits,  None)
     arrows = kb.numWumpii
     if save_file:
-        rm.save_file("/github/WumpusWorld/AIProject2/test.txt", arrows, kb)
+        rm.save_file("/WumpusWorld/test.txt", arrows, kb)
   
     if args.dude == 'i':
         iDude = Dudes.InformedDude(logger, kb)    
