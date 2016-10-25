@@ -613,7 +613,7 @@ class InferenceEngine:
             split_q = q.split("!(")
             q = split_q[1]
             split_q = q.split(")")
-            q = split_string[0]
+            q = split_q[0]
             return "({})".format(q)   
         return "!({})".format(q)       
              
