@@ -445,7 +445,8 @@ class InferenceEngine:
 
                     # checks all the items in disjunct_list for possible substitution
                     for i in range(0,num_items):
-                        # three different cases where variable could be, after left paren, before right paren, or between two commas
+                        # different cases where variable could be, after left paren, before right paren, or between two commas
+                        
                         if "({},".format(key_variable) in disjunct_list:
                             disjunct_list = disjunct_list.replace("{}".format(key_variable), "{}".format(value_of_key))
 
