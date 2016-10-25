@@ -148,7 +148,7 @@ class InformedDude(AbstractDude):
     def __init__(self, logger, kb, k, prob):
         super(InformedDude, self).__init__(logger, kb, k, prob)
         self.logger.info("Informed dude created!")
-        self.ie = InferenceEngine.InferenceEngine(kb)
+        self.ie = InferenceEngine.InferenceEngine(kb, logger)
         self.move.place_dude()
         self.ie.tell(['a'], self.x, self.y)
         self.rounds()

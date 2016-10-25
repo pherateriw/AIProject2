@@ -1,10 +1,11 @@
 class InferenceEngine:
-    def __init__(self, kb):
+    def __init__(self, kb, logger):
         # theta is a dictionary of all substitutions where the variable is the key, values are the values 
         self.theta = {}        
         self.kb = kb
         self.removal_clauses = []
         self.clauses = ""
+        self.logger = logger
 
         # testing unification and resolution
         # self.test_unify(self.theta)
@@ -193,7 +194,7 @@ class InferenceEngine:
         # loop until no new clauses can be added (which means KB does not entail q), or
         # two clauses yield the empty clause (which means KB entails q)
         while True:
-            self.logger.info("clauses = {}".format(self.clauses))
+            #self.logger.info("clauses = {}".format(self.clauses))
 
             # variable to keep track of the length of clause list            
             clause_len = len(self.clauses)
@@ -221,9 +222,9 @@ class InferenceEngine:
                 # resolve returns the set of all possible clauses obtained by resolving ci and cj
                 resolvents = set(self.resolve(ci, cj))
                 #self.logger.info(self.resolve(ci, cj, clauses))
-                self.logger.info("resolvents = {}".format(resolvents))
-                self.logger.info("clauses = {}".format(self.clauses))
-                self.logger.info(self.clauses)
+                #self.logger.info("resolvents = {}".format(resolvents))
+                #self.logger.info("clauses = {}".format(self.clauses))
+                #self.logger.info(self.clauses)
                 #self.logger.info(len(resolvents))
 
                 # all we have left is the empty clause
@@ -382,65 +383,97 @@ class InferenceEngine:
                                         
                                         if len(disjunct_list_i) == 1:
                                             #self.logger.info(self.clauses)
-                                            self.clauses.discard(ci)
-                                            self.logger.info("popped {}".format(ci_index))
+                                            while ci in self.clauses:                                            
+                                                self.clauses.discard(ci)
+                                            #self.logger.info("popped {}".format(ci))
                                             #self.logger.info(self.clauses)
 
-                                            replacement_item = disjunct_list_i[0]
-                                            self.clauses.add(replacement_item)
+                                            #replacement_item = disjunct_list_i[0]
+                                            #self.clauses.add(replacement_item)
                                             #self.logger.info(self.clauses)
                                             # clear disjunct list
-                                            disjunct_list_i.remove(ci_index)
+                                            while ci in disjunct_list_i:
+                                                disjunct_list_i.remove(ci)
                                             
                                         elif len(disjunct_list_i) == 2:
-                                            self.clauses.discard(ci)
-                                            disjunct_list_i.remove(ci)
+                                            while ci in self.clauses:                                            
+                                                self.clauses.discard(ci)
+                                            while ci in disjunct_list_i:
+                                                disjunct_list_i.remove(ci)
                                 
                                         elif len(disjunct_list_i) == 3:    
                                             # put back together
                                             if ci_index == 0:
-                                                self.clauses.discard(ci)
-                                                disjunct_list_i.remove(ci)
+                                                while ci in self.clauses:                                                
+                                                    self.clauses.discard(ci)
+
+                                                while ci in disjunct_list_i:
+                                                    disjunct_list_i.remove(ci)
+                                                
                                                 r1 = disjunct_list_i[1]
                                                 r2 = disjunct_list_i[2]
                                                 self.clauses.add("{} v {}".format(r1, r2))  
                                             elif ci_index == 1:
-                                                self.clauses.discard(ci)
-                                                disjunct_list_i.remove(ci)
+                                                while ci in self.clauses:                                                
+                                                    self.clauses.discard(ci)
+
+                                                while ci in disjunct_list_i:
+                                                    disjunct_list_i.remove(ci)
+
                                                 r1 = disjunct_list_i[0]
                                                 r2 = disjunct_list_i[2]
                                                 self.clauses.add("{} v {}".format(r1, r2))  
                                             elif ci_index == 2:
-                                                self.clauses.discard(ci)
-                                                disjunct_list_i.remove(ci)
+                                                while ci in self.clauses:                                                
+                                                    self.clauses.discard(ci)
+
+                                                while ci in disjunct_list_i:
+                                                    disjunct_list_i.remove(ci)
+                                                    
                                                 r1 = disjunct_list_i[0]
                                                 r2 = disjunct_list_i[1]
                                                 self.clauses.add("{} v {}".format(r1, r2))                                                  
                                         elif len(disjunct_list_i) == 4:
                                             if ci_index == 0:
-                                                self.clauses.discard(ci)
-                                                disjunct_list_i.remove(ci)
+                                                while ci in self.clauses:                                                
+                                                    self.clauses.discard(ci)
+
+                                                while ci in disjunct_list_i:
+                                                    disjunct_list_i.remove(ci)
+
                                                 r1 = disjunct_list_i[1]
                                                 r2 = disjunct_list_i[2]
                                                 r3 = disjunct_list_i[3]                                                
                                                 self.clauses.add("{} v {} v {}".format(r1, r2, r3))  
                                             elif ci_index == 1:
-                                                self.clauses.discard(ci)
-                                                disjunct_list_i.remove(ci)
+                                                while ci in self.clauses:                                                
+                                                    self.clauses.discard(ci)
+
+                                                while ci in disjunct_list_i:
+                                                    disjunct_list_i.remove(ci)
+
                                                 r1 = disjunct_list_i[0]
                                                 r2 = disjunct_list_i[1]
                                                 r3 = disjunct_list_i[2]                                                
                                                 self.clauses.add("{} v {} v {}".format(r1, r2, r3))  
                                             elif ci_index == 2:
-                                                self.clauses.discard(ci)
-                                                disjunct_list_i.remove(ci)
+                                                while ci in self.clauses:                                                
+                                                    self.clauses.discard(ci)
+
+                                                while ci in disjunct_list_i:
+                                                    disjunct_list_i.remove(ci)
+                                                    
                                                 r1 = disjunct_list_i[0]
                                                 r2 = disjunct_list_i[1]
                                                 r3 = disjunct_list_i[3]                                                
                                                 self.clauses.add("{} v {} v {}".format(r1, r2, r3)) 
                                             elif ci_index == 3:
-                                                self.clauses.discard(ci)
-                                                disjunct_list_i.remove(ci)
+                                                while ci in self.clauses:                                                
+                                                    self.clauses.discard(ci)
+
+                                                while ci in disjunct_list_i:
+                                                    disjunct_list_i.remove(ci)
+
                                                 r1 = disjunct_list_i[0]
                                                 r2 = disjunct_list_i[1]
                                                 r3 = disjunct_list_i[2]                                                
@@ -448,40 +481,60 @@ class InferenceEngine:
 
                                         elif len(disjunct_list_i) == 5:
                                             if ci_index == 0:
-                                                self.clauses.discard(ci)
-                                                disjunct_list_i.remove(ci)
+                                                while ci in self.clauses:                                                
+                                                    self.clauses.discard(ci)
+
+                                                while ci in disjunct_list_i:
+                                                    disjunct_list_i.remove(ci)
+                                                    
                                                 r1 = disjunct_list_i[1]
                                                 r2 = disjunct_list_i[2]
                                                 r3 = disjunct_list_i[3] 
                                                 r4 = disjunct_list_i[4]                                                 
                                                 self.clauses.add("{} v {} v {} v {}".format(r1, r2, r3, r4))                                          
                                             if ci_index == 1:
-                                                self.clauses.discard(ci)
-                                                disjunct_list_i.remove(ci)
+                                                while ci in self.clauses:                                                
+                                                    self.clauses.discard(ci)
+
+                                                while ci in disjunct_list_i:
+                                                    disjunct_list_i.remove(ci)                                                
+                                                
                                                 r1 = disjunct_list_i[0]
                                                 r2 = disjunct_list_i[2]
                                                 r3 = disjunct_list_i[3] 
                                                 r4 = disjunct_list_i[4]                                                 
                                                 self.clauses.add("{} v {} v {} v {}".format(r1, r2, r3, r4))                                         
                                             if ci_index == 2:
-                                                self.clauses.discard(ci)
-                                                disjunct_list_i.remove(ci)
+                                                while ci in self.clauses:                                                
+                                                    self.clauses.discard(ci)
+
+                                                while ci in disjunct_list_i:
+                                                    disjunct_list_i.remove(ci)
+                                                    
                                                 r1 = disjunct_list_i[0]
                                                 r2 = disjunct_list_i[1]
                                                 r3 = disjunct_list_i[3] 
                                                 r4 = disjunct_list_i[4]                                                 
                                                 self.clauses.add("{} v {} v {} v {}".format(r1, r2, r3, r4))
                                             if ci_index == 3:
-                                                self.clauses.discard(ci)
-                                                disjunct_list_i.remove(ci)
+                                                while ci in self.clauses:                                                
+                                                    self.clauses.discard(ci)
+
+                                                while ci in disjunct_list_i:
+                                                    disjunct_list_i.remove(ci)
+                                                    
                                                 r1 = disjunct_list_i[0]
                                                 r2 = disjunct_list_i[1]
                                                 r3 = disjunct_list_i[2] 
                                                 r4 = disjunct_list_i[4]                                                 
                                                 self.clauses.add("{} v {} v {} v {}".format(r1, r2, r3, r4))  
                                             if ci_index == 4:
-                                                self.clauses.discard(ci)
-                                                disjunct_list_i.remove(ci)
+                                                while ci in self.clauses:                                                
+                                                    self.clauses.discard(ci)
+
+                                                while ci in disjunct_list_i:
+                                                    disjunct_list_i.remove(ci)
+                                                    
                                                 r1 = disjunct_list_i[0]
                                                 r2 = disjunct_list_i[1]
                                                 r3 = disjunct_list_i[2] 
@@ -497,65 +550,98 @@ class InferenceEngine:
                                             #TODO: handle more than one or
                                             if len(disjunct_list_j) == 1:
                                                 #self.logger.info(self.clauses)
-                                                self.clauses.discard(cj)
-                                                self.logger.info("popped {}".format(cj_index))
+                                                while cj in self.clauses:                                                
+                                                    self.clauses.discard(cj)
+
+                                                while cj in disjunct_list_j:
+                                                    disjunct_list_i.remove(cj)                                                
+
+                                                #self.logger.info("popped {}".format(cj_index))
                                                 #self.logger.info(self.clauses)
 
-                                                replacement_item = disjunct_list_j[0]
-                                                self.clauses.add(replacement_item)
+                                                #replacement_item = disjunct_list_j[0]
+                                                #self.clauses.add(replacement_item)
                                                 #self.logger.info(self.clauses)
                                                 # clear disjunct list
-                                                disjunct_list_j.remove(cj_index)
                                             
                                             elif len(disjunct_list_j) == 2:
-                                                self.clauses.discard(cj)
-                                                disjunct_list_i.remove(cj)
+                                                while cj in self.clauses:                                                
+                                                    self.clauses.discard(cj)
+
+                                                while cj in disjunct_list_j:
+                                                    disjunct_list_i.remove(cj) 
                                 
                                             elif len(disjunct_list_j) == 3:    
                                                 # put back together
-                                                if ci_index == 0:
-                                                    self.clauses.discard(cj)
-                                                    disjunct_list_j.remove(cj)
+                                                if cj_index == 0:
+                                                    while cj in self.clauses:                                                
+                                                        self.clauses.discard(cj)
+
+                                                    while cj in disjunct_list_j:
+                                                        disjunct_list_i.remove(cj) 
+                                                
                                                     r1 = disjunct_list_j[1]
                                                     r2 = disjunct_list_j[2]
                                                     self.clauses.add("{} v {}".format(r1, r2))  
                                                 elif cj_index == 1:
-                                                    self.clauses.discard(cj)
-                                                    disjunct_list_j.remove(cj)
+                                                    while cj in self.clauses:                                                
+                                                        self.clauses.discard(cj)
+
+                                                    while cj in disjunct_list_j:
+                                                        disjunct_list_i.remove(cj) 
                                                     r1 = disjunct_list_j[0]
                                                     r2 = disjunct_list_j[2]
                                                     self.clauses.add("{} v {}".format(r1, r2))  
                                                 elif cj_index == 2:
-                                                    self.clauses.discard(cj)
-                                                    disjunct_list_j.remove(cj)
+                                                    while cj in self.clauses:                                                
+                                                        self.clauses.discard(cj)
+
+                                                    while cj in disjunct_list_j:
+                                                        disjunct_list_i.remove(cj) 
+                                                
                                                     r1 = disjunct_list_j[0]
                                                     r2 = disjunct_list_j[1]
                                                     self.clauses.add("{} v {}".format(r1, r2))                                                  
                                             elif len(disjunct_list_j) == 4:
                                                 if cj_index == 0:
-                                                    self.clauses.discard(cj)
-                                                    disjunct_list_j.remove(cj)
+                                                    while cj in self.clauses:                                                
+                                                        self.clauses.discard(cj)
+
+                                                    while cj in disjunct_list_j:
+                                                        disjunct_list_i.remove(cj) 
+                                                    
                                                     r1 = disjunct_list_j[1]
                                                     r2 = disjunct_list_j[2]
                                                     r3 = disjunct_list_j[3]                                                
                                                     self.clauses.add("{} v {} v {}".format(r1, r2, r3))  
                                                 elif cj_index == 1:
-                                                    self.clauses.discard(cj)
-                                                    disjunct_list_j.remove(cj)
+                                                    while cj in self.clauses:                                                
+                                                        self.clauses.discard(cj)
+
+                                                    while cj in disjunct_list_j:
+                                                        disjunct_list_i.remove(cj) 
                                                     r1 = disjunct_list_j[0]
                                                     r2 = disjunct_list_j[1]
                                                     r3 = disjunct_list_j[2]                                                
                                                     self.clauses.add("{} v {} v {}".format(r1, r2, r3))  
                                                 elif cj_index == 2:
-                                                    self.clauses.discard(cj)
-                                                    disjunct_list_j.remove(cj)
+                                                    while cj in self.clauses:                                                
+                                                        self.clauses.discard(cj)
+
+                                                    while cj in disjunct_list_j:
+                                                        disjunct_list_i.remove(cj) 
+                                                
                                                     r1 = disjunct_list_j[0]
                                                     r2 = disjunct_list_j[1]
                                                     r3 = disjunct_list_j[3]                                                
                                                     self.clauses.add("{} v {} v {}".format(r1, r2, r3)) 
                                                 elif cj_index == 3:
-                                                    self.clauses.discard(cj)
-                                                    disjunct_list_j.remove(cj)
+                                                    while cj in self.clauses:                                                
+                                                        self.clauses.discard(cj)
+
+                                                    while cj in disjunct_list_j:
+                                                        disjunct_list_i.remove(cj) 
+                                                    
                                                     r1 = disjunct_list_j[0]
                                                     r2 = disjunct_list_j[1]
                                                     r3 = disjunct_list_j[2]                                                
@@ -563,45 +649,65 @@ class InferenceEngine:
 
                                             elif len(disjunct_list_j) == 5:
                                                 if cj_index == 0:
-                                                    self.clauses.discard(cj)
-                                                    disjunct_list_j.remove(cj)
+                                                    while cj in self.clauses:                                                
+                                                        self.clauses.discard(cj)
+
+                                                    while cj in disjunct_list_j:
+                                                        disjunct_list_i.remove(cj) 
+                                                    
                                                     r1 = disjunct_list_j[1]
                                                     r2 = disjunct_list_j[2]
                                                     r3 = disjunct_list_j[3] 
                                                     r4 = disjunct_list_j[4]                                                 
                                                     self.clauses.add("{} v {} v {} v {}".format(r1, r2, r3, r4))                                          
                                                 if cj_index == 1:
-                                                    self.clauses.discard(cj)
-                                                    disjunct_list_j.remove(cj)
+                                                    while cj in self.clauses:                                                
+                                                        self.clauses.discard(cj)
+
+                                                    while cj in disjunct_list_j:
+                                                        disjunct_list_i.remove(cj)                                                     
+                                                    
+                        
                                                     r1 = disjunct_list_j[0]
                                                     r2 = disjunct_list_j[2]
                                                     r3 = disjunct_list_j[3] 
                                                     r4 = disjunct_list_j[4]                                                 
                                                     self.clauses.add("{} v {} v {} v {}".format(r1, r2, r3, r4))                                         
                                                 if cj_index == 2:
-                                                    self.clauses.discard(cj)
-                                                    disjunct_list_j.remove(cj)
+                                                    while cj in self.clauses:                                                
+                                                        self.clauses.discard(cj)
+
+                                                    while cj in disjunct_list_j:
+                                                        disjunct_list_i.remove(cj) 
+                                                
                                                     r1 = disjunct_list_j[0]
                                                     r2 = disjunct_list_j[1]
                                                     r3 = disjunct_list_j[3] 
                                                     r4 = disjunct_list_j[4]                                                 
                                                     self.clauses.add("{} v {} v {} v {}".format(r1, r2, r3, r4))
                                                 if cj_index == 3:
-                                                    self.clauses.discard(cj)
-                                                    disjunct_list_j.remove(cj)
+                                                    while cj in self.clauses:                                                
+                                                        self.clauses.discard(cj)
+
+                                                    while cj in disjunct_list_j:
+                                                        disjunct_list_i.remove(cj) 
+                                                    
                                                     r1 = disjunct_list_j[0]
                                                     r2 = disjunct_list_j[1]
                                                     r3 = disjunct_list_j[2] 
                                                     r4 = disjunct_list_j[4]                                                 
                                                     self.clauses.add("{} v {} v {} v {}".format(r1, r2, r3, r4))  
                                                 if cj_index == 4:
-                                                    self.clauses.discard(cj)
-                                                    disjunct_list_i.remove(cj)
-                                                    r1 = disjunct_list_j[0]
-                                                    r2 = disjunct_list_j[1]
-                                                    r3 = disjunct_list_j[2] 
-                                                    r4 = disjunct_list_j[3]                                                 
-                                                    self.clauses.add("{} v {} v {} v {}".format(r1, r2, r3, r4))  
+                                                    while cj in self.clauses:                                                
+                                                        self.clauses.discard(cj)
+
+                                                    while cj in disjunct_list_j:
+                                                        disjunct_list_i.remove(cj) 
+                                                        r1 = disjunct_list_j[0]
+                                                        r2 = disjunct_list_j[1]
+                                                        r3 = disjunct_list_j[2] 
+                                                        r4 = disjunct_list_j[3]                                                 
+                                                        self.clauses.add("{} v {} v {} v {}".format(r1, r2, r3, r4))  
             # after sub, remove those keys from theta, so we can try again
             self.theta.clear()
             return local_clauses
@@ -664,11 +770,35 @@ class InferenceEngine:
         q = "B(0,0)"
         self.resolution(kb, q)
 
-    # pass on to KnowledgeBase
     def tell(self, assertion, x, y):
         for a in assertion:
             if a != '_':
                 self.kb.tell(a, x, y)
+                
+                if a == '$':
+                    query = "GLIMMER({},{})".format(x,y)
+                    self.resolution(self.kb, query)
+                elif a == 'b':
+                    query = "BREEZE({},{})".format(x,y)
+                    self.resolution(self.kb, query)                
+                elif a == 's':
+                    query = "STENCH({},{})".format(x,y)
+                    self.resolution(self.kb, query)
+                elif a == 't':
+                    query = "BUMP({},{})".format(x,y)
+                    self.resolution(self.kb, query)
+                elif a == 'a':
+                    query = "SAFE({},{})".format(x, y)
+                    self.resolution(self.kb, query)
+                elif a == 'o':
+                    query = "OBSTACLE({},{})".format(x, y)
+                    self.resolution(self.kb, query)
+                elif a == 'w':
+                    query = "WUMPUS({},{})".format(x, y)
+                    self.resolution(self.kb, query)
+                elif a == 'p':
+                    query = "PIT({},{})".format(x, y)                    
+                    self.resolution(self.kb, query)
 
     # Ask for best choice for dude given choices/neighbors
     def ask(self, query, x, y):
