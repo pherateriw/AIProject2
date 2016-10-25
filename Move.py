@@ -130,15 +130,15 @@ class Move:
             return False
         # if in square with pit, call pit fall handler
         elif self.kb.unknown_map[x][y] == 'p':    
-            self.pit_fall()
             self.kb.update_cell(x, y, "p")
             self.kb.tell('p', x, y)
+            self.pit_fall()
             return False
         # if in square with wumpus, call wumpus handler
         elif self.kb.unknown_map[x][y] == 'w':    
-            self.wumpus_encounter()
             self.kb.update_cell(x, y, "w")
             self.kb.tell('w', x, y)
+            self.wumpus_encounter()
             return False
         else:
             # cell is safe and explored
